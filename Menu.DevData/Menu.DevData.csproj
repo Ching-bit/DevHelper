@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Control.Basic\Control.Basic.csproj" />
+      <ProjectReference Include="..\Framework.Common\Framework.Common.csproj" />
+      <ProjectReference Include="..\Plugin.DevData\Plugin.DevData.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ColumnsView.axaml.cs">
+        <DependentUpon>ColumnsView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\TableView.axaml.cs">
+        <DependentUpon>TableView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:semi="https://irihi.tech/semi"
+             xmlns:ursaSemi="https://irihi.tech/ursa/themes/semi"
+             x:Class="UniClient.App">
+             
+    <Application.Styles>
+        <semi:SemiTheme/>
+        <ursaSemi:SemiTheme/>
+        <DockFluentTheme/>
+        <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml"/>
+        <StyleInclude Source="Resources/Styles/BasicStyles.axaml"/>
+        <StyleInclude Source="avares://Control.Basic/ControlStyles.axaml"/>
+    </Application.Styles>
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Framework.Consts/ConstResources.axaml"/>
+                <ResourceInclude Source="avares://Control.Basic/ControlResources.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    
+</Application>

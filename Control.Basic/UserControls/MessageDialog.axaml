@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Control.Basic"
+             x:Class="Control.Basic.MessageDialog"
+             x:Name="This">
+    
+    <local:ConfirmDialog
+        IsAutoClick="{Binding ElementName=This, Path=IsAutoClick}"
+        IsOkDefault="{Binding ElementName=This, Path=IsOkDefault}"
+        AutoClickSeconds="{Binding ElementName=This, Path=AutoClickSeconds}"
+        IsCancelButtonVisible="{Binding ElementName=This, Path=IsCancelButtonVisible}">
+        <TextBlock Text="{Binding ElementName=This, Path=Message}"/>
+    </local:ConfirmDialog>
+    
+</UserControl>

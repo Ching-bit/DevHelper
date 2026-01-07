@@ -1,0 +1,19 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ursa="https://irihi.tech/ursa"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:UniClient"
+    x:Class="UniClient.TitleBarRightView">
+    
+    <StackPanel Classes="Common" Orientation="Horizontal">
+        <ursa:IconButton
+            Theme="{StaticResource BorderlessIconButton}"
+            Classes="Tertiary"
+            Icon="{StaticResource SemiIconSetting}"
+            Command="{Binding SettingCommand}"/>
+    </StackPanel>
+    
+</frw:UniPanel>

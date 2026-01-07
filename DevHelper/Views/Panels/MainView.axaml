@@ -1,0 +1,83 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ursa="https://irihi.tech/ursa"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:UniClient"
+    x:Class="UniClient.MainView"
+    x:Name="This">
+    
+    <Design.DataContext>
+        <local:MainViewModel/>
+    </Design.DataContext>
+    
+    <Grid ColumnDefinitions="Auto,*">
+        <!-- Left Nav -->
+        <Border
+            Padding="0"
+            HorizontalAlignment="Left"
+            Theme="{DynamicResource CardBorder}">
+            <ursa:NavMenu
+                x:Name="NavMenu"
+                DataContext="{Binding ElementName=This, Path=DataContext}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                ExpandWidth="180"
+                CollapseWidth="35"
+                IsHorizontalCollapsed="False"
+                ItemsSource="{Binding Menus}"
+                SelectedItem="{Binding SelectedMenu}"
+                SubMenuBinding="{Binding SubMenus}"
+                HeaderBinding="{Binding Name}"
+                IconBinding="{Binding .}"
+                Classes="enable_animation">
+                <ursa:NavMenu.Header>
+                    <PathIcon
+                        Data="{StaticResource SemiIconMenu}"
+                        Classes="Common Large"
+                        Width="{Binding ElementName=NavMenu, Path=ExpandWidth}"
+                        ursa:NavMenu.CanToggle="True"/>
+                </ursa:NavMenu.Header>
+                <ursa:NavMenu.IconTemplate>
+                    <DataTemplate DataType="{x:Type frw:MenuConf}">
+                        <Border Theme="{DynamicResource CardBorder}"
+                                Padding="2" Margin="0" MinHeight="25" MinWidth="25">
+                            <Border.IsVisible>
+                                <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                    <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed"/>
+                                    <Binding Path="MenuLevel" Converter="{StaticResource NumberEqualsConverter}" ConverterParameter='1'/>
+                                </MultiBinding>
+                            </Border.IsVisible>
+                            <TextBlock
+                                Text="{Binding Name, Converter={StaticResource SubStringConverter}, ConverterParameter='0,1'}"
+                                FontSize="14"
+                                FontWeight="Bold"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                        </Border>
+                    </DataTemplate>
+                </ursa:NavMenu.IconTemplate>
+            </ursa:NavMenu>
+        </Border>
+        
+        <!-- Right -->
+        <DockControl Grid.Column="1" x:Name="DockControl" InitializeLayout="True" InitializeFactory="True">
+            <DockControl.Factory>
+                <Factory/>
+            </DockControl.Factory>
+            <RootDock IsCollapsable="False" DefaultDockable="{Binding #MainLayout}">
+                <ProportionalDock Id="MainLayout" Orientation="Horizontal">
+                    <ProportionalDock>
+                        <DocumentDock x:Name="MenuDock" CanCreateDocument="False" CanDrag="False" CanDrop="False">
+                            <Document CanClose="False">
+                                <local:HomeView/>
+                            </Document>
+                        </DocumentDock>
+                    </ProportionalDock>
+                </ProportionalDock>
+            </RootDock>
+        </DockControl>
+    </Grid>
+</frw:UniPanel>

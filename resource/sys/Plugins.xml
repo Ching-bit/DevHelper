@@ -1,0 +1,18 @@
+<ArrayOfPluginInfo>
+    <PluginInfo>
+        <Assembly>Plugin.AppEnv</Assembly>
+        <Name>AppEnv</Name>
+    </PluginInfo>
+    <PluginInfo>
+        <Assembly>Plugin.AppEnv</Assembly>
+        <Name>GlobalSetting</Name>
+    </PluginInfo>
+    <PluginInfo>
+        <Assembly>Plugin.Log</Assembly>
+        <Name>Log</Name>
+    </PluginInfo>
+    <PluginInfo>
+        <Assembly>Plugin.DevData</Assembly>
+        <Name>DevData</Name>
+    </PluginInfo>
+</ArrayOfPluginInfo>

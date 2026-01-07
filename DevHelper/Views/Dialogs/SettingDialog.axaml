@@ -1,0 +1,33 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="UniClient.SettingDialog">
+    
+    <UserControl.Resources>
+        <frw:LanguageConst x:Key="LanguageConst"/>
+        <frw:ThemeConst x:Key="ThemeConst"/>
+    </UserControl.Resources>
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding Setting}">
+        <StackPanel Classes="Common">
+            <HeaderedContentControl Header="{DynamicResource R_STR_LANGUAGE}" Classes="Common">
+                <ComboBox
+                    Classes="Common"
+                    ItemsSource="{StaticResource LanguageConst}"
+                    SelectedValueBinding="{Binding Key}"
+                    SelectedValue="{Binding Setting.Language}"/>
+            </HeaderedContentControl>
+            
+            <HeaderedContentControl Header="{DynamicResource R_STR_THEME}" Classes="Common">
+                <ComboBox
+                    Classes="Common"
+                    ItemsSource="{StaticResource ThemeConst}"
+                    SelectedValueBinding="{Binding Key}"
+                    SelectedValue="{Binding Setting.Theme}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>

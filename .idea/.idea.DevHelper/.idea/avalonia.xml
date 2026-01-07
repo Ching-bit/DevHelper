@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Control.Basic/ControlResources.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Resources/Lang/LangResources.en.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Resources/Styles/BasicStyles.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Dialogs/SettingDialog.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/DataDictionaryView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/HomeView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/LoginView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/MainView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/TitleBarLeftView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="DevHelper/Views/Panels/TitleBarRightView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/ColumnsView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/DataDictView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/TableView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/Views/ColumnsView.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/Views/Dialogs/ColumnDialog.axaml" value="DevHelper/DevHelper.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Control.Basic">
+    
+    <local:BoolAndConverter x:Key="BoolAndConverter"/>
+    <local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+    <local:IsValueInConverter x:Key="IsValueInConverter"/>
+    <local:NumberEqualsConverter x:Key="NumberEqualsConverter"/>
+    <local:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
+    <local:SubStringConverter x:Key="SubStringConverter"/>
+    
+</ResourceDictionary>

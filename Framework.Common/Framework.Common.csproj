@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Attributes.Avalonia" Version="1.0.2" />
+      <PackageReference Include="Avalonia" Version="11.3.9" />
+      <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
+      <PackageReference Include="Avalonia.Diagnostics" Version="11.3.9" />
+      <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.9" />
+      <PackageReference Include="Avalonia.Markup.Xaml.Loader" Version="11.3.9" />
+      <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.9" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Dock.Avalonia" Version="11.3.8" />
+      <PackageReference Include="Dock.Avalonia.Themes.Fluent" Version="11.3.8" />
+      <PackageReference Include="Dock.Avalonia.Themes.Simple" Version="11.3.8" />
+      <PackageReference Include="Dock.Model.Avalonia" Version="11.3.8" />
+      <PackageReference Include="Dock.Model.Mvvm" Version="11.3.8" />
+      <PackageReference Include="Irihi.Ursa" Version="1.14.0" />
+      <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.14.0" />
+      <PackageReference Include="NLog" Version="6.0.6" />
+      <PackageReference Include="Semi.Avalonia" Version="11.3.7.1" />
+      <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.1" />
+      <PackageReference Include="Semi.Avalonia.Dock" Version="11.3.6.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Framework.Utils\Framework.Utils.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+Key,en,zht,zhs
+R_STR_USERNAME,User Name,賬號,账号
+R_STR_PASSWORD,Password,密碼,密码
+R_STR_LOGIN,Login,登錄,登录
+R_STR_AUTO_LOGIN,Auto Login,自動登錄,自动登录
+R_STR_REMEMBER_ME,Remember Me,記住帳號,记住账号
+R_STR_OK,OK,確定,确定
+R_STR_CANCEL,Cancel,取消,取消
+R_STR_SETTING,Setting,設置,设置
+R_STR_LANGUAGE,Language,語言,语言
+R_STR_THEME,Theme,主題,主题
+R_STR_TEST_DELAY,Test Delay,測試延時,测试延时
+R_STR_CONN_NAME,Name,名稱,名称
+R_STR_ADDRESS,Address,地址,地址
+R_STR_DELAY_MS,Delay(ms),延時(ms),延时(ms)
+R_STR_CHANGE_CONN_NOTICE,The client will disconnect and reconnect to the server if you change the connection. Continue?,若改變連接地址客戶端將斷開重連，是否繼續？,若改变连接地址客户端将断开重连，是否继续？
+R_STR_NEW_VERSION_RELEASED,A new version released. Please Update.,新版本已發佈，請更新,新版本已发布，请更新
+R_STR_UPDATE_FAILED_NOTICE,Failed to update the client. Continue?,更新客戶端失敗，是否繼續？,更新客户端失败，是否继续？
+R_STR_MENU,Menu,菜單,菜单
+R_STR_HOMEPAGE,Home,主頁,主页
+R_STR_DEMO,Demo,示例,示例
+R_STR_TEST,Test,測試,测试
+R_STR_COLUMNS,Columns,字段,字段
+R_STR_TABLES,Tables,表,表
+R_STR_SAVE,Save,保存,保存
+R_STR_RESTORE,Restore,還原,还原
+R_STR_ADD,Add,新增,新增
+R_STR_MODIFY,Modify,修改,修改
+R_STR_DELETE,Delete,刪除,删除
+R_STR_NAME,Name,名稱,名称
+R_STR_DESCRIPTION,Description,說明,说明
+R_STR_TYPE,Type,類型,类型
+R_STR_LENGTH,Length,長度,长度
+R_STR_SCALE,Scale,標度,标度
+R_STR_DATA_DICT,Data Dictionary,數據字典,数据字典
+R_STR_REMARK,Remark,備註,备注
+R_STR_GROUP,Group,分類,分类
+R_STR_NEW_ADD,New...,新增...,新增...

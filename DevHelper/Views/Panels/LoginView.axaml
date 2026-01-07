@@ -1,0 +1,54 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    x:Class="UniClient.LoginView">
+    
+    <StackPanel Classes="Common">
+        <!-- User Name -->
+        <StackPanel Classes="Common" Orientation="Horizontal">
+            <PathIcon Data="{StaticResource SemiIconUserStroked}" Classes="Common Large"/>
+            <TextBox Watermark="{DynamicResource R_STR_USERNAME}" Classes="Common ClearButton"
+                     Text="{Binding Username}"/>
+        </StackPanel>
+        
+        <!-- Password -->
+        <StackPanel Classes="Common" Orientation="Horizontal">
+            <PathIcon Data="{StaticResource SemiIconKeyStroked}" Classes="Common Large"/>
+            <TextBox Watermark="{DynamicResource R_STR_PASSWORD}" Classes="Common ClearButton RevealPasswordButton"
+                     Text="{Binding Password}"/>
+        </StackPanel>
+        
+        <!-- Auto-login and Remember Me -->
+        <StackPanel Classes="Common" Orientation="Horizontal" HorizontalAlignment="Left">
+            <CheckBox Content="{DynamicResource R_STR_AUTO_LOGIN}"
+                      IsVisible="{Binding CanAutoLogin}"
+                      IsChecked="{Binding IsAutoLogin}"
+                      Classes="Common"/>
+            <CheckBox Content="{DynamicResource R_STR_REMEMBER_ME}"
+                      IsChecked="{Binding IsRememberAccount}"
+                      Classes="Common"/>
+        </StackPanel>
+        
+        <!-- Login Button -->
+        <Button Content="{DynamicResource R_STR_LOGIN}"
+                Classes="Common Primary" Margin="0,20,0,5"
+                Command="{Binding LoginCommand}"/>
+        
+        <!-- Error Message -->
+        <TextBlock Text="{Binding ErrMsg}" TextWrapping="Wrap" Margin="0,10,0,0"/>
+        
+        <!-- Update Progress -->
+        <ProgressBar Minimum="0" Maximum="{Binding UpdateFileCount}"
+                     Value="{Binding DownloadedFileCount}"
+                     IsVisible="{Binding IsLogining}">
+            <ProgressBar.IsIndeterminate>
+                <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                    <Binding Path="IsLogining"/>
+                    <Binding Path="IsUpdating" Converter="{StaticResource BoolReverseConverter}"/>
+                </MultiBinding>
+            </ProgressBar.IsIndeterminate>
+        </ProgressBar>
+    </StackPanel>
+    
+</frw:UniPanel>

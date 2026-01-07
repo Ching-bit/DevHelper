@@ -1,0 +1,44 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <system:String x:Key="R_STR_USERNAME">User Name</system:String>
+    <system:String x:Key="R_STR_PASSWORD">Password</system:String>
+    <system:String x:Key="R_STR_LOGIN">Login</system:String>
+    <system:String x:Key="R_STR_AUTO_LOGIN">Auto Login</system:String>
+    <system:String x:Key="R_STR_REMEMBER_ME">Remember Me</system:String>
+    <system:String x:Key="R_STR_OK">OK</system:String>
+    <system:String x:Key="R_STR_CANCEL">Cancel</system:String>
+    <system:String x:Key="R_STR_SETTING">Setting</system:String>
+    <system:String x:Key="R_STR_LANGUAGE">Language</system:String>
+    <system:String x:Key="R_STR_THEME">Theme</system:String>
+    <system:String x:Key="R_STR_TEST_DELAY">Test Delay</system:String>
+    <system:String x:Key="R_STR_CONN_NAME">Name</system:String>
+    <system:String x:Key="R_STR_ADDRESS">Address</system:String>
+    <system:String x:Key="R_STR_DELAY_MS">Delay(ms)</system:String>
+    <system:String x:Key="R_STR_CHANGE_CONN_NOTICE">The client will disconnect and reconnect to the server if you change the connection. Continue?</system:String>
+    <system:String x:Key="R_STR_NEW_VERSION_RELEASED">A new version released. Please Update.</system:String>
+    <system:String x:Key="R_STR_UPDATE_FAILED_NOTICE">Failed to update the client. Continue?</system:String>
+    <system:String x:Key="R_STR_MENU">Menu</system:String>
+    <system:String x:Key="R_STR_HOMEPAGE">Home</system:String>
+    <system:String x:Key="R_STR_DEMO">Demo</system:String>
+    <system:String x:Key="R_STR_TEST">Test</system:String>
+    <system:String x:Key="R_STR_COLUMNS">Columns</system:String>
+    <system:String x:Key="R_STR_TABLES">Tables</system:String>
+    <system:String x:Key="R_STR_SAVE">Save</system:String>
+    <system:String x:Key="R_STR_RESTORE">Restore</system:String>
+    <system:String x:Key="R_STR_ADD">Add</system:String>
+    <system:String x:Key="R_STR_MODIFY">Modify</system:String>
+    <system:String x:Key="R_STR_DELETE">Delete</system:String>
+    <system:String x:Key="R_STR_NAME">Name</system:String>
+    <system:String x:Key="R_STR_DESCRIPTION">Description</system:String>
+    <system:String x:Key="R_STR_TYPE">Type</system:String>
+    <system:String x:Key="R_STR_LENGTH">Length</system:String>
+    <system:String x:Key="R_STR_SCALE">Scale</system:String>
+    <system:String x:Key="R_STR_DATA_DICT">Data Dictionary</system:String>
+    <system:String x:Key="R_STR_REMARK">Remark</system:String>
+    <system:String x:Key="R_STR_GROUP">Group</system:String>
+    <system:String x:Key="R_STR_NEW_ADD">New...</system:String>
+
+</ResourceDictionary>

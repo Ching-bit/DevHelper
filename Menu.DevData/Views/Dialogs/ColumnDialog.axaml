@@ -1,0 +1,50 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="Menu.DevData.ColumnDialog">
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding ColumnInfoModel}">
+        <StackPanel Classes="Common">
+            <!-- Group -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_GROUP}" Classes="Common">
+                <StackPanel Classes="Common">
+                    <ComboBox x:Name="ComboBoxGroup" Classes="Common"
+                              ItemsSource="{Binding ColumnGroups}"
+                              SelectedIndex="{Binding SelectedGroupIndex}"/>
+                    <TextBox Classes="Common" Text="{Binding GroupName}"
+                             IsVisible="{Binding ElementName=ComboBoxGroup, Path=SelectedIndex, Converter={StaticResource NumberEqualsConverter}, ConverterParameter=0}"/>
+                </StackPanel>
+            </HeaderedContentControl>
+            <!-- Name -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_NAME}" Classes="Common">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Name}"/>
+            </HeaderedContentControl>
+            <!-- Description -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_DESCRIPTION}" Classes="Common">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Description}"/>
+            </HeaderedContentControl>
+            <!-- Type -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_TYPE}" Classes="Common">
+                <ComboBox Classes="Common" x:Name="ComboBoxType"
+                          ItemsSource="{Binding ColumnTypes}"
+                          SelectedItem="{Binding ColumnInfoModel.Type}"/>
+            </HeaderedContentControl>
+            <!-- Length -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_LENGTH}" Classes="Common"
+                                    IsVisible="{Binding ElementName=ComboBoxType, Path=SelectedItem, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|String}">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Length}"/>
+            </HeaderedContentControl>
+            <!-- Scale -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_SCALE}" Classes="Common"
+                                    IsVisible="{Binding ElementName=ComboBoxType, Path=SelectedItem, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number}">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Scale}"/>
+            </HeaderedContentControl>
+            <!-- Remark -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_REMARK}" Classes="Common">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Remark}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>

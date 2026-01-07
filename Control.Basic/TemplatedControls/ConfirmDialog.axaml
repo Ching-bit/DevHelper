@@ -1,0 +1,53 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Control.Basic">
+    <Design.PreviewWith>
+        <local:ConfirmDialog />
+    </Design.PreviewWith>
+    
+    <Styles.Resources>
+        <local:ConfirmDialogButtonContentConverter x:Key="ConfirmDialogButtonContentConverter"/>
+        <local:BoolReverseConverter x:Key="BoolReverseConverter"/>
+    </Styles.Resources>
+
+    <Style Selector="local|ConfirmDialog">
+        <Setter Property="Margin" Value="10,50,10,10"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Vertical">
+                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- OK Button -->
+                        <Button
+                            Classes="Common Primary"
+                            Command="{Binding OkCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Button.Content>
+                                <MultiBinding Converter="{StaticResource ConfirmDialogButtonContentConverter}">
+                                    <Binding Path="OkButtonText" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="IsAutoClick" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="IsOkDefault" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="AutoClickSeconds" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </Button.Content>
+                        </Button>
+                        <!-- Cancel Button -->
+                        <Button
+                            Classes="Common Warning"
+                            IsVisible="{Binding IsCancelButtonVisible, RelativeSource={RelativeSource TemplatedParent}}"
+                            Command="{Binding CancelCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Button.Content>
+                                <MultiBinding Converter="{StaticResource ConfirmDialogButtonContentConverter}">
+                                    <Binding Path="CancelButtonText" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="IsAutoClick" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="IsOkDefault" RelativeSource="{RelativeSource TemplatedParent}"
+                                             Converter="{StaticResource BoolReverseConverter}"/>
+                                    <Binding Path="AutoClickSeconds" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

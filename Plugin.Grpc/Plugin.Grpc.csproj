@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Framework.Common\Framework.Common.csproj" />
+      <ProjectReference Include="..\Plugin.AppEnv\Plugin.AppEnv.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.33.2" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+    </ItemGroup>
+
+</Project>

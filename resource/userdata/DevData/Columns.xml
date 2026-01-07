@@ -1,0 +1,24 @@
+<ArrayOfColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>1</Id>
+        <Name>order_qty</Name>
+        <Description>訂單數量</Description>
+        <Type>Int64</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <DictId></DictId>
+        <Remark>數量</Remark>
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>2</Id>
+        <Name>order_price</Name>
+        <Description>訂單價格</Description>
+        <Type>Int64</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <DictId></DictId>
+        <Remark>價格</Remark>
+    </ColumnInfo>
+</ArrayOfColumnInfo>
