@@ -38,7 +38,11 @@
     <system:String x:Key="R_STR_SCALE">標度</system:String>
     <system:String x:Key="R_STR_DATA_DICT">數據字典</system:String>
     <system:String x:Key="R_STR_REMARK">備註</system:String>
-    <system:String x:Key="R_STR_GROUP">分類</system:String>
+    <system:String x:Key="R_STR_GROUP">分組</system:String>
     <system:String x:Key="R_STR_NEW_ADD">新增...</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">請選擇字段</system:String>
+    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">確認刪除以下字段？</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">保存失敗</system:String>
 
 </ResourceDictionary>

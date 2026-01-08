@@ -4,6 +4,8 @@
     <option name="projectPerEditor">
       <map>
         <entry key="Control.Basic/ControlResources.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Control.Basic/ControlStyles.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Control.Basic/UserControls/MessageDialog.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="DevHelper/Resources/Lang/LangResources.en.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="DevHelper/Resources/Styles/BasicStyles.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="DevHelper/Views/Dialogs/SettingDialog.axaml" value="DevHelper/DevHelper.csproj" />

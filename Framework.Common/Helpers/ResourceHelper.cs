@@ -5,11 +5,20 @@ namespace Framework.Common;
 
 public static class ResourceHelper
 {
-    public static string FindStringResource(string resourceName, string? defaultValue = null)
+    public static object? FindResource(string resourceName)
     {
         if (null == Application.Current ||
-            !Application.Current.TryFindResource(resourceName, out object? value) ||
-            value is not string ret)
+            !Application.Current.TryFindResource(resourceName, out object? value))
+        {
+            return null;
+        }
+
+        return value;
+    }
+    
+    public static string FindStringResource(string resourceName, string? defaultValue = null)
+    {
+        if (FindResource(resourceName) is not string ret)
         {
             return defaultValue ?? resourceName;
         }

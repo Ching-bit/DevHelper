@@ -40,5 +40,9 @@
     <system:String x:Key="R_STR_REMARK">Remark</system:String>
     <system:String x:Key="R_STR_GROUP">Group</system:String>
     <system:String x:Key="R_STR_NEW_ADD">New...</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">Please select a column.</system:String>
+    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
 
 </ResourceDictionary>

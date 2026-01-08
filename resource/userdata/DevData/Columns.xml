@@ -7,7 +7,7 @@
         <Type>Int64</Type>
         <Length>0</Length>
         <Scale>0</Scale>
-        <DictId></DictId>
+        <DataDict></DataDict>
         <Remark>數量</Remark>
     </ColumnInfo>
     <ColumnInfo>
@@ -18,7 +18,7 @@
         <Type>Int64</Type>
         <Length>0</Length>
         <Scale>0</Scale>
-        <DictId></DictId>
+        <DataDict></DataDict>
         <Remark>價格</Remark>
     </ColumnInfo>
 </ArrayOfColumnInfo>

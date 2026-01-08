@@ -1,11 +1,17 @@
 <UserControl
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ursa="https://irihi.tech/ursa"
     xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    xmlns:pdata="clr-namespace:Plugin.DevData;assembly=Plugin.DevData"
     x:Class="Menu.DevData.ColumnDialog">
     
     <ctrl:ConfirmDialog ReturnParameter="{Binding ColumnInfoModel}">
         <StackPanel Classes="Common">
+            <!-- ID -->
+            <HeaderedContentControl Header="ID" Classes="Common">
+                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Id}" IsEnabled="False"/>
+            </HeaderedContentControl>
             <!-- Group -->
             <HeaderedContentControl Header="{DynamicResource R_STR_GROUP}" Classes="Common">
                 <StackPanel Classes="Common">
@@ -26,19 +32,21 @@
             </HeaderedContentControl>
             <!-- Type -->
             <HeaderedContentControl Header="{DynamicResource R_STR_TYPE}" Classes="Common">
-                <ComboBox Classes="Common" x:Name="ComboBoxType"
-                          ItemsSource="{Binding ColumnTypes}"
-                          SelectedItem="{Binding ColumnInfoModel.Type}"/>
+                <ursa:EnumSelector Classes="Common" x:Name="SelectorType"
+                                   EnumType="{x:Type pdata:ColumnType}"
+                                   Value="{Binding ColumnInfoModel.Type}"/>
             </HeaderedContentControl>
             <!-- Length -->
             <HeaderedContentControl Header="{DynamicResource R_STR_LENGTH}" Classes="Common"
-                                    IsVisible="{Binding ElementName=ComboBoxType, Path=SelectedItem, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|String}">
-                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Length}"/>
+                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|String}">
+                <NumericUpDown Classes="Common" FormatString="N0" Minimum="1" x:Name="NumericBoxLength"
+                               Value="{Binding ColumnInfoModel.Length}"/>
             </HeaderedContentControl>
             <!-- Scale -->
             <HeaderedContentControl Header="{DynamicResource R_STR_SCALE}" Classes="Common"
-                                    IsVisible="{Binding ElementName=ComboBoxType, Path=SelectedItem, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number}">
-                <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Scale}"/>
+                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number}">
+                <NumericUpDown Classes="Common" FormatString="N0" Minimum="0" x:Name="NumericBoxScale"
+                               Value="{Binding ColumnInfoModel.Scale}"/>
             </HeaderedContentControl>
             <!-- Remark -->
             <HeaderedContentControl Header="{DynamicResource R_STR_REMARK}" Classes="Common">

@@ -13,6 +13,8 @@ internal static class ViewModelLocator
         }
 
         view.DataContext ??= vm;
+        view.Loaded -= vm.OnLoaded;
+        view.Loaded += vm.OnLoaded;
         
         vm.View = view;
         return true;

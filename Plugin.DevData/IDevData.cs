@@ -4,7 +4,6 @@ namespace Plugin.DevData;
 
 public interface IDevData : IPlugin
 {
-    public Dictionary<string, DictSet> DictSets { get; }
-    public List<ColumnInfo> Columns { get; }
+    public List<ColumnInfo> Columns { get; set; }
     public Dictionary<string, List<TableInfo>> Tables { get; }
 }

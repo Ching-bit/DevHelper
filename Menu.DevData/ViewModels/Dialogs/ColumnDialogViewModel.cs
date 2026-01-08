@@ -3,7 +3,7 @@ using Control.Basic;
 using Framework.Common;
 using Plugin.DevData;
 
-namespace Menu.DevData.Dialogs;
+namespace Menu.DevData;
 
 public partial class ColumnDialogViewModel : ConfirmDialogViewModel
 {
@@ -12,6 +12,12 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
         ColumnInfoModel = new ColumnInfoModel();
         SelectedGroupIndex = 1;
         GroupName = string.Empty;
+
+        ColumnGroups =
+        [
+            ResourceHelper.FindStringResource("R_STR_NEW_ADD", "New..."),
+            ColumnInfo.DEFAULT_COLUMN_NAME
+        ];
         
         OnConfirmEvent -= OnConfirm;
         OnConfirmEvent += OnConfirm;
@@ -19,29 +25,7 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
     
 
     #region Item Sources
-    public List<string> ColumnGroups
-    {
-        get
-        {
-            List<string> columnGroups =
-            [
-                ResourceHelper.FindStringResource("R_STR_NEW_ADD", "New..."),
-                "Default"
-            ];
-
-            foreach (ColumnInfo item in Global.Get<IDevData>().Columns)
-            {
-                if (!columnGroups.Contains(item.Group))
-                {
-                    columnGroups.Add(item.Group);
-                }
-            }
-            
-            return columnGroups;
-        }
-    }
-    
-    public static Array ColumnTypes => Enum.GetValues(typeof(ColumnType));
+    public List<string> ColumnGroups { get; }
     #endregion
     
     
@@ -53,4 +37,6 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
     {
         ColumnInfoModel.Group = 0 == SelectedGroupIndex ? GroupName : ColumnGroups[SelectedGroupIndex];
     }
+
+
 }
