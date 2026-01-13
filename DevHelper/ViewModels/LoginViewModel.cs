@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -193,23 +192,7 @@ public partial class LoginViewModel : UniViewModel
                         SystemConfig.AppConf.UpdatePassword,
                         this))
                 {
-                    ConfirmDialogResult? result =
-                        await Dialog.ShowCustomModal<ConfirmDialogResult>(
-                            new MessageDialog
-                            {
-                                Message = ResourceHelper.FindStringResource("R_STR_UPDATE_FAILED_NOTICE"),
-                                IsAutoClick = true,
-                                IsOkDefault = false
-                            },
-                            new ConfirmDialogViewModel(),
-                            options: new DialogOptions
-                            {
-                                Mode = DialogMode.Warning,
-                                CanDragMove = true,
-                                IsCloseButtonVisible = true,
-                                CanResize = false
-                            });
-                    if (false == result?.IsConfirmed)
+                    if (!await MessageDialog.Show("R_STR_UPDATE_FAILED_NOTICE", isAutoClick: true))
                     {
                         Global.Get<IAppEnv>().User = null;
                         return;

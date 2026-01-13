@@ -7,6 +7,7 @@
     x:Class="Menu.DevData.ColumnsView">
     
     <frw:UniMenu.Resources>
+        <local:ColumnDataDictTooltipConverter x:Key="ColumnDataDictTooltipConverter"/>
         <local:ColumnLengthDisplayConverter x:Key="ColumnLengthDisplayConverter"/>
         <local:ColumnScaleDisplayConverter x:Key="ColumnScaleDisplayConverter"/>
         <local:ColumnModifyStatusToColourConverter x:Key="ColumnModifyStatusToColourConverter"/>
@@ -32,7 +33,8 @@
         <DataGrid Grid.Row="1" x:Name="DataGridColumns"
                   ItemsSource="{Binding ColumnListView}"
                   SelectedItem="{Binding SelectedColumn}"
-                  SelectionMode="Extended">
+                  SelectionMode="Extended"
+                  CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <!-- ID -->
                 <ctrl:BindableDataGridTextColumn
@@ -83,11 +85,22 @@
                     </DataGridTextColumn.Binding>
                 </ctrl:BindableDataGridTextColumn>
                 <!-- DataDict -->
-                <ctrl:BindableDataGridTextColumn
-                    Header="{DynamicResource R_STR_DATA_DICT}"
-                    Binding="{Binding DataDict}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
-                    IsReadOnly="True" Width="300"/>
+                <DataGridTemplateColumn Header="{DynamicResource R_STR_DATA_DICT}" Width="300">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,50">
+                                <TextBlock Grid.Column="0" Text="{Binding DataDict}"
+                                           Foreground="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                                           ToolTip.Tip="{Binding DataDict, Converter={StaticResource ColumnDataDictTooltipConverter}}"/>
+                                <Button Grid.Column="1" Classes="Small" Content="{DynamicResource R_STR_EDIT}"
+                                        Command="{Binding DataContext.EditColumnDataDictionaryCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        HorizontalAlignment="Right"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <!-- Remark -->
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_REMARK}"

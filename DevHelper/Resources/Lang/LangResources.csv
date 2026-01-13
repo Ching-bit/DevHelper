@@ -27,6 +27,7 @@ R_STR_RESTORE,Restore,還原,还原
 R_STR_ADD,Add,新增,新增
 R_STR_MODIFY,Modify,修改,修改
 R_STR_DELETE,Delete,刪除,删除
+R_STR_EDIT,Edit,編輯,编辑
 R_STR_NAME,Name,名稱,名称
 R_STR_DESCRIPTION,Description,說明,说明
 R_STR_TYPE,Type,類型,类型
@@ -40,3 +41,5 @@ R_STR_SELECT_EMPTY_COLUMNS_NOTICE,Please select a column.,請選擇字段,请选
 R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
 R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
 R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
+R_STR_VALUE,Value,值,值
+R_STR_MEANING,Meaning,含意,含意

@@ -31,6 +31,7 @@
     <system:String x:Key="R_STR_ADD">新增</system:String>
     <system:String x:Key="R_STR_MODIFY">修改</system:String>
     <system:String x:Key="R_STR_DELETE">删除</system:String>
+    <system:String x:Key="R_STR_EDIT">编辑</system:String>
     <system:String x:Key="R_STR_NAME">名称</system:String>
     <system:String x:Key="R_STR_DESCRIPTION">说明</system:String>
     <system:String x:Key="R_STR_TYPE">类型</system:String>
@@ -44,5 +45,7 @@
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
     <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
     <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
+    <system:String x:Key="R_STR_VALUE">值</system:String>
+    <system:String x:Key="R_STR_MEANING">含意</system:String>
 
 </ResourceDictionary>

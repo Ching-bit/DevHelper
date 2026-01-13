@@ -1,13 +1,11 @@
 using System.Collections.ObjectModel;
 using Avalonia.Collections;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Control.Basic;
 using Framework.Common;
 using Framework.Utils.Helpers;
 using Plugin.DevData;
-using Ursa.Controls;
 
 namespace Menu.DevData;
 
@@ -20,10 +18,7 @@ public partial class ColumnsViewModel : UniViewModel
         ColumnListView = new DataGridCollectionView(ColumnList);
         ColumnListView.GroupDescriptions.Add(new DataGridPathGroupDescription(nameof(ColumnInfo.Group)));
         IsColumnChanged = false;
-    }
-
-    public override void OnLoaded(object? sender, RoutedEventArgs e)
-    {
+        
         InitData();
     }
 
@@ -34,6 +29,7 @@ public partial class ColumnsViewModel : UniViewModel
         {
             ColumnList.Add(new ColumnInfoModel(columnInfo));
         }
+        ColumnListView.Refresh();
         IsColumnChanged = false;
     }
     #endregion
@@ -61,63 +57,27 @@ public partial class ColumnsViewModel : UniViewModel
         try
         {
             Global.Get<IDevData>().Columns = columns;
-            await Dialog.ShowCustomModal<ConfirmDialogResult>(
-                new MessageDialog
-                {
-                    Message = ResourceHelper.FindStringResource("R_STR_SAVE_SUCCESS"),
-                    IsAutoClick = true,
-                    IsCancelButtonVisible = false
-                },
-                new ConfirmDialogViewModel(),
-                options: new DialogOptions
-                {
-                    Mode = DialogMode.Warning,
-                    CanDragMove = true,
-                    IsCloseButtonVisible = true,
-                    CanResize = false
-                });
-            
+            await MessageDialog.Show("R_STR_SAVE_SUCCESS", true);
             InitData();
         }
         catch (Exception)
         {
-            await Dialog.ShowCustomModal<ConfirmDialogResult>(
-                new MessageDialog
-                {
-                    Message = ResourceHelper.FindStringResource("R_STR_SAVE_FAILED"),
-                    IsCancelButtonVisible = false
-                },
-                new ConfirmDialogViewModel(),
-                options: new DialogOptions
-                {
-                    Mode = DialogMode.Warning,
-                    CanDragMove = true,
-                    IsCloseButtonVisible = true,
-                    CanResize = false
-                });
+            await MessageDialog.Show("R_STR_SAVE_FAILED");
         }
-        
-
-        
     }
 
     [RelayCommand]
     private void Restore()
     {
         InitData();
-        IsColumnChanged = false;
     }
     
     [RelayCommand]
     private async Task AddColumn()
     {
-        ColumnDialogViewModel vm = new();
-        vm.ColumnGroups.AddRange(GetAllColumnGroups());
-        vm.ColumnInfoModel.ModifyStatus = ModifyStatus.Added;
-        vm.ColumnInfoModel.Id = ColumnList.Max(x => x.Id) + 1;
-        
-        ConfirmDialogResult? result = await Dialog.ShowCustomModal<ColumnDialog, ColumnDialogViewModel, ConfirmDialogResult>(vm);
-        if (true != result?.IsConfirmed)
+        ColumnDialogViewModel vm = new(null, GetAllColumnGroups(), ColumnList.Max(x => x.Id) + 1);
+        ConfirmDialogResult result = await ConfirmDialog.Show<ColumnDialog>(vm);
+        if (!result.IsConfirmed)
         {
             return;
         }
@@ -133,31 +93,14 @@ public partial class ColumnsViewModel : UniViewModel
         // not select any column
         if (null == SelectedColumn)
         {
-            await Dialog.ShowCustomModal<ConfirmDialogResult>(
-                new MessageDialog
-                {
-                    Message = ResourceHelper.FindStringResource("R_STR_SELECT_EMPTY_COLUMNS_NOTICE"),
-                    IsAutoClick = true,
-                    IsCancelButtonVisible = false
-                },
-                new ConfirmDialogViewModel(),
-                options: new DialogOptions
-                {
-                    Mode = DialogMode.Warning,
-                    CanDragMove = true,
-                    IsCloseButtonVisible = true,
-                    CanResize = false
-                });
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMNS_NOTICE", true);
             return;
         }
         
         // modifying dialog
-        ColumnDialogViewModel vm = new();
-        vm.ColumnGroups.AddRange(GetAllColumnGroups());
-        ObjectHelper.Copy(vm.ColumnInfoModel, SelectedColumn);
-        vm.ColumnInfoModel.ModifyStatus = ModifyStatus.Modified;
-        ConfirmDialogResult? result = await Dialog.ShowCustomModal<ColumnDialog, ColumnDialogViewModel, ConfirmDialogResult>(vm);
-        if (true != result?.IsConfirmed)
+        ColumnDialogViewModel vm = new(SelectedColumn, GetAllColumnGroups());
+        ConfirmDialogResult result = await ConfirmDialog.Show<ColumnDialog>(vm);
+        if (!result.IsConfirmed)
         {
             return;
         }
@@ -192,41 +135,17 @@ public partial class ColumnsViewModel : UniViewModel
         // not select any column
         if (selectedColumns.Count <= 0)
         {
-            await Dialog.ShowCustomModal<ConfirmDialogResult>(
-                new MessageDialog
-                {
-                    Message = ResourceHelper.FindStringResource("R_STR_SELECT_EMPTY_COLUMNS_NOTICE"),
-                    IsAutoClick = true,
-                    IsCancelButtonVisible = false
-                },
-                new ConfirmDialogViewModel(),
-                options: new DialogOptions
-                {
-                    Mode = DialogMode.Warning,
-                    CanDragMove = true,
-                    IsCloseButtonVisible = true,
-                    CanResize = false
-                });
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMNS_NOTICE", true);
             return;
         }
         
         // confirm
-        ConfirmDialogResult? confirmResult = await Dialog.ShowCustomModal<ConfirmDialogResult>(
-            new MessageDialog
-            {
-                Message = ResourceHelper.FindStringResource("R_STR_DELETE_COLUMNS_CONFIRM_NOTICE") +
-                          Environment.NewLine +
-                          string.Join(Environment.NewLine, selectedColumns.Select(x => $"{x.Id}: {x.Name}({x.Description})"))
-            },
-            new ConfirmDialogViewModel(),
-            options: new DialogOptions
-            {
-                Mode = DialogMode.Warning,
-                CanDragMove = true,
-                IsCloseButtonVisible = true,
-                CanResize = false
-            });
-        if (true != confirmResult?.IsConfirmed)
+        bool isConfirmed = await MessageDialog.Show(
+            ResourceHelper.FindStringResource("R_STR_DELETE_COLUMNS_CONFIRM_NOTICE") +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, selectedColumns.Select(x => $"{x.Id}: {x.Name}({x.Description})")),
+            isCancelButtonVisible: true);
+        if (!isConfirmed)
         {
             return;
         }
@@ -236,6 +155,29 @@ public partial class ColumnsViewModel : UniViewModel
         {
             columnInfoModel.ModifyStatus = ModifyStatus.Deleted;
         }
+        IsColumnChanged = true;
+    }
+    
+    [RelayCommand]
+    private async Task EditColumnDataDictionary(ColumnInfoModel columnInfoModel)
+    {
+        ConfirmDialogResult result =
+            await ConfirmDialog.Show<DataDictionaryDialog>(
+                new DataDictionaryDialogViewModel(columnInfoModel.DataDict));
+        if (!result.IsConfirmed)
+        {
+            return;
+        }
+
+        ObservableCollection<DataDictionaryItemModel> dataDictionaryItems = (ObservableCollection<DataDictionaryItemModel>)result.ReturnParameter!;
+        string dataDictString = DataDictionaryDialogViewModel.DictToString(dataDictionaryItems.ToList());
+        if (columnInfoModel.DataDict.Equals(dataDictString))
+        {
+            return;
+        }
+
+        columnInfoModel.DataDict = dataDictString;
+        columnInfoModel.ModifyStatus = ModifyStatus.Modified;
         IsColumnChanged = true;
     }
     #endregion

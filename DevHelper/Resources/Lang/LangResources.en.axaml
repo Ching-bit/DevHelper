@@ -31,6 +31,7 @@
     <system:String x:Key="R_STR_ADD">Add</system:String>
     <system:String x:Key="R_STR_MODIFY">Modify</system:String>
     <system:String x:Key="R_STR_DELETE">Delete</system:String>
+    <system:String x:Key="R_STR_EDIT">Edit</system:String>
     <system:String x:Key="R_STR_NAME">Name</system:String>
     <system:String x:Key="R_STR_DESCRIPTION">Description</system:String>
     <system:String x:Key="R_STR_TYPE">Type</system:String>
@@ -44,5 +45,7 @@
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
     <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
     <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
+    <system:String x:Key="R_STR_VALUE">Value</system:String>
+    <system:String x:Key="R_STR_MEANING">Meaning</system:String>
 
 </ResourceDictionary>

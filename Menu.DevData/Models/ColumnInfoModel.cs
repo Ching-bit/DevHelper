@@ -37,7 +37,6 @@ public partial class ColumnInfoModel : UniModel
 
 
     #region Properties
-
     [ObservableProperty] private ModifyStatus _modifyStatus;
     
     [ObservableProperty] private string _group;
@@ -49,55 +48,64 @@ public partial class ColumnInfoModel : UniModel
     [ObservableProperty] private int _scale;
     [ObservableProperty] private string _dataDict;
     [ObservableProperty] private string _remark;
-    #endregion
     
-
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (nameof(Length) == e.PropertyName)
+        switch (e.PropertyName)
         {
-            if (ColumnType.Number == Type)
+            case nameof(Length):
             {
-                Length = Math.Min(Length, 38);                  // Number(m, n), m <= 38
-                Scale = Math.Min(Scale, Math.Min(Length, 30));  // n <= 30, n <= m
+                if (ColumnType.Number == Type)
+                {
+                    Length = Math.Min(Length, 38);                  // Number(m, n), m <= 38
+                    Scale = Math.Min(Scale, Math.Min(Length, 30));  // n <= 30, n <= m
+                }
+                else if (ColumnType.Char == Type)
+                {
+                    Length = Math.Min(Length, 255);     // Char(m), m <= 255
+                }
+                else if (ColumnType.String == Type)
+                {
+                    Length = Math.Min(Length, 4000);    // String(m), m <= 4000
+                }
+
+                break;
             }
-            else if (ColumnType.Char == Type)
+            case nameof(Scale):
             {
-                Length = Math.Min(Length, 255);     // Char(m), m <= 255
+                if (ColumnType.Number == Type)
+                {
+                    Scale = Math.Min(Scale, Math.Min(Length, 30));   // Number(m, n), n <= 30, n <= m
+                }
+
+                break;
             }
-            else if (ColumnType.String == Type)
+            case nameof(Type):
             {
-                Length = Math.Min(Length, 4000);    // String(m), m <= 4000
-            }
-        }
-        else if (nameof(Scale) == e.PropertyName)
-        {
-            if (ColumnType.Number == Type)
-            {
-                Scale = Math.Min(Scale, Math.Min(Length, 30));   // Number(m, n), n <= 30, n <= m
-            }
-        }
-        else if (nameof(Type) == e.PropertyName)
-        {
-            // init value
-            if (ColumnType.Number == Type)
-            {
-                Length = 38;
-                Scale = 0;
-            }
-            else if (ColumnType.Char == Type)
-            {
-                Length = 255;
-                Scale = 0;
-            }
-            else if (ColumnType.String == Type)
-            {
-                Length = 4000;
-                Scale = 0;
+                // init value
+                if (ColumnType.Number == Type)
+                {
+                    Length = 38;
+                    Scale = 0;
+                }
+                else if (ColumnType.Char == Type)
+                {
+                    Length = 255;
+                    Scale = 0;
+                }
+                else if (ColumnType.String == Type)
+                {
+                    Length = 4000;
+                    Scale = 0;
+                }
+
+                break;
             }
         }
     }
+    #endregion
+    
 
     public ColumnInfo GetColumnInfo()
     {
@@ -130,4 +138,5 @@ public partial class ColumnInfoModel : UniModel
 
         return columnInfo;
     }
+    
 }

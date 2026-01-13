@@ -34,6 +34,8 @@
       <PackageReference Include="Semi.Avalonia" Version="11.3.7.1" />
       <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.1" />
       <PackageReference Include="Semi.Avalonia.Dock" Version="11.3.6.2" />
+      <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.9.2" />
+      <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.9.2" />
     </ItemGroup>
 
     <ItemGroup>

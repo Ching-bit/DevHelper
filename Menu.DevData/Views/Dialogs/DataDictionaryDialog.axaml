@@ -1,0 +1,47 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="Menu.DevData.DataDictionaryDialog">
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding DataDictionaryItems}">
+        <StackPanel Orientation="Horizontal">
+            <DataGrid x:Name="DataGridDataDictionary"
+                      ItemsSource="{Binding DataDictionaryItems, UpdateSourceTrigger=PropertyChanged}"
+                      SelectionMode="Extended" Height="400">
+                <DataGrid.Columns>
+                    <!-- Empty column for selecting -->
+                    <DataGridTextColumn Width="40" IsReadOnly="True"/>
+                    <!-- Value -->
+                    <DataGridTemplateColumn
+                        Header="{DynamicResource R_STR_VALUE}" Width="100"
+                        CanUserReorder="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Value}"
+                                         Watermark="{DynamicResource R_STR_VALUE}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Meaning -->
+                    <DataGridTemplateColumn
+                        Header="{DynamicResource R_STR_MEANING}" Width="300">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Meaning}"
+                                         Watermark="{DynamicResource R_STR_MEANING}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Vertical">
+                <Button Classes="Common Success" Content="{DynamicResource R_STR_ADD}"
+                        Command="{Binding AddCommand}"/>
+                <Button Classes="Common Danger" Content="{DynamicResource R_STR_DELETE}"
+                        Command="{Binding DeleteCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>
