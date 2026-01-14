@@ -1,9 +1,17 @@
 namespace Plugin.DevData;
 
-public class TableInfo
+public class TableInfo : FileNode
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; }  = string.Empty;
-    public List<ColumnInfo> Columns { get; set; } = [];
-    public List<IndexInfo> Indexes { get; set; } = [];
+    public List<int> ColumnIdList { get; set; } = [];
+    public List<IndexInfo> IndexList { get; set; } = [];
+
+    public override void FromFile()
+    {
+        // TODO
+    }
+
+    public override void ToFile()
+    {
+        // TODO
+    }
 }

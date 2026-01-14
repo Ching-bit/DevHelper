@@ -55,9 +55,10 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
     [ObservableProperty] private int _selectedGroupIndex;
     [ObservableProperty] private string _groupName;
 
-    private void OnConfirm()
+    private bool OnConfirm()
     {
         ColumnInfoModel.Group = 0 == SelectedGroupIndex ? GroupName : ColumnGroups[SelectedGroupIndex];
+        return true;
     }
     
 }

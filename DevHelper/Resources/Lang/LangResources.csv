@@ -43,3 +43,5 @@ R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
 R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
 R_STR_VALUE,Value,值,值
 R_STR_MEANING,Meaning,含意,含意
+R_STR_ADD_GROUP,Add Group,新增分組,新增分组
+R_STR_GROUP_EXIST_NOTICE,The group already exists,分組已存在,分组已存在

@@ -29,7 +29,7 @@ public partial class MainView : UniPanel
         }
         
         // register language changed
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
         {
             if (null == MenuDock.VisibleDockables)
             {
@@ -49,7 +49,7 @@ public partial class MainView : UniPanel
         });
         
         // Menu OnInit()
-        MenuDock.Factory.DockableAdded += (o, args) =>
+        MenuDock.Factory.DockableAdded += (_, args) =>
         {
             if (args.Dockable is not Document doc ||
                 doc.Content is not UniMenu menu)
@@ -63,7 +63,7 @@ public partial class MainView : UniPanel
         };
 
         // Menu OnShown()
-        MenuDock.Factory.FocusedDockableChanged += (o, args) =>
+        MenuDock.Factory.FocusedDockableChanged += (_, args) =>
         {
             if (args.Dockable is not Document doc)
             {
@@ -96,7 +96,7 @@ public partial class MainView : UniPanel
         };
         
         // Menu OnClosing()
-        MenuDock.Factory.DockableClosing += (o, args) =>
+        MenuDock.Factory.DockableClosing += (_, args) =>
         {
             if (args.Dockable is not Document doc ||
                 doc.Content is not UniMenu menu)
@@ -110,7 +110,7 @@ public partial class MainView : UniPanel
         };
 
         // Menu OnClosed()
-        MenuDock.Factory.DockableClosed += (o, args) =>
+        MenuDock.Factory.DockableClosed += (_, args) =>
         {
             if (args.Dockable is not Document doc ||
                 doc.Content is not UniMenu menu)
@@ -180,4 +180,5 @@ public partial class MainView : UniPanel
         
         MenuDock.AddDocument(doc);
     }
+
 }

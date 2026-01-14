@@ -47,5 +47,7 @@
     <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
     <system:String x:Key="R_STR_VALUE">Value</system:String>
     <system:String x:Key="R_STR_MEANING">Meaning</system:String>
+    <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
+    <system:String x:Key="R_STR_GROUP_EXIST_NOTICE">The group already exists</system:String>
 
 </ResourceDictionary>

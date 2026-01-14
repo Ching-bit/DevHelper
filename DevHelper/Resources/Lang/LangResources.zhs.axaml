@@ -47,5 +47,7 @@
     <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
     <system:String x:Key="R_STR_VALUE">值</system:String>
     <system:String x:Key="R_STR_MEANING">含意</system:String>
+    <system:String x:Key="R_STR_ADD_GROUP">新增分组</system:String>
+    <system:String x:Key="R_STR_GROUP_EXIST_NOTICE">分组已存在</system:String>
 
 </ResourceDictionary>

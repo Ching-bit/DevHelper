@@ -1,19 +1,15 @@
 <frw:UniPanel
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="using:Avalonia.Xaml.Interactivity"
-    xmlns:ia="using:Avalonia.Xaml.Interactions.Core"
     xmlns:ursa="https://irihi.tech/ursa"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
     xmlns:local="clr-namespace:UniClient"
     x:Class="UniClient.MainView"
     x:Name="This">
     
-    <Design.DataContext>
-        <local:MainViewModel/>
-    </Design.DataContext>
+    <frw:UniPanel.Resources>
+        <local:NavContextMenuDisplayConverter x:Key="NavContextMenuDisplayConverter"/>
+    </frw:UniPanel.Resources>
     
     <Grid ColumnDefinitions="Auto,*">
         <!-- Left Nav -->
@@ -26,7 +22,6 @@
                 DataContext="{Binding ElementName=This, Path=DataContext}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                ExpandWidth="180"
                 CollapseWidth="35"
                 IsHorizontalCollapsed="False"
                 ItemsSource="{Binding Menus}"
@@ -61,6 +56,34 @@
                         </Border>
                     </DataTemplate>
                 </ursa:NavMenu.IconTemplate>
+                
+                <!-- Right Click Menu -->
+                <ursa:NavMenu.Styles>
+                    <Style Selector="ursa|NavMenuItem">
+                        <Setter Property="ContextMenu">
+                            <MultiBinding Converter="{StaticResource NavContextMenuDisplayConverter}">
+                                <Binding Path="IsAddGroupVisible"/>
+                                <Binding Path="IsAddVisible"/>
+                                <Binding Path="IsModifyVisible"/>
+                                <Binding Path="IsDeleteVisible"/>
+                                <MultiBinding.ConverterParameter>
+                                    <ContextMenu>
+                                        <MenuItem Header="{DynamicResource R_STR_ADD_GROUP}"
+                                                  IsVisible="{Binding IsAddGroupVisible}"
+                                                  Command="{Binding #This.DataContext.AddGroupCommand}"
+                                                  CommandParameter="{Binding}"/>
+                                        <MenuItem Header="{DynamicResource R_STR_ADD}"
+                                                  IsVisible="{Binding IsAddVisible}"/>
+                                        <MenuItem Header="{DynamicResource R_STR_MODIFY}"
+                                                  IsVisible="{Binding IsModifyVisible}"/>
+                                        <MenuItem Header="{DynamicResource R_STR_DELETE}"
+                                                  IsVisible="{Binding IsDeleteVisible}"/>
+                                    </ContextMenu>
+                                </MultiBinding.ConverterParameter>
+                            </MultiBinding>
+                        </Setter>
+                    </Style>
+                </ursa:NavMenu.Styles>
             </ursa:NavMenu>
         </Border>
         

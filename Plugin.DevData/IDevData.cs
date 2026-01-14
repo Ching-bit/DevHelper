@@ -4,6 +4,13 @@ namespace Plugin.DevData;
 
 public interface IDevData : IPlugin
 {
-    public List<ColumnInfo> Columns { get; set; }
-    public Dictionary<string, List<TableInfo>> Tables { get; }
+    public List<ColumnInfo> Columns { get; }
+    public DirectoryNode<TableInfo> TableRoot { get; }
+
+    public bool AddColumn(ColumnInfo columnInfo);
+    public bool RemoveColumn(int id);
+    public bool ModifyColumn(ColumnInfo columnInfo);
+    public bool SaveColumns();
+    
+    public bool AddTableGroup(DirectoryNode<TableInfo> directory, string groupName, string groupDescription, out DirectoryNode<TableInfo>? node);
 }

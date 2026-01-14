@@ -4,5 +4,5 @@ public class IndexInfo
 {
     public string Name { get; set; } = string.Empty;
     public IndexType Type { get; set; }
-    public List<string> ColumnList { get; } = [];
+    public List<int> ColumnIdList { get; } = [];
 }

@@ -46,23 +46,22 @@ public partial class ColumnsViewModel : UniViewModel
     #region Commands
 
     [RelayCommand]
-    private async Task Save()
+    private void Save()
     {
         // remove deleted columns
         List<ColumnInfoModel> columnModels = ColumnList.Where(x => ModifyStatus.Deleted != x.ModifyStatus).ToList();
         
         // sync to plugin and save
-        List<ColumnInfo> columns = [];
-        columns.AddRange(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()));
-        try
+        Global.Get<IDevData>().Columns.Clear();
+        Global.Get<IDevData>().Columns.AddRange(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()));
+        if (Global.Get<IDevData>().SaveColumns())
         {
-            Global.Get<IDevData>().Columns = columns;
-            await MessageDialog.Show("R_STR_SAVE_SUCCESS", true);
+            MessageDialog.Show("R_STR_SAVE_SUCCESS", true).Wait();
             InitData();
         }
-        catch (Exception)
+        else
         {
-            await MessageDialog.Show("R_STR_SAVE_FAILED");
+            MessageDialog.Show("R_STR_SAVE_FAILED").Wait();
         }
     }
 

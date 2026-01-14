@@ -1,0 +1,20 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="Menu.DevData.AddItemDialog">
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding AddItemModel}">
+        <StackPanel Classes="Common">
+            <HeaderedContentControl Header="{DynamicResource R_STR_NAME}" Classes="Common">
+                <TextBox Watermark="{DynamicResource R_STR_NAME}" Classes="Common"
+                         Text="{Binding AddItemModel.Name}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_DESCRIPTION}" Classes="Common">
+                <TextBox Watermark="{DynamicResource R_STR_DESCRIPTION}" Classes="Common"
+                         Text="{Binding AddItemModel.Description}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>
