@@ -38,22 +38,52 @@
                         ursa:NavMenu.CanToggle="True"/>
                 </ursa:NavMenu.Header>
                 <ursa:NavMenu.IconTemplate>
-                    <DataTemplate DataType="{x:Type frw:MenuConf}">
-                        <Border Theme="{DynamicResource CardBorder}"
-                                Padding="2" Margin="0" MinHeight="25" MinWidth="25">
-                            <Border.IsVisible>
-                                <MultiBinding Converter="{StaticResource BoolAndConverter}">
-                                    <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed"/>
-                                    <Binding Path="MenuLevel" Converter="{StaticResource NumberEqualsConverter}" ConverterParameter='1'/>
-                                </MultiBinding>
-                            </Border.IsVisible>
-                            <TextBlock
-                                Text="{Binding Name, Converter={StaticResource SubStringConverter}, ConverterParameter='0,1'}"
-                                FontSize="14"
-                                FontWeight="Bold"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"/>
-                        </Border>
+                    <DataTemplate DataType="{x:Type local:MenuConfModel}">
+                        <StackPanel>
+                            <!-- Columns menu icon -->
+                            <PathIcon Data="{StaticResource SemiIconGridSquare}" Classes="Common">
+                                <PathIcon.IsVisible>
+                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
+                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="Columns"/>
+                                    </MultiBinding>
+                                </PathIcon.IsVisible>
+                            </PathIcon>
+                            <!-- Tables menu icon -->
+                            <PathIcon Data="{StaticResource SemiIconServer}" Classes="Common">
+                                <PathIcon.IsVisible>
+                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
+                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="Tables"/>
+                                    </MultiBinding>
+                                </PathIcon.IsVisible>
+                            </PathIcon>
+                            <!-- Group menu icon -->
+                            <PathIcon Data="{StaticResource SemiIconFolderStroked}" Classes="Common">
+                                <PathIcon.IsVisible>
+                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
+                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="TableGroup"/>
+                                    </MultiBinding>
+                                </PathIcon.IsVisible>
+                            </PathIcon>
+                            <!-- icon when collapsed -->
+                            <Border Theme="{DynamicResource CardBorder}"
+                                    Padding="2" Margin="0" MinHeight="25" MinWidth="25">
+                                <Border.IsVisible>
+                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
+                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed"/>
+                                        <Binding Path="MenuLevel" Converter="{StaticResource NumberEqualsConverter}" ConverterParameter='1'/>
+                                    </MultiBinding>
+                                </Border.IsVisible>
+                                <TextBlock
+                                    Text="{Binding Name, Converter={StaticResource SubStringConverter}, ConverterParameter='0,1'}"
+                                    FontSize="14"
+                                    FontWeight="Bold"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
                     </DataTemplate>
                 </ursa:NavMenu.IconTemplate>
                 
