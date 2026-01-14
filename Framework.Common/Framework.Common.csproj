@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Attributes.Avalonia" Version="1.0.2" />
+      <PackageReference Include="Attributes.Avalonia" Version="1.0.3" />
       <PackageReference Include="Avalonia" Version="11.3.9" />
       <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
       <PackageReference Include="Avalonia.Diagnostics" Version="11.3.9" />
@@ -28,11 +28,11 @@
       <PackageReference Include="Dock.Avalonia.Themes.Simple" Version="11.3.8" />
       <PackageReference Include="Dock.Model.Avalonia" Version="11.3.8" />
       <PackageReference Include="Dock.Model.Mvvm" Version="11.3.8" />
-      <PackageReference Include="Irihi.Ursa" Version="1.14.0" />
-      <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.14.0" />
+      <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
+      <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.14.1" />
       <PackageReference Include="NLog" Version="6.0.6" />
-      <PackageReference Include="Semi.Avalonia" Version="11.3.7.1" />
-      <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.1" />
+      <PackageReference Include="Semi.Avalonia" Version="11.3.7.2" />
+      <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.2" />
       <PackageReference Include="Semi.Avalonia.Dock" Version="11.3.6.2" />
       <PackageReference Include="Xaml.Behaviors.Interactions" Version="11.3.9.2" />
       <PackageReference Include="Xaml.Behaviors.Interactivity" Version="11.3.9.2" />

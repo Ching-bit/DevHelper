@@ -1,3 +1,5 @@
+using Framework.Utils.Helpers;
+
 namespace Plugin.DevData;
 
 public class TableInfo : FileNode
@@ -5,13 +7,14 @@ public class TableInfo : FileNode
     public List<int> ColumnIdList { get; set; } = [];
     public List<IndexInfo> IndexList { get; set; } = [];
 
-    public override void FromFile()
+    public override bool FromFile()
     {
         // TODO
+        return true;
     }
 
-    public override void ToFile()
+    public override bool ToFile()
     {
-        // TODO
+        return ObjectHelper.ToXml(ConfigFilePath, this);
     }
 }

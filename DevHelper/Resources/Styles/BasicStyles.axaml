@@ -19,6 +19,7 @@
         <Setter Property="Theme" Value="{DynamicResource InnerPathIcon}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0"/>
     </Style>
     
     <!-- Text Input -->

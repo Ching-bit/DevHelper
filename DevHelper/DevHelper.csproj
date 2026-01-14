@@ -49,7 +49,7 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="xcopy /e /y /c &quot;$(SolutionDir)resource&quot; &quot;$(TargetDir)&quot;" />
+      <Exec Command="xcopy /e /y /c &quot;$(SolutionDir)resource&quot; &quot;$(TargetDir)&quot;&#xA;rd /s /q &quot;$(TargetDir)cs&quot; &quot;$(TargetDir)de&quot; &quot;$(TargetDir)es&quot; &quot;$(TargetDir)fr&quot; &quot;$(TargetDir)it&quot; &quot;$(TargetDir)ja&quot; &quot;$(TargetDir)ko&quot; &quot;$(TargetDir)pl&quot; &quot;$(TargetDir)pt-BR&quot; &quot;$(TargetDir)ru&quot; &quot;$(TargetDir)tr&quot; &quot;$(TargetDir)zh-Hans&quot; &quot;$(TargetDir)zh-Hant&quot;" />
     </Target>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

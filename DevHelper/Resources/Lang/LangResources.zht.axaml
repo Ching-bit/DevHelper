@@ -48,6 +48,8 @@
     <system:String x:Key="R_STR_VALUE">值</system:String>
     <system:String x:Key="R_STR_MEANING">含意</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">新增分組</system:String>
-    <system:String x:Key="R_STR_GROUP_EXIST_NOTICE">分組已存在</system:String>
+    <system:String x:Key="R_STR_ADD_FAILED">新增失敗</system:String>
+    <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分組名稱已存在</system:String>
+    <system:String x:Key="R_STR_TABLE_NAME_EXIST_NOTICE">表名已存在</system:String>
 
 </ResourceDictionary>

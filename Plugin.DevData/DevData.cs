@@ -75,9 +75,9 @@ public class DevData : IDevData
     
 
     #region Table Methods
-    public bool AddTableGroup(DirectoryNode<TableInfo> directory, string groupName, string groupDescription, out DirectoryNode<TableInfo>? node)
+    public bool AddTableGroup(DirectoryNode<TableInfo> directory, string groupName, string groupDescription, out DirectoryNode<TableInfo>? createdDirectory)
     {
-        node = null;
+        createdDirectory = null;
         if (directory.SubDirectories.Any(x => x.Name.Equals(groupName)))
         {
             return false;
@@ -94,11 +94,37 @@ public class DevData : IDevData
             return false;
         }
 
-        node = new DirectoryNode<TableInfo>
+        createdDirectory = new DirectoryNode<TableInfo>
         {
             ConfigDirectory = groupDir
         };
-        directory.SubDirectories.Add(node);
+        directory.SubDirectories.Add(createdDirectory);
+        return true;
+    }
+
+    public bool AddTable(DirectoryNode<TableInfo> directory, string tableName, string tableDescription, out TableInfo? createdTable)
+    {
+        createdTable = null;
+        if (directory.Instances.Any(x => x.Name.Equals(tableName)))
+        {
+            return false;
+        }
+
+        string fileName = $"{tableName}@{tableDescription}.xml";
+        string filePath = Path.Combine(directory.ConfigDirectory, fileName);
+
+        // save an empty file
+        TableInfo tableInfo = new()
+        {
+            ConfigFilePath = filePath
+        };
+        if (!tableInfo.ToFile())
+        {
+            return false;
+        }
+        
+        directory.Instances.Add(tableInfo);
+        createdTable = tableInfo;
         return true;
     }
     #endregion

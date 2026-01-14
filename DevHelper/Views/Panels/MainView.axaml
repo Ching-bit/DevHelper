@@ -22,7 +22,7 @@
                 DataContext="{Binding ElementName=This, Path=DataContext}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                CollapseWidth="35"
+                CollapseWidth="50"
                 IsHorizontalCollapsed="False"
                 ItemsSource="{Binding Menus}"
                 SelectedItem="{Binding SelectedMenu}"
@@ -39,7 +39,7 @@
                 </ursa:NavMenu.Header>
                 <ursa:NavMenu.IconTemplate>
                     <DataTemplate DataType="{x:Type local:MenuConfModel}">
-                        <StackPanel>
+                        <Grid>
                             <!-- Columns menu icon -->
                             <PathIcon Data="{StaticResource SemiIconGridSquare}" Classes="Common">
                                 <PathIcon.IsVisible>
@@ -55,15 +55,6 @@
                                     <MultiBinding Converter="{StaticResource BoolAndConverter}">
                                         <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
                                         <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="Tables"/>
-                                    </MultiBinding>
-                                </PathIcon.IsVisible>
-                            </PathIcon>
-                            <!-- Group menu icon -->
-                            <PathIcon Data="{StaticResource SemiIconFolderStroked}" Classes="Common">
-                                <PathIcon.IsVisible>
-                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
-                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
-                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="TableGroup"/>
                                     </MultiBinding>
                                 </PathIcon.IsVisible>
                             </PathIcon>
@@ -83,7 +74,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"/>
                             </Border>
-                        </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </ursa:NavMenu.IconTemplate>
                 
@@ -103,7 +94,9 @@
                                                   Command="{Binding #This.DataContext.AddGroupCommand}"
                                                   CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_ADD}"
-                                                  IsVisible="{Binding IsAddVisible}"/>
+                                                  IsVisible="{Binding IsAddVisible}"
+                                                  Command="{Binding #This.DataContext.AddItemCommand}"
+                                                  CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_MODIFY}"
                                                   IsVisible="{Binding IsModifyVisible}"/>
                                         <MenuItem Header="{DynamicResource R_STR_DELETE}"

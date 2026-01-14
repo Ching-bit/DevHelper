@@ -23,6 +23,6 @@ public class FileNode
         }
     }
 
-    public virtual void FromFile() { }
-    public virtual void ToFile() { }
+    public virtual bool FromFile() => true;
+    public virtual bool ToFile() => true;
 }

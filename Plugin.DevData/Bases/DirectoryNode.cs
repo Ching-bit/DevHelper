@@ -22,7 +22,7 @@ public class DirectoryNode<T> where T : FileNode, new()
         {
             T item = new T
             {
-                ConfigFilePath = Path.Combine(dir, fileName)
+                ConfigFilePath = fileName
             };
             item.FromFile();
             node.Instances.Add(item);
@@ -33,7 +33,7 @@ public class DirectoryNode<T> where T : FileNode, new()
         {
             DirectoryNode<T> subNode = new()
             {
-                ConfigDirectory = Path.Combine(dir, subDir)
+                ConfigDirectory = subDir
             };
             subNode.ReadFiles();
             node.SubDirectories.Add(subNode);
