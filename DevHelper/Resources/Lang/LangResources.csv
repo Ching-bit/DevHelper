@@ -37,13 +37,14 @@ R_STR_DATA_DICT,Data Dictionary,數據字典,数据字典
 R_STR_REMARK,Remark,備註,备注
 R_STR_GROUP,Group,分組,分组
 R_STR_NEW_ADD,New...,新增...,新增...
-R_STR_SELECT_EMPTY_COLUMNS_NOTICE,Please select a column.,請選擇字段,请选择字段
-R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
-R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
-R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
 R_STR_VALUE,Value,值,值
 R_STR_MEANING,Meaning,含意,含意
 R_STR_ADD_GROUP,Add Group,新增分組,新增分组
 R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
 R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
 R_STR_TABLE_NAME_EXIST_NOTICE,The table name already exists,表名已存在,表名已存在
+R_STR_SELECT_EMPTY_COLUMNS_NOTICE,Please select a column.,請選擇字段,请选择字段
+R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
+R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete #?,確實要刪除 # 嗎？,确实要删除 # 吗？
+R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
+R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败

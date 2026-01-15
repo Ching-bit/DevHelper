@@ -8,6 +8,7 @@
     x:Name="This">
     
     <frw:UniPanel.Resources>
+        <local:MenuIconConverter x:Key="MenuIconConverter"/>
         <local:NavContextMenuDisplayConverter x:Key="NavContextMenuDisplayConverter"/>
     </frw:UniPanel.Resources>
     
@@ -23,12 +24,13 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 CollapseWidth="50"
+                ExpandWidth="240"
                 IsHorizontalCollapsed="False"
                 ItemsSource="{Binding Menus}"
                 SelectedItem="{Binding SelectedMenu}"
                 SubMenuBinding="{Binding SubMenus}"
                 HeaderBinding="{Binding Name}"
-                IconBinding="{Binding .}"
+                IconBinding="{Binding MenuType}"
                 Classes="enable_animation">
                 <ursa:NavMenu.Header>
                     <PathIcon
@@ -38,43 +40,8 @@
                         ursa:NavMenu.CanToggle="True"/>
                 </ursa:NavMenu.Header>
                 <ursa:NavMenu.IconTemplate>
-                    <DataTemplate DataType="{x:Type local:MenuConfModel}">
-                        <Grid>
-                            <!-- Columns menu icon -->
-                            <PathIcon Data="{StaticResource SemiIconGridSquare}" Classes="Common">
-                                <PathIcon.IsVisible>
-                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
-                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
-                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="Columns"/>
-                                    </MultiBinding>
-                                </PathIcon.IsVisible>
-                            </PathIcon>
-                            <!-- Tables menu icon -->
-                            <PathIcon Data="{StaticResource SemiIconServer}" Classes="Common">
-                                <PathIcon.IsVisible>
-                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
-                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed" Converter="{StaticResource BoolReverseConverter}"/>
-                                        <Binding Path="MenuType" Converter="{StaticResource IsValueInConverter}" ConverterParameter="Tables"/>
-                                    </MultiBinding>
-                                </PathIcon.IsVisible>
-                            </PathIcon>
-                            <!-- icon when collapsed -->
-                            <Border Theme="{DynamicResource CardBorder}"
-                                    Padding="2" Margin="0" MinHeight="25" MinWidth="25">
-                                <Border.IsVisible>
-                                    <MultiBinding Converter="{StaticResource BoolAndConverter}">
-                                        <Binding ElementName="NavMenu" Path="IsHorizontalCollapsed"/>
-                                        <Binding Path="MenuLevel" Converter="{StaticResource NumberEqualsConverter}" ConverterParameter='1'/>
-                                    </MultiBinding>
-                                </Border.IsVisible>
-                                <TextBlock
-                                    Text="{Binding Name, Converter={StaticResource SubStringConverter}, ConverterParameter='0,1'}"
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"/>
-                            </Border>
-                        </Grid>
+                    <DataTemplate DataType="{x:Type local:MenuType}">
+                        <PathIcon Data="{Binding Converter={StaticResource MenuIconConverter}}" Classes="Common"/>
                     </DataTemplate>
                 </ursa:NavMenu.IconTemplate>
                 
@@ -100,7 +67,9 @@
                                         <MenuItem Header="{DynamicResource R_STR_MODIFY}"
                                                   IsVisible="{Binding IsModifyVisible}"/>
                                         <MenuItem Header="{DynamicResource R_STR_DELETE}"
-                                                  IsVisible="{Binding IsDeleteVisible}"/>
+                                                  IsVisible="{Binding IsDeleteVisible}"
+                                                  Command="{Binding #This.DataContext.DeleteItemCommand}"
+                                                  CommandParameter="{Binding}"/>
                                     </ContextMenu>
                                 </MultiBinding.ConverterParameter>
                             </MultiBinding>

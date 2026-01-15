@@ -75,7 +75,7 @@ public class DevData : IDevData
     
 
     #region Table Methods
-    public bool AddTableGroup(DirectoryNode<TableInfo> directory, string groupName, string groupDescription, out DirectoryNode<TableInfo>? createdDirectory)
+    public bool AddGroup<T>(DirectoryNode<T> directory, string groupName, string groupDescription, out DirectoryNode<T>? createdDirectory) where T : FileNode, new()
     {
         createdDirectory = null;
         if (directory.SubDirectories.Any(x => x.Name.Equals(groupName)))
@@ -83,7 +83,7 @@ public class DevData : IDevData
             return false;
         }
 
-        string folderName = $"{groupName}@{groupDescription}";
+        string folderName = groupName + (string.IsNullOrEmpty(groupDescription) ? "" : $"@{groupDescription}");
         string groupDir = Path.Combine(directory.ConfigDirectory, folderName);
         try
         {
@@ -94,7 +94,7 @@ public class DevData : IDevData
             return false;
         }
 
-        createdDirectory = new DirectoryNode<TableInfo>
+        createdDirectory = new DirectoryNode<T>
         {
             ConfigDirectory = groupDir
         };
@@ -102,30 +102,68 @@ public class DevData : IDevData
         return true;
     }
 
-    public bool AddTable(DirectoryNode<TableInfo> directory, string tableName, string tableDescription, out TableInfo? createdTable)
+    public bool AddItem<T>(DirectoryNode<T> directory, string itemName, string itemDescription, out T? createdItem) where T : FileNode, new()
     {
-        createdTable = null;
-        if (directory.Instances.Any(x => x.Name.Equals(tableName)))
+        createdItem = null;
+        if (directory.Instances.Any(x => x.Name.Equals(itemName)))
         {
             return false;
         }
 
-        string fileName = $"{tableName}@{tableDescription}.xml";
+        string fileName = itemName + (string.IsNullOrEmpty(itemDescription) ? "" : $"@{itemDescription}") + ".xml";
         string filePath = Path.Combine(directory.ConfigDirectory, fileName);
 
         // save an empty file
-        TableInfo tableInfo = new()
+        T item = new()
         {
             ConfigFilePath = filePath
         };
-        if (!tableInfo.ToFile())
+        if (!item.ToFile())
         {
             return false;
         }
         
-        directory.Instances.Add(tableInfo);
-        createdTable = tableInfo;
+        directory.Instances.Add(item);
+        createdItem = item;
         return true;
+    }
+
+    public bool RemoveGroup<T>(DirectoryNode<T> parent, DirectoryNode<T> group) where T : FileNode, new()
+    {
+        if (!parent.SubDirectories.Contains(group))
+        {
+            return false;
+        }
+
+        try
+        {
+            Directory.Delete(group.ConfigDirectory, true);
+        }
+        catch
+        {
+            return false;
+        }
+        
+        return parent.SubDirectories.Remove(group);
+    }
+
+    public bool RemoveItem<T>(DirectoryNode<T> parent, T item) where T : FileNode, new()
+    {
+        if (!parent.Instances.Contains(item))
+        {
+            return false;
+        }
+
+        try
+        {
+            File.Delete(item.ConfigFilePath);
+        }
+        catch
+        {
+            return false;
+        }
+        
+        return parent.Instances.Remove(item);
     }
     #endregion
     

@@ -48,5 +48,6 @@ public partial class MenuConfModel : MenuConf
     [ObservableProperty] private bool _isModifyVisible;
     [ObservableProperty] private bool _isDeleteVisible;
     
+    public MenuConfModel? ParentMenu { get; set; }
     public object? Entity { get; set; }
 }

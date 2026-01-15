@@ -12,6 +12,8 @@ public interface IDevData : IPlugin
     public bool ModifyColumn(ColumnInfo columnInfo);
     public bool SaveColumns();
     
-    public bool AddTableGroup(DirectoryNode<TableInfo> directory, string groupName, string groupDescription, out DirectoryNode<TableInfo>? createdDirectory);
-    public bool AddTable(DirectoryNode<TableInfo> directory, string tableName, string tableDescription, out TableInfo? createdTable);
+    public bool AddGroup<T>(DirectoryNode<T> directory, string groupName, string groupDescription, out DirectoryNode<T>? createdDirectory) where T : FileNode, new();
+    public bool AddItem<T>(DirectoryNode<T> directory, string itemName, string itemDescription, out T? createdItem) where T : FileNode, new();
+    public bool RemoveGroup<T>(DirectoryNode<T> parent, DirectoryNode<T> group) where T : FileNode, new();
+    public bool RemoveItem<T>(DirectoryNode<T> parent, T item) where T : FileNode, new();
 }

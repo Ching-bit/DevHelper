@@ -111,7 +111,8 @@ public partial class MainViewModel : UniViewModel
     [RelayCommand]
     private async Task AddGroup(MenuConfModel menu)
     {
-        if (MenuType.Tables == menu.MenuType)
+        if (MenuType.Tables == menu.MenuType ||
+            MenuType.TableGroup == menu.MenuType)
         {
             if (menu.Entity is not DirectoryNode<TableInfo> directory)
             {
@@ -136,7 +137,7 @@ public partial class MainViewModel : UniViewModel
             }
 
             AddItemModel addItemModel = (AddItemModel)result.ReturnParameter!;
-            if (!Global.Get<IDevData>().AddTableGroup(directory, addItemModel.Name, addItemModel.Description, out DirectoryNode<TableInfo>? newDirectoryNode))
+            if (!Global.Get<IDevData>().AddGroup(directory, addItemModel.Name, addItemModel.Description, out DirectoryNode<TableInfo>? newDirectoryNode))
             {
                 ShowError("R_STR_ADD_FAILED");
                 return;
@@ -176,7 +177,7 @@ public partial class MainViewModel : UniViewModel
             }
 
             AddItemModel addItemModel = (AddItemModel)result.ReturnParameter!;
-            if (!Global.Get<IDevData>().AddTable(directory, addItemModel.Name, addItemModel.Description,
+            if (!Global.Get<IDevData>().AddItem(directory, addItemModel.Name, addItemModel.Description,
                     out TableInfo? tableInfo))
             {
                 ShowError("R_STR_ADD_FAILED");
@@ -184,6 +185,47 @@ public partial class MainViewModel : UniViewModel
             }
             
             AddMenu(menu, tableInfo!, typeof(TableView), MenuType.Table);
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeleteItem(MenuConfModel menu)
+    {
+        string noticeMsg = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE").Replace("#", menu.Name);
+        if (!await MessageDialog.Show(noticeMsg, isCancelButtonVisible: true))
+        {
+            return;
+        }
+        
+        if (MenuType.TableGroup == menu.MenuType)
+        {
+            // delete a table group
+            if (menu.Entity is not DirectoryNode<TableInfo> directory || menu.ParentMenu?.Entity is not DirectoryNode<TableInfo> parentDirectory)
+            {
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete a table group, but the selected menu or its parent menu doesn't have its target object");
+                return;
+            }
+
+            if (!Global.Get<IDevData>().RemoveGroup(parentDirectory, directory) ||
+                !RemoveMenu(menu))
+            {
+                ShowError("R_STR_ADD_FAILED");
+            }
+        }
+        else if (MenuType.Table == menu.MenuType)
+        {
+            // delete a table
+            if (menu.Entity is not TableInfo tableInfo || menu.ParentMenu?.Entity is not DirectoryNode<TableInfo> parentDirectory)
+            {
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete a table, but the selected menu or its parent menu doesn't have its target object");
+                return;
+            }
+
+            if (!Global.Get<IDevData>().RemoveItem(parentDirectory, tableInfo) ||
+                !RemoveMenu(menu))
+            {
+                ShowError("R_STR_ADD_FAILED");
+            }
         }
     }
     #endregion
@@ -222,6 +264,7 @@ public partial class MainViewModel : UniViewModel
         {
             Id = $"{parent.Id}_{instance.Name}",
             ParentId = parent.Id,
+            ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
             Name = $"{instance.Name}" +
                    (string.IsNullOrEmpty(instance.Description) ? "" : $" ({instance.Description})"),
@@ -240,6 +283,7 @@ public partial class MainViewModel : UniViewModel
         {
             Id = $"{parent.Id}_{directoryNode.Name}",
             ParentId = parent.Id,
+            ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
             Name = $"{directoryNode.Name}" + (string.IsNullOrEmpty(directoryNode.Description) ? "" : $" ({directoryNode.Description})"),
             MenuType = menuType,
@@ -247,6 +291,16 @@ public partial class MainViewModel : UniViewModel
         };
         parent.SubMenus.Add(subMenu);
         return subMenu;
+    }
+
+    private bool RemoveMenu(MenuConfModel menu)
+    {
+        if (null == menu.ParentMenu)
+        {
+            return false;
+        }
+
+        return menu.ParentMenu.SubMenus.Remove(menu);
     }
     #endregion
     

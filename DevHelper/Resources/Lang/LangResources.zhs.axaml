@@ -41,15 +41,16 @@
     <system:String x:Key="R_STR_REMARK">备注</system:String>
     <system:String x:Key="R_STR_GROUP">分组</system:String>
     <system:String x:Key="R_STR_NEW_ADD">新增...</system:String>
-    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">请选择字段</system:String>
-    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
-    <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
-    <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
     <system:String x:Key="R_STR_VALUE">值</system:String>
     <system:String x:Key="R_STR_MEANING">含意</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">新增分组</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失败</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分组名称已存在</system:String>
     <system:String x:Key="R_STR_TABLE_NAME_EXIST_NOTICE">表名已存在</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">请选择字段</system:String>
+    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
+    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确实要删除 # 吗？</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
 
 </ResourceDictionary>
