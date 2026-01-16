@@ -50,18 +50,6 @@ public partial class MenuConfModel : MenuConf
     
     public MenuConfModel? ParentMenu { get; set; }
     public object? Entity { get; set; }
-
-    private Type? _viewType;
-    public Type? ViewType
-    {
-        get => _viewType;
-        set
-        {
-            _viewType = value;
-            Assembly = value?.Assembly.GetName().Name ?? string.Empty;
-            ViewName = value?.Name ?? string.Empty;
-        }
-    }
-    
+    public Type? LeafViewType { get; set; }
     public Type? LeafEntityType { get; set; }
 }

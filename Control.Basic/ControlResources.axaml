@@ -3,6 +3,7 @@
                     xmlns:local="clr-namespace:Control.Basic">
     
     <local:BoolAndConverter x:Key="BoolAndConverter"/>
+    <local:BoolOrConverter x:Key="BoolOrConverter"/>
     <local:BoolReverseConverter x:Key="BoolReverseConverter"/>
     <local:IsValueInConverter x:Key="IsValueInConverter"/>
     <local:NumberEqualsConverter x:Key="NumberEqualsConverter"/>

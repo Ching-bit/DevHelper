@@ -46,7 +46,9 @@ public partial class MainViewModel : UniViewModel
             MenuLevel = 1,
             MenuType = MenuType.TopItem,
             Entity = null,
-            ViewType = typeof(ColumnsView),
+            LeafViewType = typeof(ColumnsView),
+            Assembly = typeof(ColumnsView).Assembly.GetName().Name ?? string.Empty,
+            ViewName = nameof(ColumnsView),
             LeafEntityType = typeof(ColumnInfo)
         });
         
@@ -58,7 +60,7 @@ public partial class MainViewModel : UniViewModel
             MenuLevel = 1,
             MenuType = MenuType.TopGroup,
             Entity = Global.Get<IDevData>().TableRoot,
-            ViewType = typeof(TableView),
+            LeafViewType = typeof(TableView),
             LeafEntityType = typeof(TableInfo)
         };
         Menus.Add(tableMenu);
@@ -358,7 +360,9 @@ public partial class MainViewModel : UniViewModel
             Name = instance.MenuName,
             MenuType = menuType,
             Entity = instance,
-            ViewType = parent.ViewType,
+            LeafViewType = parent.LeafViewType,
+            Assembly = parent.LeafViewType?.Assembly.GetName().Name ?? string.Empty,
+            ViewName = parent.LeafViewType?.Name ?? string.Empty,
             LeafEntityType = instance.GetType()
         };
         parent.SubMenus.Add(menu);
@@ -382,7 +386,7 @@ public partial class MainViewModel : UniViewModel
             Name = directoryNode.MenuName,
             MenuType = menuType,
             Entity = directoryNode,
-            ViewType = parent.ViewType,
+            LeafViewType = parent.LeafViewType,
             LeafEntityType = parent.LeafEntityType
         };
         parent.SubMenus.Add(subMenu);

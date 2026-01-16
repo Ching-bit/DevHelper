@@ -9,12 +9,12 @@ public class MenuIconConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not MenuType menuType)
+        if (value is not MenuConfModel menuConfModel)
         {
             return null;
         }
 
-        return menuType switch
+        return menuConfModel.MenuType switch
         {
             MenuType.TopItem => ResourceHelper.FindResource("SemiIconGridSquare"),
             MenuType.TopGroup => ResourceHelper.FindResource("SemiIconServer"),

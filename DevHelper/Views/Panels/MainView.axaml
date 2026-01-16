@@ -30,7 +30,7 @@
                 SelectedItem="{Binding SelectedMenu}"
                 SubMenuBinding="{Binding SubMenus}"
                 HeaderBinding="{Binding Name}"
-                IconBinding="{Binding MenuType}"
+                IconBinding="{Binding }"
                 Classes="enable_animation">
                 <ursa:NavMenu.Header>
                     <PathIcon
@@ -40,7 +40,7 @@
                         ursa:NavMenu.CanToggle="True"/>
                 </ursa:NavMenu.Header>
                 <ursa:NavMenu.IconTemplate>
-                    <DataTemplate DataType="{x:Type local:MenuType}">
+                    <DataTemplate DataType="{x:Type local:MenuConfModel}">
                         <PathIcon Data="{Binding Converter={StaticResource MenuIconConverter}}" Classes="Common"/>
                     </DataTemplate>
                 </ursa:NavMenu.IconTemplate>
