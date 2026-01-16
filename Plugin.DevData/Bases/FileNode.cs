@@ -23,6 +23,8 @@ public class FileNode
         }
     }
 
+    public string MenuName => Name + (string.IsNullOrEmpty(Description) ? "" : $" ({Description})");
+
     public virtual bool FromFile() => true;
     public virtual bool ToFile() => true;
 }

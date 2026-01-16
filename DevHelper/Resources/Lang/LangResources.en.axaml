@@ -45,8 +45,10 @@
     <system:String x:Key="R_STR_MEANING">Meaning</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
+    <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
+    <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
-    <system:String x:Key="R_STR_TABLE_NAME_EXIST_NOTICE">The table name already exists</system:String>
+    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">Please select a column.</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete #?</system:String>

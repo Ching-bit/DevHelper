@@ -45,8 +45,10 @@
     <system:String x:Key="R_STR_MEANING">含意</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">新增分组</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失败</system:String>
+    <system:String x:Key="R_STR_DELETE_FAILED">删除失败</system:String>
+    <system:String x:Key="R_STR_MODIFY_FAILED">修改失败</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分组名称已存在</system:String>
-    <system:String x:Key="R_STR_TABLE_NAME_EXIST_NOTICE">表名已存在</system:String>
+    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名称已存在</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">请选择字段</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确实要删除 # 吗？</system:String>

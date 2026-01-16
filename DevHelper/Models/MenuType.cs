@@ -2,8 +2,8 @@ namespace UniClient;
 
 public enum MenuType
 {
-    Columns,
-    Tables,
-    TableGroup,
-    Table
+    TopItem,
+    TopGroup,
+    Group,
+    Item
 }

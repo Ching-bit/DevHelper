@@ -47,7 +47,7 @@ public partial class MainViewModel : UniViewModel
             MenuLevel = 1,
             Assembly = typeof(ColumnsView).Assembly.GetName().Name!,
             ViewName = nameof(ColumnsView),
-            MenuType = MenuType.Columns
+            MenuType = MenuType.TopItem
         });
         
         // table
@@ -56,25 +56,25 @@ public partial class MainViewModel : UniViewModel
             Id = "menu_table",
             ResourceName = "R_STR_TABLES",
             MenuLevel = 1,
-            MenuType = MenuType.Tables,
+            MenuType = MenuType.TopGroup,
             Entity = Global.Get<IDevData>().TableRoot
         };
         Menus.Add(tableMenu);
         
         // all tables
-        InitTableMenus(tableMenu, Global.Get<IDevData>().TableRoot);
+        InitMenusInner(tableMenu, Global.Get<IDevData>().TableRoot);
     }
 
-    private void InitTableMenus(MenuConfModel menu, DirectoryNode<TableInfo> tableRoot)
+    private void InitMenusInner(MenuConfModel menu, DirectoryNode root)
     {
-        foreach (DirectoryNode<TableInfo> subDirectory in tableRoot.SubDirectories)
+        foreach (DirectoryNode subDirectory in root.SubDirectories)
         {
-            MenuConfModel subMenu =AddGroupMenu(menu, subDirectory, MenuType.TableGroup);
-            InitTableMenus(subMenu, subDirectory);
+            MenuConfModel subMenu = AddGroupMenu(menu, subDirectory);
+            InitMenusInner(subMenu, subDirectory);
         }
-        foreach (TableInfo tableInfo in tableRoot.Instances)
+        foreach (FileNode fileNode in root.Instances)
         {
-            AddMenu(menu, tableInfo, typeof(TableView), MenuType.Table);
+            _ = AddItemMenu(menu, fileNode, typeof(TableView));
         }
     }
 
@@ -111,120 +111,201 @@ public partial class MainViewModel : UniViewModel
     [RelayCommand]
     private async Task AddGroup(MenuConfModel menu)
     {
-        if (MenuType.Tables == menu.MenuType ||
-            MenuType.TableGroup == menu.MenuType)
+        if (menu.Entity is not DirectoryNode directory)
         {
-            if (menu.Entity is not DirectoryNode<TableInfo> directory)
+            Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add a group, but the selected menu doesn't have its directory object");
+            return;
+        }
+
+        AddItemDialogViewModel vm = new();
+        vm.OnConfirmEvent += () =>
+        {
+            if (directory.SubDirectories.Any(subDirectory => subDirectory.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower())))
             {
-                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add a table group, but the selected menu doesn't have its directory object");
+                ShowError("R_STR_GROUP_NAME_EXIST_NOTICE");
+                return false;
+            }
+            return true;
+        };
+        ConfirmDialogResult result = await ConfirmDialog.Show<AddItemDialog>(vm);
+        if (!result.IsConfirmed)
+        {
+            return;
+        }
+
+        AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
+        if (!Global.Get<IDevData>().AddGroup(directory, itemModel.Name, itemModel.Description, out DirectoryNode? newDirectoryNode))
+        {
+            ShowError("R_STR_ADD_FAILED");
+            return;
+        }
+
+        AddGroupMenu(menu, newDirectoryNode!);
+    }
+
+    [RelayCommand]
+    private async Task AddItem(MenuConfModel menu)
+    {
+        if (menu.Entity is not DirectoryNode directory)
+        {
+            Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add an item, but the selected menu doesn't have its directory object");
+            return;
+        }
+            
+        AddItemDialogViewModel vm = new();
+        vm.OnConfirmEvent += () =>
+        {
+            if (directory.Instances.Any(instance => instance.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower())))
+            {
+                ShowError("R_STR_NAME_EXIST_NOTICE");
+                return false;
+            }
+            return true;
+        };
+        ConfirmDialogResult result = await ConfirmDialog.Show<AddItemDialog>(vm);
+        if (!result.IsConfirmed)
+        {
+            return;
+        }
+
+        AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
+        if (!Global.Get<IDevData>().AddItem(directory, itemModel.Name, itemModel.Description,
+                out TableInfo? tableInfo))
+        {
+            ShowError("R_STR_ADD_FAILED");
+            return;
+        }
+            
+        _ = AddItemMenu(menu, tableInfo!, typeof(TableView));
+    }
+
+    [RelayCommand]
+    private async Task ModifyItem(MenuConfModel menu)
+    {
+        if (MenuType.Group == menu.MenuType)
+        {
+            if (menu.Entity is not DirectoryNode directory || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
+            {
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to modify a group, but the selected menu or the parent menu doesn't have its directory object");
                 return;
             }
 
-            AddItemDialogViewModel vm = new();
+            AddItemDialogViewModel vm = new()
+            {
+                AddItemModel =
+                {
+                    Name = directory.Name,
+                    Description = directory.Description
+                }
+            };
             vm.OnConfirmEvent += () =>
             {
-                if (directory.SubDirectories.Any(subDirectory => subDirectory.Name.Equals(vm.AddItemModel.Name)))
+                if (parentDirectory.SubDirectories.Any(x => x.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower()) && !x.Name.Equals(directory.Name)))
                 {
                     ShowError("R_STR_GROUP_NAME_EXIST_NOTICE");
                     return false;
                 }
                 return true;
             };
+            
             ConfirmDialogResult result = await ConfirmDialog.Show<AddItemDialog>(vm);
             if (!result.IsConfirmed)
             {
                 return;
             }
 
-            AddItemModel addItemModel = (AddItemModel)result.ReturnParameter!;
-            if (!Global.Get<IDevData>().AddGroup(directory, addItemModel.Name, addItemModel.Description, out DirectoryNode<TableInfo>? newDirectoryNode))
+            AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
+            if (!Global.Get<IDevData>().ModifyGroup(directory, itemModel.Name, itemModel.Description))
             {
-                ShowError("R_STR_ADD_FAILED");
+                ShowError("R_STR_MODIFY_FAILED");
                 return;
             }
 
-            AddGroupMenu(menu, newDirectoryNode!, MenuType.TableGroup);
-        }
-    }
-
-    [RelayCommand]
-    private async Task AddItem(MenuConfModel menu)
-    {
-        if (MenuType.Tables == menu.MenuType ||
-            MenuType.TableGroup == menu.MenuType)
-        {
-            // add a table
-            if (menu.Entity is not DirectoryNode<TableInfo> directory)
-            {
-                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add a table, but the selected menu doesn't have its directory object");
-                return;
-            }
+            menu.Name = directory.MenuName;
             
-            AddItemDialogViewModel vm = new();
+        }
+        else if (MenuType.Item == menu.MenuType)
+        {
+            if (menu.Entity is not FileNode fileNode || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
+            {
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to modify an item, but the selected menu or the parent menu doesn't have its directory object");
+                return;
+            }
+
+            AddItemDialogViewModel vm = new()
+            {
+                AddItemModel =
+                {
+                    Name = fileNode.Name,
+                    Description = fileNode.Description
+                }
+            };
             vm.OnConfirmEvent += () =>
             {
-                if (directory.Instances.Any(instance => instance.Name.Equals(vm.AddItemModel.Name)))
+                if (parentDirectory.Instances.Any(x => x.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower()) && !x.Name.Equals(fileNode.Name)))
                 {
-                    ShowError("R_STR_TABLE_NAME_EXIST_NOTICE");
+                    ShowError("R_STR_NAME_EXIST_NOTICE");
                     return false;
                 }
                 return true;
             };
+            
             ConfirmDialogResult result = await ConfirmDialog.Show<AddItemDialog>(vm);
             if (!result.IsConfirmed)
             {
                 return;
             }
 
-            AddItemModel addItemModel = (AddItemModel)result.ReturnParameter!;
-            if (!Global.Get<IDevData>().AddItem(directory, addItemModel.Name, addItemModel.Description,
-                    out TableInfo? tableInfo))
+            AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
+            if (!Global.Get<IDevData>().ModifyItem(fileNode, itemModel.Name, itemModel.Description))
             {
-                ShowError("R_STR_ADD_FAILED");
+                ShowError("R_STR_MODIFY_FAILED");
                 return;
             }
-            
-            AddMenu(menu, tableInfo!, typeof(TableView), MenuType.Table);
+
+            menu.Name = fileNode.MenuName;
         }
+        
     }
 
     [RelayCommand]
     private async Task DeleteItem(MenuConfModel menu)
     {
+        // confirm dialog
         string noticeMsg = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE").Replace("#", menu.Name);
         if (!await MessageDialog.Show(noticeMsg, isCancelButtonVisible: true))
         {
             return;
         }
         
-        if (MenuType.TableGroup == menu.MenuType)
+        if (MenuType.Group == menu.MenuType)
         {
-            // delete a table group
-            if (menu.Entity is not DirectoryNode<TableInfo> directory || menu.ParentMenu?.Entity is not DirectoryNode<TableInfo> parentDirectory)
+            // delete a group
+            if (menu.Entity is not DirectoryNode directory || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
             {
-                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete a table group, but the selected menu or its parent menu doesn't have its target object");
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete a group, but the selected menu or its parent menu doesn't have its target object");
                 return;
             }
 
             if (!Global.Get<IDevData>().RemoveGroup(parentDirectory, directory) ||
                 !RemoveMenu(menu))
             {
-                ShowError("R_STR_ADD_FAILED");
+                ShowError("R_STR_DELETE_FAILED");
             }
         }
-        else if (MenuType.Table == menu.MenuType)
+        else if (MenuType.Item == menu.MenuType)
         {
-            // delete a table
-            if (menu.Entity is not TableInfo tableInfo || menu.ParentMenu?.Entity is not DirectoryNode<TableInfo> parentDirectory)
+            // delete an item
+            if (menu.Entity is not FileNode fileNode || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
             {
-                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete a table, but the selected menu or its parent menu doesn't have its target object");
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to delete an item, but the selected menu or its parent menu doesn't have its target object");
                 return;
             }
 
-            if (!Global.Get<IDevData>().RemoveItem(parentDirectory, tableInfo) ||
+            if (!Global.Get<IDevData>().RemoveItem(parentDirectory, fileNode) ||
                 !RemoveMenu(menu))
             {
-                ShowError("R_STR_ADD_FAILED");
+                ShowError("R_STR_DELETE_FAILED");
             }
         }
     }
@@ -258,16 +339,21 @@ public partial class MainViewModel : UniViewModel
         ((MainView)View).OpenMenu(SelectedMenu);
     }
 
-    private MenuConfModel AddMenu<T>(MenuConfModel parent, T instance, Type viewType, MenuType menuType) where T : FileNode, new()
+    private MenuConfModel AddItemMenu(MenuConfModel parent, FileNode instance, Type viewType)
     {
+        MenuType menuType = parent.MenuType switch
+        {
+            MenuType.TopGroup or MenuType.Group => MenuType.Item,
+            _ => throw new InvalidEnumArgumentException("")
+        };
+        
         MenuConfModel menu = new()
         {
             Id = $"{parent.Id}_{instance.Name}",
             ParentId = parent.Id,
             ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
-            Name = $"{instance.Name}" +
-                   (string.IsNullOrEmpty(instance.Description) ? "" : $" ({instance.Description})"),
+            Name = instance.MenuName,
             Assembly = viewType.Assembly.GetName().Name!,
             ViewName = viewType.Name,
             MenuType = menuType,
@@ -277,15 +363,21 @@ public partial class MainViewModel : UniViewModel
         return menu;
     }
 
-    private MenuConfModel AddGroupMenu<T>(MenuConfModel parent, DirectoryNode<T> directoryNode, MenuType menuType) where T : FileNode, new()
+    private MenuConfModel AddGroupMenu(MenuConfModel parent, DirectoryNode directoryNode)
     {
+        MenuType menuType = parent.MenuType switch
+        {
+            MenuType.TopGroup or MenuType.Group => MenuType.Group,
+            _ => throw new InvalidEnumArgumentException("")
+        };
+
         MenuConfModel subMenu = new MenuConfModel
         {
             Id = $"{parent.Id}_{directoryNode.Name}",
             ParentId = parent.Id,
             ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
-            Name = $"{directoryNode.Name}" + (string.IsNullOrEmpty(directoryNode.Description) ? "" : $" ({directoryNode.Description})"),
+            Name = directoryNode.MenuName,
             MenuType = menuType,
             Entity = directoryNode
         };

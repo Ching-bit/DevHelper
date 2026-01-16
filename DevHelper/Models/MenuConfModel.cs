@@ -15,25 +15,25 @@ public partial class MenuConfModel : MenuConf
             _menuType = value;
             switch (value)
             {
-                case MenuType.Columns:
+                case MenuType.TopItem:
                     IsAddGroupVisible = false;
                     IsAddVisible = false;
                     IsModifyVisible = false;
                     IsDeleteVisible = false;
                     break;
-                case MenuType.Tables:
+                case MenuType.TopGroup:
                     IsAddGroupVisible = true;
                     IsAddVisible = true;
                     IsModifyVisible = false;
                     IsDeleteVisible = false;
                     break;
-                case MenuType.TableGroup:
+                case MenuType.Group:
                     IsAddGroupVisible = true;
                     IsAddVisible = true;
                     IsModifyVisible = true;
                     IsDeleteVisible = true;
                     break;
-                case MenuType.Table:
+                case MenuType.Item:
                     IsAddGroupVisible = false;
                     IsAddVisible = false;
                     IsModifyVisible = true;

@@ -16,10 +16,10 @@ public class MenuIconConverter : IValueConverter
 
         return menuType switch
         {
-            MenuType.Columns => ResourceHelper.FindResource("SemiIconGridSquare"),
-            MenuType.Tables => ResourceHelper.FindResource("SemiIconServer"),
-            MenuType.TableGroup => ResourceHelper.FindResource("SemiIconFolderStroked"),
-            MenuType.Table => ResourceHelper.FindResource("SemiIconFile"),
+            MenuType.TopItem => ResourceHelper.FindResource("SemiIconGridSquare"),
+            MenuType.TopGroup => ResourceHelper.FindResource("SemiIconServer"),
+            MenuType.Group => ResourceHelper.FindResource("SemiIconFolderStroked"),
+            MenuType.Item => ResourceHelper.FindResource("SemiIconFile"),
             _ => null
         };
     }

@@ -65,7 +65,9 @@
                                                   Command="{Binding #This.DataContext.AddItemCommand}"
                                                   CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_MODIFY}"
-                                                  IsVisible="{Binding IsModifyVisible}"/>
+                                                  IsVisible="{Binding IsModifyVisible}"
+                                                  Command="{Binding #This.DataContext.ModifyItemCommand}"
+                                                  CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_DELETE}"
                                                   IsVisible="{Binding IsDeleteVisible}"
                                                   Command="{Binding #This.DataContext.DeleteItemCommand}"

@@ -1,8 +1,8 @@
 namespace Plugin.DevData;
 
-public class DirectoryNode<T> where T : FileNode, new()
+public class DirectoryNode
 {
-    #region Constructors
+    #region Functions
     public void ReadFiles()
     {
         if (!Directory.Exists(ConfigDirectory))
@@ -15,23 +15,23 @@ public class DirectoryNode<T> where T : FileNode, new()
         ReadFilesInner(ConfigDirectory, this);
     }
 
-    private void ReadFilesInner(string dir, DirectoryNode<T> node)
+    private void ReadFilesInner(string dir, DirectoryNode node)
     {
         string[] fileNames = Directory.GetFiles(dir, "*.xml", SearchOption.TopDirectoryOnly);
         foreach (string fileName in fileNames)
         {
-            T item = new T
+            FileNode fileNode = new FileNode
             {
                 ConfigFilePath = fileName
             };
-            item.FromFile();
-            node.Instances.Add(item);
+            fileNode.FromFile();
+            node.Instances.Add(fileNode);
         }
         
         string[] subDirs = Directory.GetDirectories(dir, "*", SearchOption.TopDirectoryOnly);
         foreach (string subDir in subDirs)
         {
-            DirectoryNode<T> subNode = new()
+            DirectoryNode subNode = new()
             {
                 ConfigDirectory = subDir
             };
@@ -44,8 +44,10 @@ public class DirectoryNode<T> where T : FileNode, new()
 
     #region Properties
     public string ConfigDirectory { get; set; } = string.Empty;
-    public List<T> Instances { get; set; } = [];
-    public List<DirectoryNode<T>> SubDirectories { get; set; } = [];
+    
+    public DirectoryNode? Parent { get; set; } = null;
+    public List<FileNode> Instances { get; } = [];
+    public List<DirectoryNode> SubDirectories { get; } = [];
 
     public string Name
     {
@@ -65,6 +67,8 @@ public class DirectoryNode<T> where T : FileNode, new()
             return arr.Length >= 2 ? arr[1] : string.Empty;
         }
     }
+    
+    public string MenuName => Name + (string.IsNullOrEmpty(Description) ? "" : $" ({Description})");
     #endregion
     
 }

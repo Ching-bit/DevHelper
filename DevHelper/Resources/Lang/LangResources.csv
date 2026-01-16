@@ -41,8 +41,10 @@ R_STR_VALUE,Value,值,值
 R_STR_MEANING,Meaning,含意,含意
 R_STR_ADD_GROUP,Add Group,新增分組,新增分组
 R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
+R_STR_DELETE_FAILED,Failed to delete,刪除失敗,删除失败
+R_STR_MODIFY_FAILED,Failed to modify,修改失敗,修改失败
 R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
-R_STR_TABLE_NAME_EXIST_NOTICE,The table name already exists,表名已存在,表名已存在
+R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
 R_STR_SELECT_EMPTY_COLUMNS_NOTICE,Please select a column.,請選擇字段,请选择字段
 R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
 R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete #?,確實要刪除 # 嗎？,确实要删除 # 吗？
