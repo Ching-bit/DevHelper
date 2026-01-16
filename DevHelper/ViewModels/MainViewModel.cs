@@ -380,8 +380,9 @@ public partial class MainViewModel : UniViewModel
             ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
             Name = directoryNode.MenuName,
-            Entity = directoryNode,
             MenuType = menuType,
+            Entity = directoryNode,
+            ViewType = parent.ViewType,
             LeafEntityType = parent.LeafEntityType
         };
         parent.SubMenus.Add(subMenu);

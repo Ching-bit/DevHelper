@@ -59,7 +59,7 @@ public partial class MenuConfModel : MenuConf
         {
             _viewType = value;
             Assembly = value?.Assembly.GetName().Name ?? string.Empty;
-            ViewName = nameof(ViewType);
+            ViewName = value?.Name ?? string.Empty;
         }
     }
     
