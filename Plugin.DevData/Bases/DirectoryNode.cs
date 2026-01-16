@@ -1,29 +1,46 @@
 namespace Plugin.DevData;
 
-public class DirectoryNode
+public class DirectoryNode : IDirectoryNode
 {
+    public DirectoryNode(string name, string description, IDirectoryNode parent)
+    {
+        Name = name;
+        Description = description;
+        Parent = parent;
+    }
+
+    public DirectoryNode(string directoryPath)
+    {
+        _directoryPath = directoryPath;
+
+        string dirName = Path.GetFileNameWithoutExtension(directoryPath);
+        Name = dirName.Split("@")[0];
+        Description = dirName.Split("@").Length <= 1 ? string.Empty : dirName.Split("@")[1];
+    }
+    
     #region Functions
     public void ReadFiles()
     {
-        if (!Directory.Exists(ConfigDirectory))
+        if (!Directory.Exists(DirectoryPath))
         {
             return;
         }
         
         Instances.Clear();
         SubDirectories.Clear();
-        ReadFilesInner(ConfigDirectory, this);
+        ReadFilesInner(DirectoryPath, this);
     }
 
     private void ReadFilesInner(string dir, DirectoryNode node)
     {
-        string[] fileNames = Directory.GetFiles(dir, "*.xml", SearchOption.TopDirectoryOnly);
-        foreach (string fileName in fileNames)
+        string[] files = Directory.GetFiles(dir, "*.xml", SearchOption.TopDirectoryOnly);
+        foreach (string file in files)
         {
-            FileNode fileNode = new FileNode
-            {
-                ConfigFilePath = fileName
-            };
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            string name = fileName.Split("@")[0];
+            string description = fileName.Split("@").Length <= 1 ? string.Empty : fileName.Split("@")[1];
+
+            FileNode fileNode = new(name, description, node);
             fileNode.FromFile();
             node.Instances.Add(fileNode);
         }
@@ -31,10 +48,11 @@ public class DirectoryNode
         string[] subDirs = Directory.GetDirectories(dir, "*", SearchOption.TopDirectoryOnly);
         foreach (string subDir in subDirs)
         {
-            DirectoryNode subNode = new()
-            {
-                ConfigDirectory = subDir
-            };
+            string subDirName = Path.GetFileNameWithoutExtension(subDir);
+            string name = subDirName.Split("@")[0];
+            string description = subDirName.Split("@").Length <= 1 ? string.Empty : subDirName.Split("@")[1];
+            DirectoryNode subNode = new(name, description, node);
+            
             subNode.ReadFiles();
             node.SubDirectories.Add(subNode);
         }
@@ -43,31 +61,18 @@ public class DirectoryNode
     
 
     #region Properties
-    public string ConfigDirectory { get; set; } = string.Empty;
-    
-    public DirectoryNode? Parent { get; set; } = null;
-    public List<FileNode> Instances { get; } = [];
-    public List<DirectoryNode> SubDirectories { get; } = [];
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public IDirectoryNode? Parent { get; set; }
+    public List<IFileNode> Instances { get; } = [];
+    public List<IDirectoryNode> SubDirectories { get; } = [];
 
-    public string Name
-    {
-        get
-        {
-            string fileName = Path.GetFileNameWithoutExtension(ConfigDirectory);
-            return fileName.Split("@")[0];
-        }
-    }
 
-    public string Description
-    {
-        get
-        {
-            string fileName = Path.GetFileNameWithoutExtension(ConfigDirectory);
-            string[] arr = fileName.Split("@");
-            return arr.Length >= 2 ? arr[1] : string.Empty;
-        }
-    }
-    
+    public string DirectoryName => Name + (string.IsNullOrEmpty(Description) ? "" : $"@{Description}");
+
+    private readonly string? _directoryPath;
+    public string DirectoryPath => _directoryPath ?? Path.Combine(Parent?.DirectoryPath ?? string.Empty, DirectoryName);
+
     public string MenuName => Name + (string.IsNullOrEmpty(Description) ? "" : $" ({Description})");
     #endregion
     

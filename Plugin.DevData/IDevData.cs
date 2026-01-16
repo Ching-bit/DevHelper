@@ -5,17 +5,19 @@ namespace Plugin.DevData;
 public interface IDevData : IPlugin
 {
     public List<ColumnInfo> Columns { get; }
-    public DirectoryNode TableRoot { get; }
+    public IDirectoryNode? TableRoot { get; }
 
     public bool AddColumn(ColumnInfo columnInfo);
     public bool RemoveColumn(int id);
     public bool ModifyColumn(ColumnInfo columnInfo);
     public bool SaveColumns();
     
-    public bool AddGroup(DirectoryNode directory, string groupName, string groupDescription, out DirectoryNode? createdDirectory);
-    public bool AddItem<T>(DirectoryNode directory, string itemName, string itemDescription, out T? createdItem) where T : FileNode, new();
-    public bool RemoveGroup(DirectoryNode parent, DirectoryNode group);
-    public bool RemoveItem(DirectoryNode parent, FileNode item);
-    public bool ModifyGroup(DirectoryNode directory, string newName, string newDescription);
-    public bool ModifyItem(FileNode item, string newName, string newDescription);
+    public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory);
+
+    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem,
+        Type itemType);
+    public bool RemoveGroup(IDirectoryNode parent, IDirectoryNode group);
+    public bool RemoveItem(IDirectoryNode parent, IFileNode item);
+    public bool ModifyGroup(IDirectoryNode directory, string newName, string newDescription);
+    public bool ModifyItem(IFileNode item, string newName, string newDescription);
 }

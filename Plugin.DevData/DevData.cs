@@ -1,3 +1,4 @@
+using System.Reflection;
 using Framework.Common;
 using Framework.Utils.Helpers;
 
@@ -7,7 +8,8 @@ public class DevData : IDevData
 {
     private static string DevDataDir => Path.Combine(SystemConfig.AppConf.UserDataDir, "DevData");
     private static string ColumnsFilePath => Path.Combine(DevDataDir, "Columns.xml");
-    private static string TableDataDir => Path.Combine(DevDataDir, "Tables");
+    private const string TablesDirName = "Tables";
+    private static string TablesDir => Path.Combine(DevDataDir, TablesDirName);
     
     #region IPlugin
     public void OnStart() { }
@@ -19,7 +21,7 @@ public class DevData : IDevData
     public void OnLoggedIn()
     {
         Columns = ObjectHelper.FromXmlFile<List<ColumnInfo>>(ColumnsFilePath);
-        TableRoot.ConfigDirectory = TableDataDir;
+        TableRoot = new DirectoryNode(TablesDir);
         TableRoot.ReadFiles();
     }
 
@@ -29,7 +31,7 @@ public class DevData : IDevData
 
     #region IDevData
     public List<ColumnInfo> Columns { get; private set; } = [];
-    public DirectoryNode TableRoot { get; } = new();
+    public IDirectoryNode? TableRoot { get; private set; }
 
     #region Column Methods
     public bool AddColumn(ColumnInfo columnInfo)
@@ -75,60 +77,73 @@ public class DevData : IDevData
     
 
     #region Table Methods
-    public bool AddGroup(DirectoryNode directory, string groupName, string groupDescription, out DirectoryNode? createdDirectory)
+    public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory)
     {
         createdDirectory = null;
         if (directory.SubDirectories.Any(x => x.Name.Equals(groupName)))
         {
             return false;
         }
-
-        string folderName = AssembleFileName(groupName, groupDescription);
-        string groupDir = Path.Combine(directory.ConfigDirectory, folderName);
+        
+        DirectoryNode newDirectoryNode = new(groupName, groupDescription, directory);
         try
         {
-            Directory.CreateDirectory(groupDir);
+            Directory.CreateDirectory(newDirectoryNode.DirectoryPath);
         }
         catch
         {
             return false;
         }
 
-        createdDirectory = new DirectoryNode
-        {
-            ConfigDirectory = groupDir
-        };
+        createdDirectory = newDirectoryNode;
         directory.SubDirectories.Add(createdDirectory);
         return true;
     }
 
-    public bool AddItem<T>(DirectoryNode directory, string itemName, string itemDescription, out T? createdItem) where T : FileNode, new()
+    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem,
+        Type itemType)
     {
         createdItem = null;
+        MethodInfo? method = typeof(DevData).GetMethod(nameof(AddItemInner));
+        if (null == method)
+        {
+            return false;
+        }
+
+        MethodInfo genericMethod = method.MakeGenericMethod(itemType);
+        object?[] parameters = [directory, itemName, itemDescription, null];
+        object? ret = genericMethod.Invoke(this, parameters);
+        createdItem = (IFileNode?)parameters[3];
+        return ret is true;
+    }
+    
+    public bool AddItemInner<T>(IDirectoryNode directory, string itemName, string itemDescription, out T? createdItem)  where T : IFileNode, new()
+    {
+        createdItem = default;
         if (directory.Instances.Any(x => x.Name.Equals(itemName)))
         {
             return false;
         }
 
-        string fileName = $"{AssembleFileName(itemName, itemDescription)}.xml";
-        string filePath = Path.Combine(directory.ConfigDirectory, fileName);
-
-        // save an empty file
-        T item = new()
+        T newFileNode = new()
         {
-            ConfigFilePath = filePath
+            Name = itemName,
+            Description = itemDescription,
+            Parent = directory
         };
-        if (!item.ToFile())
+        
+        // save an empty file
+        if (!newFileNode.ToFile())
         {
             return false;
         }
-        
-        directory.Instances.Add(item);
-        createdItem = item;
+
+        createdItem = newFileNode;
+        directory.Instances.Add(createdItem);
         return true;
     }
 
-    public bool RemoveGroup(DirectoryNode parent, DirectoryNode group)
+    public bool RemoveGroup(IDirectoryNode parent, IDirectoryNode group)
     {
         if (!parent.SubDirectories.Contains(group))
         {
@@ -137,7 +152,7 @@ public class DevData : IDevData
 
         try
         {
-            Directory.Delete(group.ConfigDirectory, true);
+            Directory.Delete(group.DirectoryPath, true);
         }
         catch
         {
@@ -147,7 +162,7 @@ public class DevData : IDevData
         return parent.SubDirectories.Remove(group);
     }
 
-    public bool RemoveItem(DirectoryNode parent, FileNode item)
+    public bool RemoveItem(IDirectoryNode parent, IFileNode item)
     {
         if (!parent.Instances.Contains(item))
         {
@@ -156,7 +171,7 @@ public class DevData : IDevData
 
         try
         {
-            File.Delete(item.ConfigFilePath);
+            File.Delete(item.FilePath);
         }
         catch
         {
@@ -166,49 +181,41 @@ public class DevData : IDevData
         return parent.Instances.Remove(item);
     }
 
-    public bool ModifyGroup(DirectoryNode directory, string newName, string newDescription)
+    public bool ModifyGroup(IDirectoryNode directory, string newName, string newDescription)
     {
-        string newFolderName = AssembleFileName(newName, newDescription);
-        string newDir = Path.Combine(Path.GetDirectoryName(directory.ConfigDirectory) ?? string.Empty, newFolderName);
+        IDirectoryNode tmp = new DirectoryNode(newName, newDescription, directory.Parent!);
         try
         {
-            Directory.Move(directory.ConfigDirectory, newDir);
+            Directory.Move(directory.DirectoryPath, tmp.DirectoryPath);
         }
         catch
         {
             return false;
         }
         
-        directory.ConfigDirectory = newDir;
-        // TODO
-        // update all paths of sub directories and files
-        
+        directory.Name = newName;
+        directory.Description = newDescription;
         return true;
     }
 
-    public bool ModifyItem(FileNode item, string newName, string newDescription)
+    public bool ModifyItem(IFileNode item, string newName, string newDescription)
     {
-        string newFileName = $"{AssembleFileName(newName, newDescription)}.xml";
-        string newPath = Path.Combine(Path.GetDirectoryName(item.ConfigFilePath) ?? string.Empty, newFileName);
+        IFileNode tmp = new FileNode(newName, newDescription, item.Parent);
         try
         {
-            File.Move(item.ConfigFilePath, newPath);
+            File.Move(item.FilePath, tmp.FilePath);
         }
         catch
         {
             return false;
         }
         
-        item.ConfigFilePath = newPath;
+        item.Name = newName;
+        item.Description = newDescription;
         return true;
     }
     #endregion
     
     #endregion
-
-
-    private string AssembleFileName(string name, string description)
-    {
-        return name + (string.IsNullOrEmpty(description) ? "" : $"@{description}");
-    }
+    
 }

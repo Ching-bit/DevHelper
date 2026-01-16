@@ -6,7 +6,7 @@ public class TableInfo : FileNode
 {
     public List<int> ColumnIdList { get; set; } = [];
     public List<IndexInfo> IndexList { get; set; } = [];
-
+    
     public override bool FromFile()
     {
         // TODO
@@ -15,6 +15,7 @@ public class TableInfo : FileNode
 
     public override bool ToFile()
     {
-        return ObjectHelper.ToXml(ConfigFilePath, this);
+        // TODO
+        return ObjectHelper.ToXml(FilePath, ColumnIdList);
     }
 }

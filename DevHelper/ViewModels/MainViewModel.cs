@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -45,9 +44,10 @@ public partial class MainViewModel : UniViewModel
             Id = "menu_column",
             ResourceName = "R_STR_COLUMNS",
             MenuLevel = 1,
-            Assembly = typeof(ColumnsView).Assembly.GetName().Name!,
-            ViewName = nameof(ColumnsView),
-            MenuType = MenuType.TopItem
+            MenuType = MenuType.TopItem,
+            Entity = null,
+            ViewType = typeof(ColumnsView),
+            LeafEntityType = typeof(ColumnInfo)
         });
         
         // table
@@ -57,24 +57,26 @@ public partial class MainViewModel : UniViewModel
             ResourceName = "R_STR_TABLES",
             MenuLevel = 1,
             MenuType = MenuType.TopGroup,
-            Entity = Global.Get<IDevData>().TableRoot
+            Entity = Global.Get<IDevData>().TableRoot,
+            ViewType = typeof(TableView),
+            LeafEntityType = typeof(TableInfo)
         };
         Menus.Add(tableMenu);
         
         // all tables
-        InitMenusInner(tableMenu, Global.Get<IDevData>().TableRoot);
+        InitMenusInner(tableMenu, Global.Get<IDevData>().TableRoot!);
     }
 
-    private void InitMenusInner(MenuConfModel menu, DirectoryNode root)
+    private void InitMenusInner(MenuConfModel menu, IDirectoryNode root)
     {
-        foreach (DirectoryNode subDirectory in root.SubDirectories)
+        foreach (IDirectoryNode subDirectory in root.SubDirectories)
         {
             MenuConfModel subMenu = AddGroupMenu(menu, subDirectory);
             InitMenusInner(subMenu, subDirectory);
         }
-        foreach (FileNode fileNode in root.Instances)
+        foreach (IFileNode fileNode in root.Instances)
         {
-            _ = AddItemMenu(menu, fileNode, typeof(TableView));
+            _ = AddItemMenu(menu, fileNode);
         }
     }
 
@@ -134,7 +136,7 @@ public partial class MainViewModel : UniViewModel
         }
 
         AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
-        if (!Global.Get<IDevData>().AddGroup(directory, itemModel.Name, itemModel.Description, out DirectoryNode? newDirectoryNode))
+        if (!Global.Get<IDevData>().AddGroup(directory, itemModel.Name, itemModel.Description, out IDirectoryNode? newDirectoryNode))
         {
             ShowError("R_STR_ADD_FAILED");
             return;
@@ -169,14 +171,14 @@ public partial class MainViewModel : UniViewModel
         }
 
         AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
-        if (!Global.Get<IDevData>().AddItem(directory, itemModel.Name, itemModel.Description,
-                out TableInfo? tableInfo))
+        
+        if (!Global.Get<IDevData>().AddItem(directory, itemModel.Name, itemModel.Description, out IFileNode? item, menu.LeafEntityType!))
         {
             ShowError("R_STR_ADD_FAILED");
             return;
         }
             
-        _ = AddItemMenu(menu, tableInfo!, typeof(TableView));
+        _ = AddItemMenu(menu, item!);
     }
 
     [RelayCommand]
@@ -339,7 +341,7 @@ public partial class MainViewModel : UniViewModel
         ((MainView)View).OpenMenu(SelectedMenu);
     }
 
-    private MenuConfModel AddItemMenu(MenuConfModel parent, FileNode instance, Type viewType)
+    private MenuConfModel AddItemMenu(MenuConfModel parent, IFileNode instance)
     {
         MenuType menuType = parent.MenuType switch
         {
@@ -354,16 +356,16 @@ public partial class MainViewModel : UniViewModel
             ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
             Name = instance.MenuName,
-            Assembly = viewType.Assembly.GetName().Name!,
-            ViewName = viewType.Name,
             MenuType = menuType,
-            Entity = instance
+            Entity = instance,
+            ViewType = parent.ViewType,
+            LeafEntityType = instance.GetType()
         };
         parent.SubMenus.Add(menu);
         return menu;
     }
 
-    private MenuConfModel AddGroupMenu(MenuConfModel parent, DirectoryNode directoryNode)
+    private MenuConfModel AddGroupMenu(MenuConfModel parent, IDirectoryNode directoryNode)
     {
         MenuType menuType = parent.MenuType switch
         {
@@ -378,8 +380,9 @@ public partial class MainViewModel : UniViewModel
             ParentMenu = parent,
             MenuLevel = parent.MenuLevel + 1,
             Name = directoryNode.MenuName,
+            Entity = directoryNode,
             MenuType = menuType,
-            Entity = directoryNode
+            LeafEntityType = parent.LeafEntityType
         };
         parent.SubMenus.Add(subMenu);
         return subMenu;
