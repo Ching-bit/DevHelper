@@ -3,7 +3,34 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ursa="https://irihi.tech/ursa"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.TableView">
-    Welcome to Avalonia!
+    
+    <StackPanel Margin="5">
+        
+        <StackPanel Orientation="Horizontal">
+            <Button Classes="Common" Content="{DynamicResource R_STR_SAVE}"/>
+            <Button Classes="Common" Content="{DynamicResource R_STR_RESTORE}"/>
+        </StackPanel>
+        
+        <ursa:Divider/>
+        
+        <local:TableBasicInfoPanel TableInfoModel="{Binding TableInfoModel}"/>
+        
+        <TabControl>
+            <TabItem Header="{DynamicResource R_STR_COLUMNS}">
+                
+            </TabItem>
+            <TabItem Header="{DynamicResource R_STR_INDEXES}">
+                
+            </TabItem>
+            <TabItem Header="{DynamicResource R_STR_FOREIGN_KEYS}">
+                
+            </TabItem>
+        </TabControl>
+        
+    </StackPanel>
+    
 </frw:UniMenu>

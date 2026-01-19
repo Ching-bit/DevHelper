@@ -49,7 +49,6 @@ public partial class MenuConfModel : MenuConf
     [ObservableProperty] private bool _isDeleteVisible;
     
     public MenuConfModel? ParentMenu { get; set; }
-    public object? Entity { get; set; }
     public Type? LeafViewType { get; set; }
     public Type? LeafEntityType { get; set; }
 }

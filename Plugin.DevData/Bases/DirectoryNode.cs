@@ -7,15 +7,18 @@ public class DirectoryNode : IDirectoryNode
         Name = name;
         Description = description;
         Parent = parent;
+        LeafType = parent.LeafType;
     }
 
-    public DirectoryNode(string directoryPath)
+    public DirectoryNode(string directoryPath, Type leafType)
     {
         _directoryPath = directoryPath;
 
         string dirName = Path.GetFileNameWithoutExtension(directoryPath);
         Name = dirName.Split("@")[0];
         Description = dirName.Split("@").Length <= 1 ? string.Empty : dirName.Split("@")[1];
+        
+        LeafType = leafType;
     }
     
     #region Functions
@@ -40,7 +43,15 @@ public class DirectoryNode : IDirectoryNode
             string name = fileName.Split("@")[0];
             string description = fileName.Split("@").Length <= 1 ? string.Empty : fileName.Split("@")[1];
 
-            FileNode fileNode = new(name, description, node);
+            IFileNode? fileNode = (IFileNode?)Activator.CreateInstance(LeafType);
+            if (null == fileNode)
+            {
+                throw new Exception($"Cannot create instance of type {LeafType}");
+            }
+            
+            fileNode.Name = name;
+            fileNode.Description = description;
+            fileNode.Parent = node;
             fileNode.FromFile();
             node.Instances.Add(fileNode);
         }
@@ -66,6 +77,7 @@ public class DirectoryNode : IDirectoryNode
     public IDirectoryNode? Parent { get; set; }
     public List<IFileNode> Instances { get; } = [];
     public List<IDirectoryNode> SubDirectories { get; } = [];
+    public Type LeafType { get; set; }
 
 
     public string DirectoryName => Name + (string.IsNullOrEmpty(Description) ? "" : $"@{Description}");

@@ -10,9 +10,9 @@ using Framework.Common;
 
 namespace Control.Basic;
 
-[WithDirectProperty(typeof(ICommand), "OkCommand")]
-[WithDirectProperty(typeof(ICommand), "CancelCommand")]
-[WithDirectProperty(typeof(object), "ReturnParameter")]
+[WithDirectProperty(typeof(ICommand), "OkCommand", nullable: true)]
+[WithDirectProperty(typeof(ICommand), "CancelCommand", nullable: true)]
+[WithDirectProperty(typeof(object), "ReturnParameter", nullable: true)]
 [WithDirectProperty(typeof(bool), "IsAutoClick", false)]
 [WithDirectProperty(typeof(bool), "IsOkDefault", true)]
 [WithDirectProperty(typeof(int), "AutoClickSeconds", 10)]
@@ -51,7 +51,7 @@ public partial class ConfirmDialog : TemplatedControl
         {
             AutoClickSeconds = Math.Max(0, AutoClickSeconds);
             
-            _autoClickTimer.Tick += (s, args) =>
+            _autoClickTimer.Tick += (_, _) =>
             {
                 if (AutoClickSeconds > 0)
                 {
@@ -63,8 +63,8 @@ public partial class ConfirmDialog : TemplatedControl
                     return;
                 }
             
-                ICommand command = IsOkDefault ? OkCommand : CancelCommand;
-                command.Execute(null);
+                ICommand? command = IsOkDefault ? OkCommand : CancelCommand;
+                command?.Execute(null);
             };
         }
         _autoClickTimer.Start();

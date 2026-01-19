@@ -7,6 +7,7 @@ public interface IDirectoryNode
     public IDirectoryNode? Parent { get; set; }
     public List<IFileNode> Instances { get; }
     public List<IDirectoryNode> SubDirectories { get; }
+    public Type LeafType { get; set; }
     
     
     public string DirectoryName { get; }

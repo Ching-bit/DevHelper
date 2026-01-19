@@ -21,7 +21,7 @@ public class DevData : IDevData
     public void OnLoggedIn()
     {
         Columns = ObjectHelper.FromXmlFile<List<ColumnInfo>>(ColumnsFilePath);
-        TableRoot = new DirectoryNode(TablesDir);
+        TableRoot = new DirectoryNode(TablesDir, typeof(TableInfo));
         TableRoot.ReadFiles();
     }
 

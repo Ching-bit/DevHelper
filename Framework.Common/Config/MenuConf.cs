@@ -30,6 +30,7 @@ public partial class MenuConf : ObservableObject
     [XmlIgnore] public UniMenu? Instance { get; set; }
     [XmlIgnore] public int MenuLevel { get; set; }
     [XmlIgnore] public ObservableCollection<MenuConf> SubMenus { get; set; }
+    [XmlIgnore] public object? Entity { get; set; }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

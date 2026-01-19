@@ -14,5 +14,7 @@ public partial class MessageDialog : UserControl
     public MessageDialog()
     {
         InitializeComponent();
+
+        _message = string.Empty;
     }
 }
