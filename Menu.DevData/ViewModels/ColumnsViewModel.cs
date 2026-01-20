@@ -35,15 +35,6 @@ public partial class ColumnsViewModel : UniViewModel
         ColumnListView.Refresh();
         IsColumnChanged = false;
     }
-
-    public override void OnLoaded(object? sender, RoutedEventArgs e)
-    {
-        _manager = new WindowNotificationManager(TopLevel.GetTopLevel(View))
-        {
-            Position = NotificationPosition.TopCenter,
-            MaxItems = 1
-        };
-    }
     #endregion
 
 
@@ -68,12 +59,12 @@ public partial class ColumnsViewModel : UniViewModel
         Global.Get<IDevData>().Columns.AddRange(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()));
         if (Global.Get<IDevData>().SaveColumns())
         {
-            ShowMessage("R_STR_SAVE_SUCCESS", NotificationType.Success);
+            ShowNotification("R_STR_SAVE_SUCCESS", NotificationType.Success);
             InitData();
         }
         else
         {
-            ShowMessage("R_STR_SAVE_FAILED", NotificationType.Error);
+            ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
         }
     }
 
@@ -203,16 +194,5 @@ public partial class ColumnsViewModel : UniViewModel
                 .Distinct()
                 .OrderBy(x => x)
                 .ToList();
-    }
-    
-    private WindowNotificationManager? _manager;
-    
-    private void ShowMessage(string message, NotificationType notificationType)
-    {
-        Notification notification = new()
-        {
-            Message = ResourceHelper.FindStringResource(message)
-        };
-        _manager?.Show(notification, type: notificationType);
     }
 }

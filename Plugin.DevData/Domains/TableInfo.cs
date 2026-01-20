@@ -4,6 +4,10 @@ namespace Plugin.DevData;
 
 public class TableInfo : FileNode
 {
+    public TableInfo() : base() { }
+    public TableInfo(string name, string description, IDirectoryNode? parent)
+        : base(name, description, parent) { }
+    
     public List<int> ColumnIdList { get; set; } = [];
     public List<IndexInfo> IndexList { get; set; } = [];
     public string Remark { get; set; } = string.Empty;

@@ -2,9 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -81,16 +79,6 @@ public partial class MainViewModel : UniViewModel
             _ = AddItemMenu(menu, fileNode);
         }
     }
-
-    public override void OnLoaded(object? sender, RoutedEventArgs e)
-    {
-        base.OnLoaded(sender, e);
-        _manager = new WindowNotificationManager(TopLevel.GetTopLevel(View))
-        {
-            Position = NotificationPosition.TopCenter,
-            MaxItems = 1
-        };
-    }
     #endregion
 
 
@@ -126,7 +114,7 @@ public partial class MainViewModel : UniViewModel
         {
             if (directory.SubDirectories.Any(subDirectory => subDirectory.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower())))
             {
-                ShowError("R_STR_GROUP_NAME_EXIST_NOTICE");
+                ShowNotification("R_STR_GROUP_NAME_EXIST_NOTICE", NotificationType.Error);
                 return false;
             }
             return true;
@@ -140,7 +128,7 @@ public partial class MainViewModel : UniViewModel
         AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
         if (!Global.Get<IDevData>().AddGroup(directory, itemModel.Name, itemModel.Description, out IDirectoryNode? newDirectoryNode))
         {
-            ShowError("R_STR_ADD_FAILED");
+            ShowNotification("R_STR_ADD_FAILED", NotificationType.Error);
             return;
         }
 
@@ -161,7 +149,7 @@ public partial class MainViewModel : UniViewModel
         {
             if (directory.Instances.Any(instance => instance.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower())))
             {
-                ShowError("R_STR_NAME_EXIST_NOTICE");
+                ShowNotification("R_STR_NAME_EXIST_NOTICE", NotificationType.Error);
                 return false;
             }
             return true;
@@ -176,7 +164,7 @@ public partial class MainViewModel : UniViewModel
         
         if (!Global.Get<IDevData>().AddItem(directory, itemModel.Name, itemModel.Description, out IFileNode? item, menu.LeafEntityType!))
         {
-            ShowError("R_STR_ADD_FAILED");
+            ShowNotification("R_STR_ADD_FAILED", NotificationType.Error);
             return;
         }
             
@@ -206,7 +194,7 @@ public partial class MainViewModel : UniViewModel
             {
                 if (parentDirectory.SubDirectories.Any(x => x.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower()) && !x.Name.Equals(directory.Name)))
                 {
-                    ShowError("R_STR_GROUP_NAME_EXIST_NOTICE");
+                    ShowNotification("R_STR_GROUP_NAME_EXIST_NOTICE", NotificationType.Error);
                     return false;
                 }
                 return true;
@@ -221,7 +209,7 @@ public partial class MainViewModel : UniViewModel
             AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
             if (!Global.Get<IDevData>().ModifyGroup(directory, itemModel.Name, itemModel.Description))
             {
-                ShowError("R_STR_MODIFY_FAILED");
+                ShowNotification("R_STR_MODIFY_FAILED", NotificationType.Error);
                 return;
             }
 
@@ -248,7 +236,7 @@ public partial class MainViewModel : UniViewModel
             {
                 if (parentDirectory.Instances.Any(x => x.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower()) && !x.Name.Equals(fileNode.Name)))
                 {
-                    ShowError("R_STR_NAME_EXIST_NOTICE");
+                    ShowNotification("R_STR_NAME_EXIST_NOTICE", NotificationType.Error);
                     return false;
                 }
                 return true;
@@ -263,7 +251,7 @@ public partial class MainViewModel : UniViewModel
             AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
             if (!Global.Get<IDevData>().ModifyItem(fileNode, itemModel.Name, itemModel.Description))
             {
-                ShowError("R_STR_MODIFY_FAILED");
+                ShowNotification("R_STR_MODIFY_FAILED", NotificationType.Error);
                 return;
             }
 
@@ -294,7 +282,7 @@ public partial class MainViewModel : UniViewModel
             if (!Global.Get<IDevData>().RemoveGroup(parentDirectory, directory) ||
                 !RemoveMenu(menu))
             {
-                ShowError("R_STR_DELETE_FAILED");
+                ShowNotification("R_STR_DELETE_FAILED", NotificationType.Error);
             }
         }
         else if (MenuType.Item == menu.MenuType)
@@ -309,29 +297,14 @@ public partial class MainViewModel : UniViewModel
             if (!Global.Get<IDevData>().RemoveItem(parentDirectory, fileNode) ||
                 !RemoveMenu(menu))
             {
-                ShowError("R_STR_DELETE_FAILED");
+                ShowNotification("R_STR_DELETE_FAILED", NotificationType.Error);
             }
         }
     }
     #endregion
 
 
-    #region Private Members
-    private WindowNotificationManager? _manager;
-    #endregion
-
-
     #region Private Functions
-    private void ShowError(string message)
-    {
-        Notification notification = new()
-        {
-            Message = ResourceHelper.FindStringResource(message)
-        };
-        _manager?.Show(notification, type: NotificationType.Error);
-    }
-
-    #region Menu Related
     private void OnMenuSelected()
     {
         if (null == SelectedMenu ||
@@ -402,8 +375,6 @@ public partial class MainViewModel : UniViewModel
 
         return menu.ParentMenu.SubMenus.Remove(menu);
     }
-    #endregion
-    
     #endregion
     
 }

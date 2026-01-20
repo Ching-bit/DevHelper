@@ -6,22 +6,28 @@
     xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.TableView">
     
-    <StackPanel Margin="5">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
         
         <StackPanel Orientation="Horizontal">
-            <Button Classes="Common" Content="{DynamicResource R_STR_SAVE}"/>
-            <Button Classes="Common" Content="{DynamicResource R_STR_RESTORE}"/>
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_SAVE}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsTableChanged}"/>
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_RESTORE}"
+                    Command="{Binding RestoreCommand}"
+                    IsEnabled="{Binding IsTableChanged}"/>
         </StackPanel>
         
-        <ursa:Divider/>
+        <ursa:Divider Grid.Row="1"/>
         
-        <local:TableBasicInfoPanel TableInfoModel="{Binding TableInfoModel}"/>
+        <local:TableBasicInfoPanel Grid.Row="2" TableInfoModel="{Binding TableInfoModel}"/>
         
-        <TabControl>
+        <TabControl Grid.Row="3">
             <TabItem Header="{DynamicResource R_STR_COLUMNS}">
                 <local:TableColumnsPanel
-                    AllColumnList="{Binding AllColumnList}"
-                    ColumnList="{Binding TableInfoModel.ColumnList}"/>
+                    ColumnList="{Binding TableInfoModel.ColumnList}"
+                    IsColumnChanged="{Binding IsTableChanged, Mode=TwoWay}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_INDEXES}">
                 
@@ -31,6 +37,6 @@
             </TabItem>
         </TabControl>
         
-    </StackPanel>
+    </Grid>
     
 </frw:UniMenu>

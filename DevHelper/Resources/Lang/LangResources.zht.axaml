@@ -55,6 +55,7 @@
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">確實要刪除 # 嗎？</system:String>
     <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
     <system:String x:Key="R_STR_SAVE_FAILED">保存失敗</system:String>
+    <system:String x:Key="R_STR_PRIMARY_KEY">主鍵</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外鍵</system:String>
 

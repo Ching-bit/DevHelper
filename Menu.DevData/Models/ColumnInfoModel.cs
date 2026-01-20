@@ -38,6 +38,7 @@ public partial class ColumnInfoModel : UniModel
 
     #region Properties
     [ObservableProperty] private ModifyStatus _modifyStatus;
+    [ObservableProperty] private bool _isPrimaryKey;
     
     [ObservableProperty] private string _group;
     [ObservableProperty] private int _id;
@@ -137,6 +138,11 @@ public partial class ColumnInfoModel : UniModel
         }
 
         return columnInfo;
+    }
+    
+    public override string ToString()
+    {
+        return $"{Id} {Name}";
     }
     
 }

@@ -55,6 +55,7 @@
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete #?</system:String>
     <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
     <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
+    <system:String x:Key="R_STR_PRIMARY_KEY">Primary Key</system:String>
     <system:String x:Key="R_STR_INDEXES">Indexes</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
 

@@ -12,7 +12,6 @@ public partial class TableInfoModel : UniModel
         Name = string.Empty;
         Description = string.Empty;
         Remark = string.Empty;
-        ColumnIdList = [];
         ColumnList = [];
     }
 
@@ -21,26 +20,47 @@ public partial class TableInfoModel : UniModel
         Name = tableInfo.Name;
         Description = tableInfo.Description;
         Remark = tableInfo.Remark;
-        ColumnIdList = [];
-        foreach (int columnId in tableInfo.ColumnIdList)
-        {
-            ColumnIdList.Add(columnId);
-        }
 
         ColumnList = [];
-        foreach (int columnId in ColumnIdList)
+        foreach (int columnId in tableInfo.ColumnIdList)
         {
             ColumnInfo? columnInfo = Global.Get<IDevData>().Columns.FirstOrDefault(x => x.Id == columnId);
             if (null != columnInfo)
             {
-                ColumnList.Add(columnInfo);
+                ColumnList.Add(new ColumnInfoModel(columnInfo));
             }
         }
+        
+        IndexInfo? primaryKey = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
+        if (null != primaryKey)
+        {
+            foreach (int colId in primaryKey.ColumnIdList)
+            {
+                ColumnInfoModel? primaryColumn = ColumnList.FirstOrDefault(x => x.Id == colId);
+                if (null != primaryColumn)
+                {
+                    primaryColumn.IsPrimaryKey = true;
+                }
+            }
+        }
+        
+        // TODO
+    }
+
+    public TableInfo GetTableInfo()
+    {
+        TableInfo tableInfo = new()
+        {
+            Name = Name,
+            Description = Description,
+            Remark = Remark,
+            ColumnIdList = ColumnList.Select(x => x.Id).ToList(),
+        };
+        return tableInfo;
     }
     
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _description;
     [ObservableProperty] private string _remark;
-    [ObservableProperty] private ObservableCollection<int> _columnIdList;
-    [ObservableProperty] private ObservableCollection<ColumnInfo> _columnList;
+    [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
 }

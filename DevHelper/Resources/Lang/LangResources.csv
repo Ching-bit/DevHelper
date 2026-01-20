@@ -51,5 +51,6 @@ R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除�
 R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete #?,確實要刪除 # 嗎？,确实要删除 # 吗？
 R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
 R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
+R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键

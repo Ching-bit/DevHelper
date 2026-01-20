@@ -76,7 +76,7 @@ public class DevData : IDevData
     #endregion
     
 
-    #region Table Methods
+    #region Menu Methods
     public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory)
     {
         createdDirectory = null;
@@ -212,6 +212,30 @@ public class DevData : IDevData
         
         item.Name = newName;
         item.Description = newDescription;
+        return true;
+    }
+    #endregion
+
+
+    #region Table Methods
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, string remark)
+    {
+        TableInfo tmp = new(tableInfo.Name, tableInfo.Description, tableInfo.Parent)
+        {
+            ColumnIdList = columnIdList,
+            IndexList = indexList,
+            Remark = remark
+        };
+        if (!tmp.ToFile())
+        {
+            return false;
+        }
+        
+        tableInfo.ColumnIdList.Clear();
+        tableInfo.ColumnIdList.AddRange(columnIdList);
+        tableInfo.IndexList.Clear();
+        tableInfo.IndexList.AddRange(indexList);
+        tableInfo.Remark = remark;
         return true;
     }
     #endregion

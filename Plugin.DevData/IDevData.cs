@@ -13,11 +13,11 @@ public interface IDevData : IPlugin
     public bool SaveColumns();
     
     public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory);
-
-    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem,
-        Type itemType);
+    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem, Type itemType);
     public bool RemoveGroup(IDirectoryNode parent, IDirectoryNode group);
     public bool RemoveItem(IDirectoryNode parent, IFileNode item);
     public bool ModifyGroup(IDirectoryNode directory, string newName, string newDescription);
     public bool ModifyItem(IFileNode item, string newName, string newDescription);
+    
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, string remark);
 }

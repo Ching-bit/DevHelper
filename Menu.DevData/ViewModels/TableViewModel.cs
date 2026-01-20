@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
+using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Framework.Common;
 using Plugin.DevData;
 
@@ -8,35 +10,50 @@ namespace Menu.DevData;
 
 public partial class TableViewModel : UniViewModel
 {
-    public TableViewModel()
+    public override void OnMenuInit()
     {
-        AllColumnList = [];
-        TableInfoModel = new();
+        base.OnMenuInit();
+        InitData();
     }
 
-    public override void OnLoaded(object? sender, RoutedEventArgs e)
+    [RelayCommand]
+    private void Save()
+    {
+        if (null == TableInfoModel || View is not UniMenu uniMenu || uniMenu.MenuConf?.Entity is not TableInfo tableInfo)
+        {
+            throw new Exception("Cannot get table instance from the menu");
+        }
+        
+        tableInfo.ColumnIdList.Clear();
+        tableInfo.ColumnIdList.AddRange(TableInfoModel.ColumnList.Select(x => x.Id));
+        // TODO
+
+        if (!tableInfo.ToFile())
+        {
+            ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
+            return;
+        }
+
+        InitData();
+    }
+
+    [RelayCommand]
+    private void Restore()
     {
         InitData();
-        
+    }
+
+    private void InitData()
+    {
         if (View is not UniMenu uniMenu || uniMenu.MenuConf?.Entity is not TableInfo tableInfo)
         {
             throw new Exception("Cannot get table instance from the menu");
         }
         
-        // TODO
-        tableInfo.ColumnIdList = [1, 2];
-        
         TableInfoModel = new TableInfoModel(tableInfo);
-    }
-
-    private void InitData()
-    {
-        foreach (ColumnInfo columnInfo in Global.Get<IDevData>().Columns)
-        {
-            AllColumnList.Add(columnInfo);
-        }
+        IsTableChanged = false;
     }
     
-    [ObservableProperty] private ObservableCollection<ColumnInfo> _allColumnList;
-    [ObservableProperty] private TableInfoModel _tableInfoModel;
+    [ObservableProperty] private TableInfoModel? _tableInfoModel;
+    [ObservableProperty] private bool _isTableChanged;
 }
