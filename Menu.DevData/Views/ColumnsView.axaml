@@ -10,7 +10,7 @@
         <local:ColumnDataDictTooltipConverter x:Key="ColumnDataDictTooltipConverter"/>
         <local:ColumnLengthDisplayConverter x:Key="ColumnLengthDisplayConverter"/>
         <local:ColumnScaleDisplayConverter x:Key="ColumnScaleDisplayConverter"/>
-        <local:ColumnModifyStatusToColourConverter x:Key="ColumnModifyStatusToColourConverter"/>
+        <local:ModifyStatusToColorConverter x:Key="ColumnModifyStatusToColourConverter"/>
     </frw:UniMenu.Resources>
     
     <Grid RowDefinitions="Auto,*">

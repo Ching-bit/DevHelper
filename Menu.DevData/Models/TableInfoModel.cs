@@ -13,6 +13,7 @@ public partial class TableInfoModel : UniModel
         Description = string.Empty;
         Remark = string.Empty;
         ColumnList = [];
+        IndexList = [];
     }
 
     public TableInfoModel(TableInfo tableInfo)
@@ -31,6 +32,9 @@ public partial class TableInfoModel : UniModel
             }
         }
         
+        // TODO
+        IndexList = [];
+        
         IndexInfo? primaryKey = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
         if (null != primaryKey)
         {
@@ -44,7 +48,7 @@ public partial class TableInfoModel : UniModel
             }
         }
         
-        // TODO
+        
     }
 
     public TableInfo GetTableInfo()
@@ -63,4 +67,5 @@ public partial class TableInfoModel : UniModel
     [ObservableProperty] private string _description;
     [ObservableProperty] private string _remark;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
+    [ObservableProperty] private ObservableCollection<IndexInfoModel> _indexList;
 }

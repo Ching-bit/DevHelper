@@ -23,6 +23,7 @@
         <entry key="Menu.DevData/Views/Dialogs/ColumnDialog.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="Menu.DevData/Views/Dialogs/DataDictionaryDialog.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="Menu.DevData/Views/Dialogs/TableColumnDialog.axaml" value="DevHelper/DevHelper.csproj" />
+        <entry key="Menu.DevData/Views/Dialogs/TableIndexDialog.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="Menu.DevData/Views/Panels/TableBasicInfoPanel.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="Menu.DevData/Views/Panels/TableColumnsPanel.axaml" value="DevHelper/DevHelper.csproj" />
         <entry key="Menu.DevData/Views/Panels/TableIndexesPanel.axaml" value="DevHelper/DevHelper.csproj" />

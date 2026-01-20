@@ -1,0 +1,31 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ursa="https://irihi.tech/ursa"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="Menu.DevData.TableIndexDialog">
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding IndexInfoModel}">
+        <StackPanel Classes="Common">
+            <HeaderedContentControl Header="{DynamicResource R_STR_TYPE}" Classes="Common">
+                <ComboBox
+                    Classes="Common"
+                    ItemsSource="{Binding AllTypes}"
+                    SelectedItem="{Binding IndexInfoModel.Type}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_NAME}" Classes="Common">
+                <TextBox
+                    Classes="Common"
+                    Text="{Binding IndexInfoModel.Name}"
+                    TextWrapping="Wrap"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_COLUMNS}" Classes="Common">
+                <ursa:MultiComboBox
+                    Classes="Common"
+                    ItemsSource="{Binding AllColumns}"
+                    SelectedItems="{Binding IndexInfoModel.ColumnList}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>

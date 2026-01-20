@@ -7,7 +7,7 @@
     x:Class="Menu.DevData.TableColumnsPanel">
     
     <frw:UniPanel.Resources>
-        <local:ColumnModifyStatusToColourConverter x:Key="ColumnModifyStatusToColourConverter"/>
+        <local:ModifyStatusToColorConverter x:Key="ModifyStatusToColorConverter"/>
         <local:PrimaryKeyColumnDisplayConverter x:Key="PrimaryKeyColumnDisplayConverter"/>
     </frw:UniPanel.Resources>
     
@@ -32,35 +32,35 @@
                 <ctrl:BindableDataGridTextColumn
                     Header="ID"  IsReadOnly="True"
                     Binding="{Binding Id}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="150"
                     Binding="{Binding Name}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_DESCRIPTION}" IsReadOnly="True" Width="150"
                     Binding="{Binding Description}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_TYPE}" IsReadOnly="True" Width="110"
                     Binding="{Binding Type}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_LENGTH}" IsReadOnly="True" Width="90"
                     Binding="{Binding Length}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_SCALE}" IsReadOnly="True" Width="90"
                     Binding="{Binding Scale}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="90"
                     Binding="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_DATA_DICT}" IsReadOnly="True" Width="300"
                     Binding="{Binding DataDict}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"/>
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -26,11 +26,16 @@
         <TabControl Grid.Row="3">
             <TabItem Header="{DynamicResource R_STR_COLUMNS}">
                 <local:TableColumnsPanel
+                    x:Name="TableColumnsPanel"
                     ColumnList="{Binding TableInfoModel.ColumnList}"
                     IsColumnChanged="{Binding IsTableChanged, Mode=TwoWay}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_INDEXES}">
-                
+                <local:TableIndexesPanel
+                    IndexList="{Binding TableInfoModel.IndexList}"
+                    ColumnList="{Binding ElementName=TableColumnsPanel, Path=ColumnList}"
+                    IsIndexChanged="{Binding IsTableChanged, Mode=TwoWay}"
+                    TableName="{Binding TableInfoModel.Name}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_FOREIGN_KEYS}">
                 

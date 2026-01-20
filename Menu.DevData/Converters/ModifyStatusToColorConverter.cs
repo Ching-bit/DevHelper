@@ -5,7 +5,7 @@ using Framework.Common;
 
 namespace Menu.DevData;
 
-public class ColumnModifyStatusToColourConverter : IValueConverter
+public class ModifyStatusToColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

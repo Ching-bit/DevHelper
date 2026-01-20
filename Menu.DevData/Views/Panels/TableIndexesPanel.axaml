@@ -1,8 +1,48 @@
-<frw:UniPanel xmlns="https://github.com/avaloniaui"
-              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-              xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
-              x:Class="Menu.DevData.TableIndexesPanel">
-    Welcome to Avalonia!
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    xmlns:local="clr-namespace:Menu.DevData"
+    x:Class="Menu.DevData.TableIndexesPanel">
+    
+    <frw:UniPanel.Resources>
+        <local:ModifyStatusToColorConverter x:Key="ModifyStatusToColorConverter"/>
+        <local:ColumnListToStringConverter x:Key="ColumnListToStringConverter"/>
+    </frw:UniPanel.Resources>
+    
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Classes="Common Success"
+                    Content="{DynamicResource R_STR_ADD}"
+                    Command="{Binding AddCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_MODIFY}"
+                    Command="{Binding ModifyCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+            <Button Classes="Common Danger"
+                    Content="{DynamicResource R_STR_DELETE}"
+                    Command="{Binding DeleteCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </StackPanel>
+        <DataGrid
+            x:Name="DataGridIndexes" Grid.Row="1"
+            ItemsSource="{Binding IndexList, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+            SelectionMode="Extended"
+            CanUserResizeColumns="True">
+            <DataGrid.Columns>
+                <ctrl:BindableDataGridTextColumn
+                    Header="{DynamicResource R_STR_TYPE}"  IsReadOnly="True" Width="100"
+                    Binding="{Binding Type}"
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+                <ctrl:BindableDataGridTextColumn
+                    Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="200"
+                    Binding="{Binding Name}"
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+                <ctrl:BindableDataGridTextColumn
+                    Header="{DynamicResource R_STR_COLUMNS}" IsReadOnly="True" Width="500"
+                    Binding="{Binding ColumnList, Converter={StaticResource ColumnListToStringConverter}}"
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+    
 </frw:UniPanel>
