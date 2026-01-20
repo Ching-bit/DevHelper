@@ -1,0 +1,35 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    x:Class="Menu.DevData.TableColumnsPanel"
+    x:Name="This">
+    
+    <DataGrid
+        ItemsSource="{Binding ElementName=This, Path=ColumnList}"
+        SelectionMode="Extended"
+        CanUserResizeColumns="True">
+        <DataGrid.Columns>
+            <DataGridTemplateColumn Header="{DynamicResource R_STR_COLUMN}">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <ComboBox ItemsSource="{Binding ElementName=This, Path=AllColumnList}"
+                                  SelectedValueBinding="{Binding Id}"
+                                  SelectedValue="{Binding Id}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="{DynamicResource R_STR_DESCRIPTION}" IsReadOnly="True"
+                                Binding="{Binding Description}"/>
+            <DataGridTextColumn Header="{DynamicResource R_STR_TYPE}" IsReadOnly="True"
+                                Binding="{Binding Type}"/>
+            <DataGridTextColumn Header="{DynamicResource R_STR_LENGTH}" IsReadOnly="True"
+                                Binding="{Binding Length}"/>
+            <DataGridTextColumn Header="{DynamicResource R_STR_SCALE}" IsReadOnly="True"
+                                Binding="{Binding Scale}"/>
+            <DataGridTextColumn Header="{DynamicResource R_STR_DATA_DICT}" IsReadOnly="True"
+                                Binding="{Binding DataDict}"/>
+        </DataGrid.Columns>
+    </DataGrid>
+    
+</frw:UniPanel>

@@ -1,6 +1,5 @@
 using Attributes.Avalonia;
 using Framework.Common;
-using Plugin.DevData;
 
 namespace Menu.DevData;
 

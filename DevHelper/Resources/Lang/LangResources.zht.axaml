@@ -24,6 +24,7 @@
     <system:String x:Key="R_STR_HOMEPAGE">主頁</system:String>
     <system:String x:Key="R_STR_DEMO">示例</system:String>
     <system:String x:Key="R_STR_TEST">測試</system:String>
+    <system:String x:Key="R_STR_COLUMN">字段</system:String>
     <system:String x:Key="R_STR_COLUMNS">字段</system:String>
     <system:String x:Key="R_STR_TABLES">表</system:String>
     <system:String x:Key="R_STR_SAVE">保存</system:String>

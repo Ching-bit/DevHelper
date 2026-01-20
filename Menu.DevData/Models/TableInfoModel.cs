@@ -12,8 +12,8 @@ public partial class TableInfoModel : UniModel
         Name = string.Empty;
         Description = string.Empty;
         Remark = string.Empty;
-        ColumnIds = [];
-        AllColumns = [];
+        ColumnIdList = [];
+        ColumnList = [];
     }
 
     public TableInfoModel(TableInfo tableInfo)
@@ -21,22 +21,26 @@ public partial class TableInfoModel : UniModel
         Name = tableInfo.Name;
         Description = tableInfo.Description;
         Remark = tableInfo.Remark;
-        ColumnIds = [];
+        ColumnIdList = [];
         foreach (int columnId in tableInfo.ColumnIdList)
         {
-            ColumnIds.Add(columnId);
+            ColumnIdList.Add(columnId);
         }
 
-        AllColumns = [];
-        foreach (ColumnInfo columnInfo in Global.Get<IDevData>().Columns)
+        ColumnList = [];
+        foreach (int columnId in ColumnIdList)
         {
-            AllColumns.Add(columnInfo);
+            ColumnInfo? columnInfo = Global.Get<IDevData>().Columns.FirstOrDefault(x => x.Id == columnId);
+            if (null != columnInfo)
+            {
+                ColumnList.Add(columnInfo);
+            }
         }
     }
     
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _description;
     [ObservableProperty] private string _remark;
-    [ObservableProperty] private ObservableCollection<int> _columnIds;
-    [ObservableProperty] private ObservableCollection<ColumnInfo> _allColumns;
+    [ObservableProperty] private ObservableCollection<int> _columnIdList;
+    [ObservableProperty] private ObservableCollection<ColumnInfo> _columnList;
 }

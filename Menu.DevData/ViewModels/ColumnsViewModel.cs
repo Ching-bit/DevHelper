@@ -1,5 +1,8 @@
 using System.Collections.ObjectModel;
 using Avalonia.Collections;
+using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Control.Basic;
@@ -32,6 +35,15 @@ public partial class ColumnsViewModel : UniViewModel
         ColumnListView.Refresh();
         IsColumnChanged = false;
     }
+
+    public override void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        _manager = new WindowNotificationManager(TopLevel.GetTopLevel(View))
+        {
+            Position = NotificationPosition.TopCenter,
+            MaxItems = 1
+        };
+    }
     #endregion
 
 
@@ -56,12 +68,12 @@ public partial class ColumnsViewModel : UniViewModel
         Global.Get<IDevData>().Columns.AddRange(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()));
         if (Global.Get<IDevData>().SaveColumns())
         {
-            MessageDialog.Show("R_STR_SAVE_SUCCESS", true).Wait();
+            ShowMessage("R_STR_SAVE_SUCCESS", NotificationType.Success);
             InitData();
         }
         else
         {
-            MessageDialog.Show("R_STR_SAVE_FAILED").Wait();
+            ShowMessage("R_STR_SAVE_FAILED", NotificationType.Error);
         }
     }
 
@@ -74,7 +86,7 @@ public partial class ColumnsViewModel : UniViewModel
     [RelayCommand]
     private async Task AddColumn()
     {
-        ColumnDialogViewModel vm = new(null, GetAllColumnGroups(), ColumnList.Max(x => x.Id) + 1);
+        ColumnDialogViewModel vm = new(null, GetAllColumnGroups(), ColumnList.Count <= 0 ? 1 : ColumnList.Max(x => x.Id) + 1);
         ConfirmDialogResult result = await ConfirmDialog.Show<ColumnDialog>(vm);
         if (!result.IsConfirmed)
         {
@@ -191,5 +203,16 @@ public partial class ColumnsViewModel : UniViewModel
                 .Distinct()
                 .OrderBy(x => x)
                 .ToList();
+    }
+    
+    private WindowNotificationManager? _manager;
+    
+    private void ShowMessage(string message, NotificationType notificationType)
+    {
+        Notification notification = new()
+        {
+            Message = ResourceHelper.FindStringResource(message)
+        };
+        _manager?.Show(notification, type: notificationType);
     }
 }

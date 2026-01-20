@@ -24,6 +24,7 @@
     <system:String x:Key="R_STR_HOMEPAGE">Home</system:String>
     <system:String x:Key="R_STR_DEMO">Demo</system:String>
     <system:String x:Key="R_STR_TEST">Test</system:String>
+    <system:String x:Key="R_STR_COLUMN">Column</system:String>
     <system:String x:Key="R_STR_COLUMNS">Columns</system:String>
     <system:String x:Key="R_STR_TABLES">Tables</system:String>
     <system:String x:Key="R_STR_SAVE">Save</system:String>

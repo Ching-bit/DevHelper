@@ -22,6 +22,6 @@ public partial class MessageDialog
                 IsCloseButtonVisible = false,
                 CanResize = false
             });
-        return result!.IsConfirmed;
+        return result?.IsConfirmed ?? false;
     }
 }

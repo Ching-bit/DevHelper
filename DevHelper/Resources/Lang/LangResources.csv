@@ -20,6 +20,7 @@ R_STR_MENU,Menu,菜單,菜单
 R_STR_HOMEPAGE,Home,主頁,主页
 R_STR_DEMO,Demo,示例,示例
 R_STR_TEST,Test,測試,测试
+R_STR_COLUMN,Column,字段,字段
 R_STR_COLUMNS,Columns,字段,字段
 R_STR_TABLES,Tables,表,表
 R_STR_SAVE,Save,保存,保存

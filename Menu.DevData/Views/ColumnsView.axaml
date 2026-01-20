@@ -21,6 +21,7 @@
                         IsEnabled="{Binding IsColumnChanged}"
                         Command="{Binding SaveCommand}"/>
                 <Button Classes="Common" Content="{DynamicResource R_STR_RESTORE}"
+                        IsEnabled="{Binding IsColumnChanged}"
                         Command="{Binding RestoreCommand}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">

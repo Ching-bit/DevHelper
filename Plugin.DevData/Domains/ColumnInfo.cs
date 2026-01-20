@@ -13,4 +13,9 @@ public class ColumnInfo
     public int Scale { get; set; }
     public string DataDict { get; set; } = string.Empty;
     public string Remark { get; set; } = string.Empty;
+
+    public override string ToString()
+    {
+        return $"{Id} {Name}";
+    }
 }

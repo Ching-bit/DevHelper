@@ -23,6 +23,6 @@ public partial class ConfirmDialog
     public static async Task<ConfirmDialogResult> Show(UserControl view, ConfirmDialogViewModel viewModel)
     {
         ConfirmDialogResult? result = await Dialog.ShowCustomModal<ConfirmDialogResult>(view, viewModel);
-        return result!;
+        return result ?? new ConfirmDialogResult { IsConfirmed = false};
     }
 }
