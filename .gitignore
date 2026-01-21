@@ -56,5 +56,5 @@ nunit-*.xml
 # IDE
 *.csproj.user
 *.DotSettings.user
-.vs
-.idea
+.vs/
+.idea/
