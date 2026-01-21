@@ -28,10 +28,12 @@
                 <local:TableColumnsPanel
                     x:Name="TableColumnsPanel"
                     ColumnList="{Binding TableInfoModel.ColumnList}"
-                    IsColumnChanged="{Binding IsTableChanged, Mode=TwoWay}"/>
+                    IsColumnChanged="{Binding IsTableChanged, Mode=TwoWay}"
+                    IndexList="{Binding ElementName=TableIndexesPanel, Path=IndexList}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_INDEXES}">
                 <local:TableIndexesPanel
+                    x:Name="TableIndexesPanel"
                     IndexList="{Binding TableInfoModel.IndexList}"
                     ColumnList="{Binding ElementName=TableColumnsPanel, Path=ColumnList}"
                     IsIndexChanged="{Binding IsTableChanged, Mode=TwoWay}"

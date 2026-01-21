@@ -8,7 +8,6 @@
     
     <frw:UniPanel.Resources>
         <local:ModifyStatusToColorConverter x:Key="ModifyStatusToColorConverter"/>
-        <local:ColumnListToStringConverter x:Key="ColumnListToStringConverter"/>
     </frw:UniPanel.Resources>
     
     <Grid RowDefinitions="Auto,*">
@@ -34,12 +33,12 @@
                     Binding="{Binding Type}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
-                    Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="200"
+                    Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="240"
                     Binding="{Binding Name}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
-                    Header="{DynamicResource R_STR_COLUMNS}" IsReadOnly="True" Width="500"
-                    Binding="{Binding ColumnList, Converter={StaticResource ColumnListToStringConverter}}"
+                    Header="{DynamicResource R_STR_COLUMNS}" IsReadOnly="True" Width="550"
+                    Binding="{Binding ColumnListString}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -22,7 +22,7 @@
             <HeaderedContentControl Header="{DynamicResource R_STR_COLUMNS}" Classes="Common">
                 <ursa:MultiComboBox
                     Classes="Common"
-                    ItemsSource="{Binding AllColumns}"
+                    ItemsSource="{Binding TableColumnList}"
                     SelectedItems="{Binding IndexInfoModel.ColumnList}"/>
             </HeaderedContentControl>
         </StackPanel>

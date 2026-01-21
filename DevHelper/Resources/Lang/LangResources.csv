@@ -41,16 +41,20 @@ R_STR_NEW_ADD,New...,新增...,新增...
 R_STR_VALUE,Value,值,值
 R_STR_MEANING,Meaning,含意,含意
 R_STR_ADD_GROUP,Add Group,新增分組,新增分组
-R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
-R_STR_DELETE_FAILED,Failed to delete,刪除失敗,删除失败
-R_STR_MODIFY_FAILED,Failed to modify,修改失敗,修改失败
-R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
-R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
-R_STR_SELECT_EMPTY_COLUMNS_NOTICE,Please select a column.,請選擇字段,请选择字段
-R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
-R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete #?,確實要刪除 # 嗎？,确实要删除 # 吗？
-R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
-R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
 R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键
+R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
+R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
+R_STR_SELECT_EMPTY_COLUMN_NOTICE,Please select a column,請選擇字段,请选择字段
+R_STR_SELECT_EMPTY_INDEX_NOTICE,Please select an index,請選擇索引,请选择索引
+R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
+R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete [#]?,確實要刪除 [#] 嗎？,确实要删除 [#] 吗？
+R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE,The column [#1] is used by the table [#2]. Continue to modify?,字段 [#1] 被表 [#2] 使用，仍然修改？,字段 [#1] 被表 [#2] 使用，仍然修改？
+R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE,The column [#1] is used by the table [#2],字段 [#1] 被表 [#2] 使用,字段 [#1] 被表 [#2] 使用
+R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE,The column [#1] is used by the index [#2],字段 [#1] 被索引 [#2] 使用,字段 [#1] 被索引 [#2] 使用
+R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
+R_STR_DELETE_FAILED,Failed to delete,刪除失敗,删除失败
+R_STR_MODIFY_FAILED,Failed to modify,修改失敗,修改失败
+R_STR_SAVE_SUCCESS,Saved successfully,保存成功,保存成功
+R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败

@@ -6,25 +6,26 @@ namespace Menu.DevData;
 
 public partial class TableIndexDialogViewModel : ConfirmDialogViewModel
 {
-    public TableIndexDialogViewModel(List<IndexInfoModel> indexList, List<ColumnInfoModel> columnList, string tableName)
+    public TableIndexDialogViewModel(List<IndexInfoModel> currentIndexList, List<ColumnInfoModel> tableColumnList, string tableName)
     {
+        TableName = tableName;
+        IndexInfoModel = new IndexInfoModel(TableName);
+        
         AllTypes = [IndexType.Unique, IndexType.Index];
-        if (indexList.All(x => IndexType.Primary != x.Type))
+        IndexInfoModel.Type = IndexType.Unique;
+        if (currentIndexList.All(x => IndexType.Primary != x.Type))
         {
             AllTypes.Insert(0, IndexType.Primary);
+            IndexInfoModel.Type = IndexType.Primary;
         }
         
-        AllColumns = [];
-        AllColumns.AddRange(columnList);
-
-        TableName = tableName;
-        
-        IndexInfoModel = new IndexInfoModel(TableName);
+        TableColumnList = [];
+        TableColumnList.AddRange(tableColumnList);
     }
     
     [ObservableProperty] private IndexInfoModel _indexInfoModel;
     
     public List<IndexType> AllTypes { get; }
-    public List<ColumnInfoModel> AllColumns { get; }
+    public List<ColumnInfoModel> TableColumnList { get; }
     public string TableName { get; }
 }

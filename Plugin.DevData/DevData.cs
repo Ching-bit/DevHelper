@@ -34,44 +34,43 @@ public class DevData : IDevData
     public IDirectoryNode? TableRoot { get; private set; }
 
     #region Column Methods
-    public bool AddColumn(ColumnInfo columnInfo)
+    public bool UpdateColumns(List<ColumnInfo> columns)
     {
-        if (Columns.Any(x => x.Id == columnInfo.Id || x.Name == columnInfo.Name))
+        if (!ObjectHelper.ToXml(ColumnsFilePath, columns))
         {
             return false;
         }
-        
-        Columns.Add(columnInfo);
+
+        Columns = columns;
         return true;
     }
 
-    public bool RemoveColumn(int id)
+    public TableInfo? FirstUsedTable(int columnId)
     {
-        ColumnInfo? columnInfo = Columns.FirstOrDefault(x => x.Id == id);
-        if (null == columnInfo)
-        {
-            return false;
-        }
-        
-        Columns.Remove(columnInfo);
-        return true;
+        return null == TableRoot ? null : FirstUsedTableInner(columnId, TableRoot);
     }
 
-    public bool ModifyColumn(ColumnInfo columnInfo)
+    private TableInfo? FirstUsedTableInner(int columnId, IDirectoryNode directory)
     {
-        ColumnInfo? target = Columns.FirstOrDefault(x => x.Id == columnInfo.Id);
-        if (null == target)
+        foreach (IFileNode fileNode in directory.Instances)
         {
-            return false;
+            if (fileNode is TableInfo tableInfo &&
+                tableInfo.ColumnIdList.Contains(columnId))
+            {
+                return tableInfo;
+            }
+        }
+
+        foreach (IDirectoryNode directoryNode in directory.SubDirectories)
+        {
+            TableInfo? tableInfo = FirstUsedTableInner(columnId, directoryNode);
+            if (null != tableInfo)
+            {
+                return tableInfo;
+            }
         }
         
-        ObjectHelper.Copy(target, columnInfo);
-        return true;
-    }
-    
-    public bool SaveColumns()
-    {
-        return ObjectHelper.ToXml(ColumnsFilePath, Columns);
+        return null;
     }
     #endregion
     

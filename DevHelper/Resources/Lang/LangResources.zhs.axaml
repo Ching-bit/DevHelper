@@ -45,18 +45,22 @@
     <system:String x:Key="R_STR_VALUE">值</system:String>
     <system:String x:Key="R_STR_MEANING">含意</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">新增分组</system:String>
-    <system:String x:Key="R_STR_ADD_FAILED">新增失败</system:String>
-    <system:String x:Key="R_STR_DELETE_FAILED">删除失败</system:String>
-    <system:String x:Key="R_STR_MODIFY_FAILED">修改失败</system:String>
-    <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分组名称已存在</system:String>
-    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名称已存在</system:String>
-    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">请选择字段</system:String>
-    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
-    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确实要删除 # 吗？</system:String>
-    <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
-    <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">主键</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外键</system:String>
+    <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分组名称已存在</system:String>
+    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名称已存在</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">请选择字段</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">请选择索引</system:String>
+    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
+    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确实要删除 [#] 吗？</system:String>
+    <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 [#1] 被表 [#2] 使用，仍然修改？</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 [#1] 被表 [#2] 使用</system:String>
+    <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">字段 [#1] 被索引 [#2] 使用</system:String>
+    <system:String x:Key="R_STR_ADD_FAILED">新增失败</system:String>
+    <system:String x:Key="R_STR_DELETE_FAILED">删除失败</system:String>
+    <system:String x:Key="R_STR_MODIFY_FAILED">修改失败</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">保存成功</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">保存失败</system:String>
 
 </ResourceDictionary>

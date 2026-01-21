@@ -142,7 +142,7 @@ public partial class ColumnInfoModel : UniModel
     
     public override string ToString()
     {
-        return $"{Id} {Name}";
+        return $"{Id}: {Name}{(string.IsNullOrEmpty(Description) ? string.Empty : $" ({Description})")}";
     }
     
 }

@@ -9,25 +9,46 @@ namespace Menu.DevData;
 
 public partial class IndexInfoModel : UniModel
 {
+    #region Constructors
     public IndexInfoModel(string tableName)
     {
         _tableName = tableName;
         
         Name = string.Empty;
         ColumnList = [];
+        ColumnListString = string.Empty;
 
         ColumnList.CollectionChanged += (_, _) =>
         {
             Name = GenIndexName();
+            ColumnListString = string.Join(", ", ColumnList);
         };
     }
-    
+
+    public IndexInfoModel(string tableName, IndexInfo indexInfo, List<ColumnInfoModel> allColumns) : this(tableName)
+    {
+        Name = indexInfo.Name;
+        Type = indexInfo.Type;
+        foreach (int columnId in indexInfo.ColumnIdList)
+        {
+            ColumnInfoModel? columnInfoModel = allColumns.FirstOrDefault(x => x.Id == columnId);
+            if (null != columnInfoModel)
+            {
+                ColumnList.Add(columnInfoModel);
+            }
+        }
+    }
+    #endregion
+
+
+    #region Properties
     private readonly string _tableName;
     
     [ObservableProperty] private string _name;
     [ObservableProperty] private IndexType _type;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
     
+    [ObservableProperty] private string _columnListString;
     [ObservableProperty] private ModifyStatus _modifyStatus;
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -66,4 +87,62 @@ public partial class IndexInfoModel : UniModel
             
         return sbName.ToString();
     }
+    #endregion
+
+
+    #region Public Functions
+    public IndexInfo GetIndexInfo()
+    {
+        IndexInfo indexInfo = new()
+        {
+            Name = Name,
+            Type = Type
+        };
+        indexInfo.ColumnIdList.AddRange(ColumnList.Select(x => x.Id));
+        return indexInfo;
+    }
+
+    public void CopyFrom(IndexInfoModel source, List<ColumnInfoModel> tableColumnList)
+    {
+        Name = source.Name;
+        Type = source.Type;
+        
+        ColumnList.Clear();
+        foreach (ColumnInfoModel sourceColumn in source.ColumnList)
+        {
+            ColumnInfoModel? columnInfoModel = tableColumnList.FirstOrDefault(x => x.Id == sourceColumn.Id);
+            if (null != columnInfoModel)
+            {
+                ColumnList.Add(columnInfoModel);
+            }
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is IndexInfoModel indexInfoModel)
+        {
+            return
+                Name.Equals(indexInfoModel.Name) &&
+                Type == indexInfoModel.Type &&
+                new HashSet<int>(ColumnList.Select(x => x.Id)).SetEquals(indexInfoModel.ColumnList.Select(x => x.Id));
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hash = new();
+        hash.Add(Name);
+        hash.Add(Type);
+        foreach (ColumnInfoModel columnInfoModel in ColumnList)
+        {
+            hash.Add(columnInfoModel.Id);
+        }
+        return hash.ToHashCode();
+    }
+    #endregion
+
+    
+    
 }

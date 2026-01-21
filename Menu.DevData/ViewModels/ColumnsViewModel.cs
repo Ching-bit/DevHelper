@@ -1,8 +1,6 @@
 using System.Collections.ObjectModel;
 using Avalonia.Collections;
-using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Control.Basic;
@@ -55,9 +53,7 @@ public partial class ColumnsViewModel : UniViewModel
         List<ColumnInfoModel> columnModels = ColumnList.Where(x => ModifyStatus.Deleted != x.ModifyStatus).ToList();
         
         // sync to plugin and save
-        Global.Get<IDevData>().Columns.Clear();
-        Global.Get<IDevData>().Columns.AddRange(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()));
-        if (Global.Get<IDevData>().SaveColumns())
+        if (Global.Get<IDevData>().UpdateColumns(columnModels.Select(columnInfoModel => columnInfoModel.GetColumnInfo()).ToList()))
         {
             ShowNotification("R_STR_SAVE_SUCCESS", NotificationType.Success);
             InitData();
@@ -95,8 +91,22 @@ public partial class ColumnsViewModel : UniViewModel
         // not select any column
         if (null == SelectedColumn)
         {
-            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMNS_NOTICE", true);
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMN_NOTICE", true);
             return;
+        }
+        
+        // warning: the column is used by the table
+        TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(SelectedColumn.Id);
+        if (null != usedTable)
+        {
+            string warningMsg = ResourceHelper.FindStringResource("R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE")
+                .Replace("#1", SelectedColumn.Name)
+                .Replace("#2", usedTable.Name);
+            bool confirmResult = await MessageDialog.Show(warningMsg, isCancelButtonVisible: true);
+            if (!confirmResult)
+            {
+                return;
+            }
         }
         
         // modifying dialog
@@ -137,8 +147,22 @@ public partial class ColumnsViewModel : UniViewModel
         // not select any column
         if (selectedColumns.Count <= 0)
         {
-            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMNS_NOTICE", true);
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMN_NOTICE", true);
             return;
+        }
+        
+        // if any column is used by any table, it is not allowed to delete
+        foreach (ColumnInfoModel selectedColumn in selectedColumns)
+        {
+            TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(selectedColumn.Id);
+            if (null != usedTable)
+            {
+                string warningMsg = ResourceHelper.FindStringResource("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE")
+                    .Replace("#1", selectedColumn.Name)
+                    .Replace("#2", usedTable.Name);
+                await MessageDialog.Show(warningMsg);
+                return;
+            }
         }
         
         // confirm

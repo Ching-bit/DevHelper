@@ -54,7 +54,7 @@
                     Binding="{Binding Scale}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
-                    Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="90"
+                    Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="120"
                     Binding="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn

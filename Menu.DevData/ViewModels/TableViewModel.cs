@@ -1,6 +1,4 @@
-using System.Collections.ObjectModel;
 using Avalonia.Controls.Notifications;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Framework.Common;
@@ -23,12 +21,22 @@ public partial class TableViewModel : UniViewModel
         {
             throw new Exception("Cannot get table instance from the menu");
         }
-        
-        tableInfo.ColumnIdList.Clear();
-        tableInfo.ColumnIdList.AddRange(TableInfoModel.ColumnList.Select(x => x.Id));
-        // TODO
 
-        if (!tableInfo.ToFile())
+        foreach (ColumnInfoModel deletedColumn in TableInfoModel.ColumnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
+        {
+            TableInfoModel.ColumnList.Remove(deletedColumn);
+        }
+
+        foreach (IndexInfoModel deletedIndex in TableInfoModel.IndexList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
+        {
+            TableInfoModel.IndexList.Remove(deletedIndex);
+        }
+
+        if (!Global.Get<IDevData>().UpdateTable(tableInfo,
+                TableInfoModel.ColumnList.Select(x => x.Id).ToList(),
+                TableInfoModel.IndexList.Select(x => x.GetIndexInfo()).ToList(),
+                TableInfoModel.Remark) ||
+            !tableInfo.ToFile())
         {
             ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
             return;

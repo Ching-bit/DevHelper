@@ -45,18 +45,22 @@
     <system:String x:Key="R_STR_VALUE">Value</system:String>
     <system:String x:Key="R_STR_MEANING">Meaning</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
-    <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
-    <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
-    <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
-    <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
-    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
-    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMNS_NOTICE">Please select a column.</system:String>
-    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
-    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete #?</system:String>
-    <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
-    <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">Primary Key</system:String>
     <system:String x:Key="R_STR_INDEXES">Indexes</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
+    <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
+    <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">Please select a column</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">Please select an index</system:String>
+    <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
+    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete [#]?</system:String>
+    <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]. Continue to modify?</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]</system:String>
+    <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">The column [#1] is used by the index [#2]</system:String>
+    <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
+    <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
+    <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
 
 </ResourceDictionary>

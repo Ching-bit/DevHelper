@@ -7,10 +7,8 @@ public interface IDevData : IPlugin
     public List<ColumnInfo> Columns { get; }
     public IDirectoryNode? TableRoot { get; }
 
-    public bool AddColumn(ColumnInfo columnInfo);
-    public bool RemoveColumn(int id);
-    public bool ModifyColumn(ColumnInfo columnInfo);
-    public bool SaveColumns();
+    public bool UpdateColumns(List<ColumnInfo> columns);
+    public TableInfo? FirstUsedTable(int columnId);
     
     public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory);
     public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem, Type itemType);

@@ -1,8 +1,5 @@
 using System.Collections.ObjectModel;
 using Attributes.Avalonia;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.Input;
 using Control.Basic;
 using Framework.Common;
@@ -31,21 +28,55 @@ public partial class TableIndexesPanel : UniPanel
         {
             return;
         }
-        
+
+        indexInfoModel.ModifyStatus = ModifyStatus.Added;
         IndexList.Add(indexInfoModel);
         IsIndexChanged = true;
     }
     
     [RelayCommand]
-    private void Modify()
+    private async Task Modify()
     {
+        if (DataGridIndexes.SelectedItem is not IndexInfoModel selectedIndex)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
+            return;
+        }
+
+        TableIndexDialogViewModel vm = new(IndexList.Where(x => !x.Equals(selectedIndex)).ToList(), ColumnList.ToList(), TableName);
+        foreach (ColumnInfoModel columnInfoModel in selectedIndex.ColumnList)
+        {
+            vm.IndexInfoModel.ColumnList.Add(columnInfoModel);
+        }
+        vm.IndexInfoModel.Name = selectedIndex.Name;
+        vm.IndexInfoModel.Type = selectedIndex.Type;
         
+        ConfirmDialogResult result = await ConfirmDialog.Show<TableIndexDialog>(vm);
+        if (!result.IsConfirmed || result.ReturnParameter is not IndexInfoModel indexInfoModel || selectedIndex.Equals(indexInfoModel))
+        {
+            return;
+        }
+        
+        selectedIndex.CopyFrom(indexInfoModel, ColumnList.ToList());
+        selectedIndex.ModifyStatus = ModifyStatus.Modified;
+        IsIndexChanged = true;
     }
 
     [RelayCommand]
-    private void Delete()
+    private async Task Delete()
     {
-        
+        List<IndexInfoModel> selectedIndexes = DataGridIndexes.SelectedItems.Cast<IndexInfoModel>().ToList();
+        if (selectedIndexes.Count <= 0)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
+            return;
+        }
+
+        foreach (IndexInfoModel indexInfoModel in selectedIndexes)
+        {
+            indexInfoModel.ModifyStatus = ModifyStatus.Deleted;
+        }
+        IsIndexChanged = true;
     }
     
 }
