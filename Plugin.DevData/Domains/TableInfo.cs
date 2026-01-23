@@ -4,13 +4,19 @@ namespace Plugin.DevData;
 
 public class TableInfo : FileNode
 {
+    #region Constructors
     public TableInfo() : base() { }
     public TableInfo(string name, string description, IDirectoryNode? parent)
         : base(name, description, parent) { }
+    #endregion
     
+    
+    #region Properties
     public List<int> ColumnIdList { get; set; } = [];
     public List<IndexInfo> IndexList { get; set; } = [];
+    public List<ForeignKeyInfo> ForeignKeyList { get; set; } = [];
     public string Remark { get; set; } = string.Empty;
+    #endregion
     
     public override bool FromFile()
     {
