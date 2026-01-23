@@ -73,9 +73,6 @@ public partial class IndexInfoModel : UniModel
             case IndexType.Index:
                 sbName.Append("IDX");
                 break;
-            case IndexType.Foreign:
-                sbName.Append("FK");
-                break;
         }
 
         sbName.Append("_" + _tableName.ToUpper());

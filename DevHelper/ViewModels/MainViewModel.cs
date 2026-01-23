@@ -147,7 +147,8 @@ public partial class MainViewModel : UniViewModel
         AddItemDialogViewModel vm = new();
         vm.OnConfirmEvent += () =>
         {
-            if (directory.Instances.Any(instance => instance.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower())))
+            IDirectoryNode? rootDirectory = Global.Get<IDevData>().GetRootDirectory(directory);
+            if (null != rootDirectory && Global.Get<IDevData>().IsItemNameExists(rootDirectory, vm.AddItemModel.Name))
             {
                 ShowNotification("R_STR_NAME_EXIST_NOTICE", NotificationType.Error);
                 return false;
@@ -218,9 +219,9 @@ public partial class MainViewModel : UniViewModel
         }
         else if (MenuType.Item == menu.MenuType)
         {
-            if (menu.Entity is not FileNode fileNode || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
+            if (menu.Entity is not FileNode fileNode)
             {
-                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to modify an item, but the selected menu or the parent menu doesn't have its directory object");
+                Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to modify an item, but the selected menu doesn't have its file object");
                 return;
             }
 
@@ -234,7 +235,8 @@ public partial class MainViewModel : UniViewModel
             };
             vm.OnConfirmEvent += () =>
             {
-                if (parentDirectory.Instances.Any(x => x.Name.ToLower().Equals(vm.AddItemModel.Name.ToLower()) && !x.Name.Equals(fileNode.Name)))
+                IDirectoryNode? rootDirectory = Global.Get<IDevData>().GetRootDirectory(fileNode);
+                if (null != rootDirectory && Global.Get<IDevData>().IsItemNameExists(rootDirectory, vm.AddItemModel.Name, [fileNode.Name]))
                 {
                     ShowNotification("R_STR_NAME_EXIST_NOTICE", NotificationType.Error);
                     return false;

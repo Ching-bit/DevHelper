@@ -99,8 +99,7 @@ public class DevData : IDevData
         return true;
     }
 
-    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem,
-        Type itemType)
+    public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem, Type itemType)
     {
         createdItem = null;
         MethodInfo? method = typeof(DevData).GetMethod(nameof(AddItemInner));
@@ -212,6 +211,53 @@ public class DevData : IDevData
         item.Name = newName;
         item.Description = newDescription;
         return true;
+    }
+
+    public bool IsItemNameExists(IDirectoryNode directoryNode, string itemName, string[]? exceptedItemNames = null)
+    {
+        if (null != exceptedItemNames)
+        {
+            exceptedItemNames = exceptedItemNames.Select(name => name.ToLower()).ToArray();
+        }
+        
+        foreach (IFileNode fileNode in directoryNode.Instances)
+        {
+            if (fileNode.Name.ToLower().Equals(itemName.ToLower()) &&
+                (null == exceptedItemNames || !exceptedItemNames.Contains(fileNode.Name.ToLower())))
+            {
+                return true;
+            }
+        }
+
+        foreach (IDirectoryNode subDirectory in directoryNode.SubDirectories)
+        {
+            if (IsItemNameExists(subDirectory, itemName, exceptedItemNames))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public IDirectoryNode? GetRootDirectory(IFileNode fileNode)
+    {
+        IDirectoryNode? ret = fileNode.Parent;
+        while (null != ret && null != ret.Parent)
+        {
+            ret = ret.Parent;
+        }
+        return ret;
+    }
+
+    public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode)
+    {
+        IDirectoryNode? ret = directoryNode;
+        while (null != ret && null != ret.Parent)
+        {
+            ret = ret.Parent;
+        }
+        return ret;
     }
     #endregion
 

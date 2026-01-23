@@ -16,6 +16,9 @@ public interface IDevData : IPlugin
     public bool RemoveItem(IDirectoryNode parent, IFileNode item);
     public bool ModifyGroup(IDirectoryNode directory, string newName, string newDescription);
     public bool ModifyItem(IFileNode item, string newName, string newDescription);
+    public bool IsItemNameExists(IDirectoryNode directoryNode, string itemName, string[]? exceptedItemNames = null);
+    public IDirectoryNode? GetRootDirectory(IFileNode fileNode);
+    public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode);
     
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, string remark);
 }
