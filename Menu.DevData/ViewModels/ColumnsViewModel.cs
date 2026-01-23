@@ -47,8 +47,13 @@ public partial class ColumnsViewModel : UniViewModel
     #region Commands
 
     [RelayCommand]
-    private void Save()
+    private async Task Save()
     {
+        if (!await CheckBeforeSave(ColumnList))
+        {
+            return;
+        }
+        
         // remove deleted columns
         List<ColumnInfoModel> columnModels = ColumnList.Where(x => ModifyStatus.Deleted != x.ModifyStatus).ToList();
         
@@ -62,6 +67,24 @@ public partial class ColumnsViewModel : UniViewModel
         {
             ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
         }
+    }
+
+    private async Task<bool> CheckBeforeSave(ObservableCollection<ColumnInfoModel> columnList)
+    {
+        // check if deleted column is used by tables
+        foreach (ColumnInfoModel columnInfoModel in columnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus))
+        {
+            TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(columnInfoModel.Id);
+            if (null == usedTable) { continue; }
+            
+            string errMsg = ResourceHelper.FindStringResource("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE")
+                .Replace("#1", columnInfoModel.Name)
+                .Replace("#2", usedTable.Name);
+            await MessageDialog.Show(errMsg);
+            columnInfoModel.ModifyStatus = ModifyStatus.Normal;
+        }
+        
+        return true;
     }
 
     [RelayCommand]

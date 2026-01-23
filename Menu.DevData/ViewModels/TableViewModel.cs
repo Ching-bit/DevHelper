@@ -1,6 +1,7 @@
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Control.Basic;
 using Framework.Common;
 using Plugin.DevData;
 
@@ -15,7 +16,7 @@ public partial class TableViewModel : UniViewModel
     }
 
     [RelayCommand]
-    private void Save()
+    private async Task Save()
     {
         if (null == TableInfoModel || View is not UniMenu uniMenu || uniMenu.MenuConf?.Entity is not TableInfo tableInfo)
         {
@@ -25,6 +26,11 @@ public partial class TableViewModel : UniViewModel
         foreach (ColumnInfoModel deletedColumn in TableInfoModel.ColumnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
         {
             TableInfoModel.ColumnList.Remove(deletedColumn);
+        }
+
+        if (!await CheckBeforeSave(TableInfoModel))
+        {
+            return;
         }
 
         foreach (IndexInfoModel deletedIndex in TableInfoModel.IndexList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
@@ -43,6 +49,23 @@ public partial class TableViewModel : UniViewModel
         }
 
         InitData();
+    }
+
+    private async Task<bool> CheckBeforeSave(TableInfoModel tableInfoModel)
+    {
+        // check if the column exists
+        foreach (ColumnInfoModel columnInfoModel in tableInfoModel.ColumnList)
+        {
+            if (Global.Get<IDevData>().Columns.All(x => x.Id != columnInfoModel.Id))
+            {
+                string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_NOT_FOUND_NOTICE")
+                    .Replace("#", $"[{columnInfoModel}]");
+                await MessageDialog.Show(errMsg);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     [RelayCommand]

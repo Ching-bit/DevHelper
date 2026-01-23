@@ -56,7 +56,9 @@
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete [#]?</system:String>
     <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]. Continue to modify?</system:String>
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">The column [#1] is used by the table [#2] so it will be reserved</system:String>
     <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">The column [#1] is used by the index [#2]</system:String>
+    <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">The column information of [#] is not found</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
