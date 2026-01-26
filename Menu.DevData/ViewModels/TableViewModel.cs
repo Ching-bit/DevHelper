@@ -37,6 +37,11 @@ public partial class TableViewModel : UniViewModel
         {
             TableInfoModel.IndexList.Remove(deletedIndex);
         }
+        
+        foreach (ForeignKeyInfoModel deletedForeignKey in TableInfoModel.ForeignKeyList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
+        {
+            TableInfoModel.ForeignKeyList.Remove(deletedForeignKey);
+        }
 
         if (!Global.Get<IDevData>().UpdateTable(tableInfo,
                 TableInfoModel.ColumnList.Select(x => x.Id).ToList(),

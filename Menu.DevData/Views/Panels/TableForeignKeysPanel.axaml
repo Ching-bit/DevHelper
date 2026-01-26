@@ -24,7 +24,7 @@
         </StackPanel>
         
         <DataGrid
-            Grid.Row="1"
+            x:Name="DataGridForeignKeys" Grid.Row="1"
             ItemsSource="{Binding ForeignKeyList, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
             SelectionMode="Extended"
             CanUserResizeColumns="True">

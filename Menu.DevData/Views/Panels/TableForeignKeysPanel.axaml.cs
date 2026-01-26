@@ -54,9 +54,20 @@ public partial class TableForeignKeysPanel : UniPanel
     }
 
     [RelayCommand]
-    private void Delete()
+    private async Task Delete()
     {
-        
+        List<ForeignKeyInfoModel> selectedForeignKeys = DataGridForeignKeys.SelectedItems.Cast<ForeignKeyInfoModel>().ToList();
+        if (selectedForeignKeys.Count <= 0)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
+            return;
+        }
+
+        foreach (ForeignKeyInfoModel foreignKeyInfoModel in selectedForeignKeys)
+        {
+            foreignKeyInfoModel.ModifyStatus = ModifyStatus.Deleted;
+        }
+        IsForeignKeyChanged = true;
     }
     
 }
