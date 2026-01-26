@@ -48,9 +48,44 @@ public partial class TableForeignKeysPanel : UniPanel
     }
 
     [RelayCommand]
-    private void Modify()
+    private async Task Modify()
     {
+        if (DataGridForeignKeys.SelectedItem is not ForeignKeyInfoModel selecttedForeignKey)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
+            return;
+        }
         
+        List<ColumnInfoModel> sourceColumnList =
+            ColumnList.Where(x => !ForeignKeyList.Where(z => z.Column?.Id != selecttedForeignKey.Column?.Id).Select(y => y.Column?.Id).Contains(x.Id)).ToList();
+        List<TableInfoModel> tableList = [];
+        foreach (TableInfo tableInfo in Global.Get<IDevData>().GetTableList())
+        {
+            if (tableInfo.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
+                tableInfo.Name != TableName)
+            {
+                tableList.Add(new TableInfoModel(tableInfo));
+            }
+        }
+        
+        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList)
+        {
+            ForeignKeyInfoModel =
+            {
+                Column = selecttedForeignKey.Column,
+                ReferenceTable = selecttedForeignKey.ReferenceTable,
+                ReferenceColumn = selecttedForeignKey.ReferenceColumn
+            }
+        };
+        ConfirmDialogResult result = await ConfirmDialog.Show<TableForeignKeyDialog>(vm);
+        if (!result.IsConfirmed || result.ReturnParameter is not ForeignKeyInfoModel foreignKeyInfoModel)
+        {
+            return;
+        }
+
+        selecttedForeignKey.CopyFrom(foreignKeyInfoModel);
+        selecttedForeignKey.ModifyStatus = ModifyStatus.Modified;
+        IsForeignKeyChanged = true;
     }
 
     [RelayCommand]

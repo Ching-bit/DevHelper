@@ -45,4 +45,11 @@ public partial class ForeignKeyInfoModel : UniModel
             ReferenceColumnId = ReferenceColumn?.Id ?? 0
         };
     }
+
+    public void CopyFrom(ForeignKeyInfoModel source)
+    {
+        Column = source.Column;
+        ReferenceTable = source.ReferenceTable;
+        ReferenceColumn = source.ReferenceColumn;
+    }
 }
