@@ -11,7 +11,13 @@
                 <ursa:AutoCompleteBox
                     Classes="Common" FilterMode="Contains"
                     ItemsSource="{Binding ColumnList}"
-                    SelectedItem="{Binding ForeignKeyInfoModel.Column, Mode=TwoWay}"/>
+                    SelectedItem="{Binding ForeignKeyInfoModel.Column}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_NAME}">
+                <TextBox
+                    Classes="Common"
+                    Text="{Binding ForeignKeyInfoModel.Name}"
+                    TextWrapping="Wrap"/>
             </HeaderedContentControl>
             <HeaderedContentControl Header="{DynamicResource R_STR_REFERENCE_TABLE}">
                 <ursa:AutoCompleteBox
@@ -23,7 +29,7 @@
                 <ursa:AutoCompleteBox
                     Classes="Common" FilterMode="Contains"
                     ItemsSource="{Binding ReferenceColumnList}"
-                    SelectedItem="{Binding ForeignKeyInfoModel.ReferenceColumn, Mode=TwoWay}"/>
+                    SelectedItem="{Binding ForeignKeyInfoModel.ReferenceColumn}"/>
             </HeaderedContentControl>
         </StackPanel>
     </ctrl:ConfirmDialog>

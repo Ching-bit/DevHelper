@@ -10,6 +10,7 @@ namespace Menu.DevData;
 [WithDirectProperty(typeof(ObservableCollection<ColumnInfoModel>), "ColumnList")]
 [WithDirectProperty(typeof(bool), "IsColumnChanged", false)]
 [WithDirectProperty(typeof(ObservableCollection<IndexInfoModel>), "IndexList")]
+[WithDirectProperty(typeof(ObservableCollection<ForeignKeyInfoModel>), "ForeignKeyList")]
 public partial class TableColumnsPanel : UniPanel
 {
     public TableColumnsPanel()
@@ -17,6 +18,7 @@ public partial class TableColumnsPanel : UniPanel
         InitializeComponent();
         _columnList = [];
         _indexList = [];
+        _foreignKeyList = [];
     }
     
     [RelayCommand]
@@ -102,6 +104,25 @@ public partial class TableColumnsPanel : UniPanel
                     return;
                 }
             }
+
+            foreach (ForeignKeyInfoModel foreignKeyInfoModel in ForeignKeyList)
+            {
+                if (foreignKeyInfoModel.Column?.Id == selectedColumn.Id)
+                {
+                    string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
+                        .Replace("#1", selectedColumn.Name)
+                        .Replace("#2", foreignKeyInfoModel.Name);
+                    await MessageDialog.Show(errMsg);
+                    return;
+                }
+            }
+        }
+        
+        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+            .Replace("#", string.Join(", ", selectedColumns.Select(x => x.Name)));
+        if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
+        {
+            return;
         }
         
         foreach (ColumnInfoModel selectedColumn in selectedColumns)

@@ -8,12 +8,12 @@ namespace Menu.DevData;
 
 public partial class TableForeignKeyDialogViewModel : ConfirmDialogViewModel
 {
-    public TableForeignKeyDialogViewModel(List<ColumnInfoModel> columnList, List<TableInfoModel> tableList)
+    public TableForeignKeyDialogViewModel(List<ColumnInfoModel> columnList, List<TableInfoModel> tableList, string tableName)
     {
         ColumnList = columnList;
         TableList = tableList;
         ReferenceColumnList = [];
-        ForeignKeyInfoModel = new ForeignKeyInfoModel();
+        ForeignKeyInfoModel = new ForeignKeyInfoModel(tableName);
 
         ForeignKeyInfoModel.PropertyChanged -= OnForeignKeyChanged;
         ForeignKeyInfoModel.PropertyChanged += OnForeignKeyChanged;

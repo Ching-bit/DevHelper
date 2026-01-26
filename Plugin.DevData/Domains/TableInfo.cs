@@ -27,6 +27,8 @@ public class TableInfo : FileNode
             ColumnIdList.AddRange(fileContent.ColumnIdList);
             IndexList.Clear();
             IndexList.AddRange(fileContent.IndexList);
+            ForeignKeyList.Clear();
+            ForeignKeyList.AddRange(fileContent.ForeignKeyList);
             return true;
         }
         catch

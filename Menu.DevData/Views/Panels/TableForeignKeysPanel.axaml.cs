@@ -35,7 +35,7 @@ public partial class TableForeignKeysPanel : UniPanel
             }
         }
         
-        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList);
+        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, TableName);
         ConfirmDialogResult result = await ConfirmDialog.Show<TableForeignKeyDialog>(vm);
         if (!result.IsConfirmed || result.ReturnParameter is not ForeignKeyInfoModel foreignKeyInfoModel)
         {
@@ -68,7 +68,7 @@ public partial class TableForeignKeysPanel : UniPanel
             }
         }
         
-        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList)
+        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, TableName)
         {
             ForeignKeyInfoModel =
             {
@@ -95,6 +95,13 @@ public partial class TableForeignKeysPanel : UniPanel
         if (selectedForeignKeys.Count <= 0)
         {
             await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
+            return;
+        }
+
+        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+            .Replace("#", string.Join(", ", selectedForeignKeys.Select(x => x.Name)));
+        if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
+        {
             return;
         }
 

@@ -58,7 +58,7 @@ public partial class TableInfoModel : UniModel
 
         foreach (ForeignKeyInfo foreignKeyInfo in tableInfo.ForeignKeyList)
         {
-            ForeignKeyList.Add(new ForeignKeyInfoModel(foreignKeyInfo, ColumnList.ToList()));
+            ForeignKeyList.Add(new ForeignKeyInfoModel(foreignKeyInfo, ColumnList.ToList(), Name));
         }
     }
     

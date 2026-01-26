@@ -71,6 +71,13 @@ public partial class TableIndexesPanel : UniPanel
             await MessageDialog.Show("R_STR_SELECT_EMPTY_INDEX_NOTICE", true);
             return;
         }
+        
+        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+            .Replace("#", string.Join(", ", selectedIndexes.Select(x => x.Name)));
+        if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
+        {
+            return;
+        }
 
         foreach (IndexInfoModel indexInfoModel in selectedIndexes)
         {
