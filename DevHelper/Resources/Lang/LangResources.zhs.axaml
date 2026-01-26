@@ -48,6 +48,8 @@
     <system:String x:Key="R_STR_PRIMARY_KEY">主键</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外键</system:String>
+    <system:String x:Key="R_STR_REFERENCE_TABLE">指向表</system:String>
+    <system:String x:Key="R_STR_REFERENCE_COLUMN">指向字段</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分组名称已存在</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名称已存在</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">请选择字段</system:String>

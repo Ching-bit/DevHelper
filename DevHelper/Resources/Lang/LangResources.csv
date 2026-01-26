@@ -44,6 +44,8 @@ R_STR_ADD_GROUP,Add Group,新增分組,新增分组
 R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键
+R_STR_REFERENCE_TABLE,Reference Table,指向表,指向表
+R_STR_REFERENCE_COLUMN,Reference Column,指向字段,指向字段
 R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
 R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
 R_STR_SELECT_EMPTY_COLUMN_NOTICE,Please select a column,請選擇字段,请选择字段

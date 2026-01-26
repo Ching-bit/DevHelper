@@ -14,6 +14,7 @@ public partial class TableInfoModel : UniModel
         Remark = string.Empty;
         ColumnList = [];
         IndexList = [];
+        ForeignKeyList = [];
 
         AllColumns = [];
         foreach (ColumnInfo columnInfo in Global.Get<IDevData>().Columns)
@@ -54,7 +55,11 @@ public partial class TableInfoModel : UniModel
                 }
             }
         }
-        
+
+        foreach (ForeignKeyInfo foreignKeyInfo in tableInfo.ForeignKeyList)
+        {
+            ForeignKeyList.Add(new ForeignKeyInfoModel(foreignKeyInfo, ColumnList.ToList()));
+        }
     }
     
     [ObservableProperty] private string _name;
@@ -62,6 +67,12 @@ public partial class TableInfoModel : UniModel
     [ObservableProperty] private string _remark;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
     [ObservableProperty] private ObservableCollection<IndexInfoModel> _indexList;
+    [ObservableProperty] private ObservableCollection<ForeignKeyInfoModel> _foreignKeyList;
     
     private List<ColumnInfoModel> AllColumns { get; }
+
+    public override string ToString()
+    {
+        return $"{Name}{(string.IsNullOrEmpty(Description) ? "" : $" ({Description})")}";
+    }
 }

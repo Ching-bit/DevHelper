@@ -40,7 +40,11 @@
                     TableName="{Binding TableInfoModel.Name}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_FOREIGN_KEYS}">
-                
+                <local:TableForeignKeysPanel
+                    ForeignKeyList="{Binding TableInfoModel.ForeignKeyList}"
+                    ColumnList="{Binding ElementName=TableColumnsPanel, Path=ColumnList}"
+                    IsForeignKeyChanged="{Binding IsTableChanged, Mode=TwoWay}"
+                    TableName="{Binding TableInfoModel.Name}"/>
             </TabItem>
         </TabControl>
         

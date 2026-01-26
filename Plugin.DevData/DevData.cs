@@ -263,12 +263,42 @@ public class DevData : IDevData
 
 
     #region Table Methods
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, string remark)
+    public List<TableInfo> GetTableList()
+    {
+        if (null == TableRoot)
+        {
+            return [];
+        }
+        
+        return GetTableListInner(TableRoot);
+    }
+
+    private List<TableInfo> GetTableListInner(IDirectoryNode tableDirectory)
+    {
+        List<TableInfo> tableList = [];
+        foreach (IFileNode fileNode in tableDirectory.Instances)
+        {
+            if (fileNode is TableInfo tableInfo)
+            {
+                tableList.Add(tableInfo);
+            }
+        }
+
+        foreach (IDirectoryNode directoryNode in tableDirectory.SubDirectories)
+        {
+            tableList.AddRange(GetTableListInner(directoryNode));
+        }
+        
+        return tableList;
+    }
+    
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, string remark)
     {
         TableInfo tmp = new(tableInfo.Name, tableInfo.Description, tableInfo.Parent)
         {
             ColumnIdList = columnIdList,
             IndexList = indexList,
+            ForeignKeyList = foreignKeyList,
             Remark = remark
         };
         if (!tmp.ToFile())
@@ -280,6 +310,8 @@ public class DevData : IDevData
         tableInfo.ColumnIdList.AddRange(columnIdList);
         tableInfo.IndexList.Clear();
         tableInfo.IndexList.AddRange(indexList);
+        tableInfo.ForeignKeyList.Clear();
+        tableInfo.ForeignKeyList.AddRange(foreignKeyList);
         tableInfo.Remark = remark;
         return true;
     }

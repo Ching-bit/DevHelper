@@ -19,6 +19,7 @@ public interface IDevData : IPlugin
     public bool IsItemNameExists(IDirectoryNode directoryNode, string itemName, string[]? exceptedItemNames = null);
     public IDirectoryNode? GetRootDirectory(IFileNode fileNode);
     public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode);
-    
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, string remark);
+
+    public List<TableInfo> GetTableList();
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, string remark);
 }

@@ -1,0 +1,31 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ursa="https://irihi.tech/ursa"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    x:Class="Menu.DevData.TableForeignKeyDialog">
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding ForeignKeyInfoModel}">
+        <StackPanel Classes="Common">
+            <HeaderedContentControl Header="{DynamicResource R_STR_COLUMN}">
+                <ursa:AutoCompleteBox
+                    Classes="Common" FilterMode="Contains"
+                    ItemsSource="{Binding ColumnList}"
+                    SelectedItem="{Binding ForeignKeyInfoModel.Column, Mode=TwoWay}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_REFERENCE_TABLE}">
+                <ursa:AutoCompleteBox
+                    Classes="Common" FilterMode="Contains"
+                    ItemsSource="{Binding TableList}"
+                    SelectedItem="{Binding ForeignKeyInfoModel.ReferenceTable}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_REFERENCE_COLUMN}">
+                <ursa:AutoCompleteBox
+                    Classes="Common" FilterMode="Contains"
+                    ItemsSource="{Binding ReferenceColumnList}"
+                    SelectedItem="{Binding ForeignKeyInfoModel.ReferenceColumn, Mode=TwoWay}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>

@@ -33,7 +33,7 @@
                     Binding="{Binding Type}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn
-                    Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="240"
+                    Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="300"
                     Binding="{Binding Name}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <ctrl:BindableDataGridTextColumn

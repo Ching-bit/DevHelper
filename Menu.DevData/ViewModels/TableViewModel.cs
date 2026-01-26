@@ -41,6 +41,7 @@ public partial class TableViewModel : UniViewModel
         if (!Global.Get<IDevData>().UpdateTable(tableInfo,
                 TableInfoModel.ColumnList.Select(x => x.Id).ToList(),
                 TableInfoModel.IndexList.Select(x => x.GetIndexInfo()).ToList(),
+                TableInfoModel.ForeignKeyList.Select(x => x.GetForeignKeyInfo()).ToList(),
                 TableInfoModel.Remark) ||
             !tableInfo.ToFile())
         {
