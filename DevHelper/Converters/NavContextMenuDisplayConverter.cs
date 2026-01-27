@@ -1,24 +1,28 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data.Converters;
 
 namespace UniClient;
 
-public class NavContextMenuDisplayConverter : IMultiValueConverter
+public class NavContextMenuDisplayConverter : IValueConverter
 {
-    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        bool display = false;
-        foreach (object? value in values)
+        if (value is not MenuType menuType)
         {
-            if (value is bool and true)
-            {
-                display = true;
-                break;
-            }
+            return null;
         }
         
-        return display ? parameter : null;
+        if (MenuType.Columns == menuType)
+        {
+            return null;
+        }
+
+        return parameter;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -49,32 +49,37 @@
                 <ursa:NavMenu.Styles>
                     <Style Selector="ursa|NavMenuItem">
                         <Setter Property="ContextMenu">
-                            <MultiBinding Converter="{StaticResource NavContextMenuDisplayConverter}">
-                                <Binding Path="IsAddGroupVisible"/>
-                                <Binding Path="IsAddVisible"/>
-                                <Binding Path="IsModifyVisible"/>
-                                <Binding Path="IsDeleteVisible"/>
-                                <MultiBinding.ConverterParameter>
+                            <Binding
+                                Path="MenuType"
+                                Converter="{StaticResource NavContextMenuDisplayConverter}">
+                                <Binding.ConverterParameter>
                                     <ContextMenu>
+                                        <!-- for tables -->
+                                        <MenuItem Header="{DynamicResource R_STR_ADD_DATABASE}"
+                                                  IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Tables}"
+                                                  Command="{Binding #This.DataContext.AddDatabaseCommand}"
+                                                  CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_ADD_GROUP}"
-                                                  IsVisible="{Binding IsAddGroupVisible}"
-                                                  Command="{Binding #This.DataContext.AddGroupCommand}"
+                                                  IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup}"
+                                                  Command="{Binding #This.DataContext.AddTableGroupCommand}"
                                                   CommandParameter="{Binding}"/>
-                                        <MenuItem Header="{DynamicResource R_STR_ADD}"
-                                                  IsVisible="{Binding IsAddVisible}"
-                                                  Command="{Binding #This.DataContext.AddItemCommand}"
+                                        <MenuItem Header="{DynamicResource R_STR_ADD_TABLE}"
+                                                  IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup}"
+                                                  Command="{Binding #This.DataContext.AddTableCommand}"
                                                   CommandParameter="{Binding}"/>
+                                        
+                                        <!-- general -->
                                         <MenuItem Header="{DynamicResource R_STR_MODIFY}"
-                                                  IsVisible="{Binding IsModifyVisible}"
+                                                  IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table}"
                                                   Command="{Binding #This.DataContext.ModifyItemCommand}"
                                                   CommandParameter="{Binding}"/>
                                         <MenuItem Header="{DynamicResource R_STR_DELETE}"
-                                                  IsVisible="{Binding IsDeleteVisible}"
+                                                  IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table}"
                                                   Command="{Binding #This.DataContext.DeleteItemCommand}"
                                                   CommandParameter="{Binding}"/>
                                     </ContextMenu>
-                                </MultiBinding.ConverterParameter>
-                            </MultiBinding>
+                                </Binding.ConverterParameter>
+                            </Binding>
                         </Setter>
                     </Style>
                 </ursa:NavMenu.Styles>

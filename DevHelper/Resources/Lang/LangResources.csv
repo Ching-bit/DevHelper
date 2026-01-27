@@ -43,6 +43,8 @@ R_STR_NEW_ADD,New...,新增...,新增...
 R_STR_VALUE,Value,值,值
 R_STR_MEANING,Meaning,含意,含意
 R_STR_ADD_GROUP,Add Group,新增分組,新增分组
+R_STR_ADD_DATABASE,Add Database,新增數據庫,新增数据库
+R_STR_ADD_TABLE,Add Table,新增表,新增表
 R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键

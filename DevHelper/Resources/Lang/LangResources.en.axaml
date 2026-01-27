@@ -47,6 +47,8 @@
     <system:String x:Key="R_STR_VALUE">Value</system:String>
     <system:String x:Key="R_STR_MEANING">Meaning</system:String>
     <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
+    <system:String x:Key="R_STR_ADD_DATABASE">Add Database</system:String>
+    <system:String x:Key="R_STR_ADD_TABLE">Add Table</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">Primary Key</system:String>
     <system:String x:Key="R_STR_INDEXES">Indexes</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
