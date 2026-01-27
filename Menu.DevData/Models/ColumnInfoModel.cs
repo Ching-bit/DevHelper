@@ -15,6 +15,7 @@ public partial class ColumnInfoModel : UniModel
         Group = ColumnInfo.DEFAULT_COLUMN_NAME;
         Name = string.Empty;
         Description = string.Empty;
+        DefaultValue = string.Empty;
         DataDict = string.Empty;
         Remark = string.Empty;
     }
@@ -30,6 +31,9 @@ public partial class ColumnInfoModel : UniModel
         Type = columnInfo.Type;
         Length = columnInfo.Length;
         Scale = columnInfo.Scale;
+        IsNullable = columnInfo.IsNullable;
+        HasDefaultValue = columnInfo.HasDefaultValue;
+        DefaultValue = columnInfo.DefaultValue;
         DataDict = columnInfo.DataDict;
         Remark = columnInfo.Remark;
     }
@@ -47,6 +51,9 @@ public partial class ColumnInfoModel : UniModel
     [ObservableProperty] private ColumnType _type;
     [ObservableProperty] private int _length;
     [ObservableProperty] private int _scale;
+    [ObservableProperty] private bool _isNullable;
+    [ObservableProperty] private bool _hasDefaultValue;
+    [ObservableProperty] private string _defaultValue;
     [ObservableProperty] private string _dataDict;
     [ObservableProperty] private string _remark;
     
@@ -83,12 +90,12 @@ public partial class ColumnInfoModel : UniModel
                 }
                 else if (ColumnType.Char == Type)
                 {
-                    Length = 255;
+                    Length = 16;
                     Scale = 1;
                 }
                 else if (ColumnType.Varchar == Type)
                 {
-                    Length = 2000;
+                    Length = 255;
                     Scale = 1;
                 }
 
@@ -110,6 +117,9 @@ public partial class ColumnInfoModel : UniModel
             Type = Type,
             Length = Length,
             Scale = Scale,
+            IsNullable = IsNullable,
+            HasDefaultValue = HasDefaultValue,
+            DefaultValue = DefaultValue,
             DataDict = DataDict,
             Remark = Remark
         };

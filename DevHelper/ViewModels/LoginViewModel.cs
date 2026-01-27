@@ -135,7 +135,8 @@ public partial class LoginViewModel : UniViewModel
     #endregion
     
     
-    [RelayCommand] private async Task Login()
+    [RelayCommand]
+    private async Task Login()
     {
         Global.LoginPlugins();
         

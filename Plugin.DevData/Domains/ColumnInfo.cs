@@ -11,6 +11,9 @@ public class ColumnInfo
     public ColumnType Type { get; set; }
     public int Length { get; set; }
     public int Scale { get; set; }
+    public bool IsNullable { get; set; }
+    public bool HasDefaultValue { get; set; }
+    public string DefaultValue { get; set; } = string.Empty;
     public string DataDict { get; set; } = string.Empty;
     public string Remark { get; set; } = string.Empty;
 }

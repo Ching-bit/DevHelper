@@ -1,3 +1,4 @@
+using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Control.Basic;
 using Framework.Common;
@@ -57,6 +58,27 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
 
     private bool OnConfirm()
     {
+        if (string.IsNullOrWhiteSpace(ColumnInfoModel.Name))
+        {
+            ShowNotification("R_STR_EMPTY_NAME_NOTICE", NotificationType.Error);
+            return false;
+        }
+
+        if (!ColumnInfoModel.HasDefaultValue)
+        {
+            ColumnInfoModel.DefaultValue = string.Empty;
+        }
+        else
+        {
+            if (ColumnInfoModel.Type is ColumnType.Int32 && !int.TryParse(ColumnInfoModel.DefaultValue, out int _) ||
+                ColumnInfoModel.Type is ColumnType.Int64 && !long.TryParse(ColumnInfoModel.DefaultValue, out long _) ||
+                ColumnInfoModel.Type is ColumnType.Number && !double.TryParse(ColumnInfoModel.DefaultValue, out double _))
+            {
+                ShowNotification("R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE", NotificationType.Error);
+                return false;
+            }
+        }
+        
         ColumnInfoModel.Group = 0 == SelectedGroupIndex ? GroupName : ColumnGroups[SelectedGroupIndex];
         return true;
     }

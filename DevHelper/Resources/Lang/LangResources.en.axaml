@@ -40,6 +40,8 @@
     <system:String x:Key="R_STR_PRECISION">Precision</system:String>
     <system:String x:Key="R_STR_SCALE">Scale</system:String>
     <system:String x:Key="R_STR_MAX_BYTES_PER_CHAR">Max Bytes of a Char</system:String>
+    <system:String x:Key="R_STR_IS_NULLABLE">Nullable</system:String>
+    <system:String x:Key="R_STR_DEFAULT_VALUE">Default Value</system:String>
     <system:String x:Key="R_STR_DATA_DICT">Data Dictionary</system:String>
     <system:String x:Key="R_STR_REMARK">Remark</system:String>
     <system:String x:Key="R_STR_GROUP">Group</system:String>
@@ -69,6 +71,7 @@
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">The column [#1] is used by the table [#2] so it will be reserved</system:String>
     <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">The column [#1] is used by the index [#2]</system:String>
     <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">The column information of [#] is not found</system:String>
+    <system:String x:Key="R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE">The default value is inconsistent with its type</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>

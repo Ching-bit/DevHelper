@@ -40,6 +40,8 @@
     <system:String x:Key="R_STR_PRECISION">精度</system:String>
     <system:String x:Key="R_STR_SCALE">小數位數</system:String>
     <system:String x:Key="R_STR_MAX_BYTES_PER_CHAR">字符最大字節數</system:String>
+    <system:String x:Key="R_STR_IS_NULLABLE">可空</system:String>
+    <system:String x:Key="R_STR_DEFAULT_VALUE">缺省值</system:String>
     <system:String x:Key="R_STR_DATA_DICT">數據字典</system:String>
     <system:String x:Key="R_STR_REMARK">備註</system:String>
     <system:String x:Key="R_STR_GROUP">分組</system:String>
@@ -69,6 +71,7 @@
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">字段 [#1] 被表 [#2] 使用，因此將被保留</system:String>
     <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">字段 [#1] 被索引 [#2] 使用</system:String>
     <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">找不到字段信息 [#]</system:String>
+    <system:String x:Key="R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE">缺省值與字段類型不一致</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失敗</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">刪除失敗</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">修改失敗</system:String>

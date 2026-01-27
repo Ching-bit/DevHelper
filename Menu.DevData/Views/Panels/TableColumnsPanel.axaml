@@ -7,6 +7,7 @@
     x:Class="Menu.DevData.TableColumnsPanel">
     
     <frw:UniPanel.Resources>
+        <local:ColumnDefaultValueDisplayConverter x:Key="ColumnDefaultValueDisplayConverter"/>
         <local:ModifyStatusToColorConverter x:Key="ModifyStatusToColorConverter"/>
         <local:PrimaryKeyColumnDisplayConverter x:Key="PrimaryKeyColumnDisplayConverter"/>
     </frw:UniPanel.Resources>
@@ -57,6 +58,20 @@
                     Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="120"
                     Binding="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+                <DataGridCheckBoxColumn
+                    Header="{DynamicResource R_STR_IS_NULLABLE}" IsReadOnly="True"
+                    Binding="{Binding IsNullable}"/>
+                <ctrl:BindableDataGridTextColumn
+                    Header="{DynamicResource R_STR_DEFAULT_VALUE}" IsReadOnly="True"
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}">
+                    <ctrl:BindableDataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource ColumnDefaultValueDisplayConverter}">
+                            <Binding Path="HasDefaultValue"/>
+                            <Binding Path="DefaultValue"/>
+                            <Binding Path="Type"/>
+                        </MultiBinding>
+                    </ctrl:BindableDataGridTextColumn.Binding>
+                </ctrl:BindableDataGridTextColumn>
                 <ctrl:BindableDataGridTextColumn
                     Header="{DynamicResource R_STR_DATA_DICT}" IsReadOnly="True" Width="300"
                     Binding="{Binding DataDict}"

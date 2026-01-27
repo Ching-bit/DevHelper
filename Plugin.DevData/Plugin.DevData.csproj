@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Framework.Common\Framework.Common.csproj" />
+      <ProjectReference Include="..\Plugin.AppEnv\Plugin.AppEnv.csproj" />
     </ItemGroup>
 
 </Project>

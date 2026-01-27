@@ -13,18 +13,22 @@
         </StackPanel>
         
         <!-- Password -->
+        <!--
         <StackPanel Classes="Common" Orientation="Horizontal">
             <PathIcon Data="{StaticResource SemiIconKeyStroked}" Classes="Common Large"/>
             <TextBox Watermark="{DynamicResource R_STR_PASSWORD}" Classes="Common ClearButton RevealPasswordButton"
                      Text="{Binding Password}"/>
         </StackPanel>
+        -->
         
         <!-- Auto-login and Remember Me -->
         <StackPanel Classes="Common" Orientation="Horizontal" HorizontalAlignment="Left">
+            <!--
             <CheckBox Content="{DynamicResource R_STR_AUTO_LOGIN}"
                       IsVisible="{Binding CanAutoLogin}"
                       IsChecked="{Binding IsAutoLogin}"
                       Classes="Common"/>
+            -->
             <CheckBox Content="{DynamicResource R_STR_REMEMBER_ME}"
                       IsChecked="{Binding IsRememberAccount}"
                       Classes="Common"/>

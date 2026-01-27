@@ -54,6 +54,19 @@
                 <NumericUpDown Classes="Common" FormatString="N0" Minimum="0" x:Name="NumericBoxScale"
                                Value="{Binding ColumnInfoModel.Scale}"/>
             </HeaderedContentControl>
+            <!-- is nullable -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_IS_NULLABLE}" Classes="Common">
+                <CheckBox Classes="Common" IsChecked="{Binding ColumnInfoModel.IsNullable}"/>
+            </HeaderedContentControl>
+            <!-- default value -->
+            <HeaderedContentControl Header="{DynamicResource R_STR_DEFAULT_VALUE}" Classes="Common">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Classes="Common" IsChecked="{Binding ColumnInfoModel.HasDefaultValue}"/>
+                    <TextBox Classes="Common" Text="{Binding ColumnInfoModel.DefaultValue}"
+                             IsVisible="{Binding ColumnInfoModel.HasDefaultValue}"
+                             Width="180"/>
+                </StackPanel>
+            </HeaderedContentControl>
             <!-- Remark -->
             <HeaderedContentControl Header="{DynamicResource R_STR_REMARK}" Classes="Common">
                 <TextBox Classes="Common" Text="{Binding ColumnInfoModel.Remark}"/>

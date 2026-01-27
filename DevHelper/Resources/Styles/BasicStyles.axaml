@@ -76,6 +76,11 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="MaxDropDownHeight" Value="200"/>
+        <Setter Property="ItemTemplate">
+            <DataTemplate>
+                <TextBlock Text="{Binding}"/>
+            </DataTemplate>
+        </Setter>
     </Style>
     
     <Style Selector="CheckBox.Common">

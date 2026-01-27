@@ -1,12 +1,23 @@
 using System.Reflection;
 using Framework.Common;
 using Framework.Utils.Helpers;
+using Plugin.AppEnv;
 
 namespace Plugin.DevData;
 
 public class DevData : IDevData
 {
-    private static string DevDataDir => Path.Combine(SystemConfig.AppConf.UserDataDir, "DevData");
+    private static string DevDataDir
+    {
+        get
+        {
+            string dir = SystemConfig.AppConf.UserDataDir;
+            dir = Path.Combine(dir, Global.Get<IAppEnv>().User?.Username ?? string.Empty);
+            dir = Path.Combine(dir, "DevData");
+            return dir;
+        }
+    }
+    
     private static string ColumnsFilePath => Path.Combine(DevDataDir, "Columns.xml");
     private const string TablesDirName = "Tables";
     private static string TablesDir => Path.Combine(DevDataDir, TablesDirName);
@@ -20,7 +31,21 @@ public class DevData : IDevData
 
     public void OnLoggedIn()
     {
+        if (!Directory.Exists(DevDataDir))
+        {
+            Directory.CreateDirectory(DevDataDir);
+        }
+        
+        if (!File.Exists(ColumnsFilePath))
+        {
+            ObjectHelper.ToXml(ColumnsFilePath, new List<ColumnInfo>());
+        }
         Columns = ObjectHelper.FromXmlFile<List<ColumnInfo>>(ColumnsFilePath);
+
+        if (!Directory.Exists(TablesDir))
+        {
+            Directory.CreateDirectory(TablesDir);
+        }
         TableRoot = new DirectoryNode(TablesDir, typeof(TableInfo));
         TableRoot.ReadFiles();
     }
@@ -32,6 +57,7 @@ public class DevData : IDevData
     #region IDevData
     public List<ColumnInfo> Columns { get; private set; } = [];
     public IDirectoryNode? TableRoot { get; private set; }
+    
 
     #region Column Methods
     public bool UpdateColumns(List<ColumnInfo> columns)
@@ -265,12 +291,7 @@ public class DevData : IDevData
     #region Table Methods
     public List<TableInfo> GetTableList()
     {
-        if (null == TableRoot)
-        {
-            return [];
-        }
-        
-        return GetTableListInner(TableRoot);
+        return null == TableRoot ? [] : GetTableListInner(TableRoot);
     }
 
     private List<TableInfo> GetTableListInner(IDirectoryNode tableDirectory)

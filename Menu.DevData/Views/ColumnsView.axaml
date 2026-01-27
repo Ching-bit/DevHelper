@@ -8,6 +8,7 @@
     
     <frw:UniMenu.Resources>
         <local:ColumnDataDictTooltipConverter x:Key="ColumnDataDictTooltipConverter"/>
+        <local:ColumnDefaultValueDisplayConverter x:Key="ColumnDefaultValueDisplayConverter"/>
         <local:ColumnLengthDisplayConverter x:Key="ColumnLengthDisplayConverter"/>
         <local:ColumnScaleDisplayConverter x:Key="ColumnScaleDisplayConverter"/>
         <local:ModifyStatusToColorConverter x:Key="ColumnModifyStatusToColourConverter"/>
@@ -84,6 +85,24 @@
                             <Binding Path="Scale"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
+                </ctrl:BindableDataGridTextColumn>
+                <!-- is nullable -->
+                <DataGridCheckBoxColumn
+                    Header="{DynamicResource R_STR_IS_NULLABLE}"
+                    Binding="{Binding IsNullable}"
+                    IsReadOnly="True"/>
+                <!-- default value -->
+                <ctrl:BindableDataGridTextColumn
+                    Header="{DynamicResource R_STR_DEFAULT_VALUE}"
+                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
+                    IsReadOnly="True">
+                    <ctrl:BindableDataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource ColumnDefaultValueDisplayConverter}">
+                            <Binding Path="HasDefaultValue"/>
+                            <Binding Path="DefaultValue"/>
+                            <Binding Path="Type"/>
+                        </MultiBinding>
+                    </ctrl:BindableDataGridTextColumn.Binding>
                 </ctrl:BindableDataGridTextColumn>
                 <!-- DataDict -->
                 <DataGridTemplateColumn Header="{DynamicResource R_STR_DATA_DICT}" Width="300">

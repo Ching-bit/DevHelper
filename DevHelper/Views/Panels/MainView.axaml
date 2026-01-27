@@ -24,7 +24,6 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 CollapseWidth="50"
-                ExpandWidth="240"
                 IsHorizontalCollapsed="False"
                 ItemsSource="{Binding Menus}"
                 SelectedItem="{Binding SelectedMenu}"

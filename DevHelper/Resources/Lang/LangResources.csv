@@ -36,6 +36,8 @@ R_STR_LENGTH,Length,長度,长度
 R_STR_PRECISION,Precision,精度,精度
 R_STR_SCALE,Scale,小數位數,小数位数
 R_STR_MAX_BYTES_PER_CHAR,Max Bytes of a Char,字符最大字節數,字符最大字节数
+R_STR_IS_NULLABLE,Nullable,可空,可空
+R_STR_DEFAULT_VALUE,Default Value,缺省值,缺省值
 R_STR_DATA_DICT,Data Dictionary,數據字典,数据字典
 R_STR_REMARK,Remark,備註,备注
 R_STR_GROUP,Group,分組,分组
@@ -65,6 +67,7 @@ R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE,The column [#1] is used by the tabl
 R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE,The column [#1] is used by the table [#2] so it will be reserved,字段 [#1] 被表 [#2] 使用，因此將被保留,字段 [#1] 被表 [#2] 使用，因此将被保留
 R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE,The column [#1] is used by the index [#2],字段 [#1] 被索引 [#2] 使用,字段 [#1] 被索引 [#2] 使用
 R_STR_COLUMN_NOT_FOUND_NOTICE,The column information of [#] is not found,找不到字段信息 [#],找不到字段信息 [#]
+R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE,The default value is inconsistent with its type,缺省值與字段類型不一致,缺省值与字段类型不一致
 R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
 R_STR_DELETE_FAILED,Failed to delete,刪除失敗,删除失败
 R_STR_MODIFY_FAILED,Failed to modify,修改失敗,修改失败

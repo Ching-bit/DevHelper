@@ -6,10 +6,13 @@
     x:Class="Menu.DevData.TableColumnDialog">
     
     <ctrl:ConfirmDialog ReturnParameter="{Binding SelectedColumn}">
-        <ursa:AutoCompleteBox
-            Classes="Common" FilterMode="Contains"
-            ItemsSource="{Binding AllColumns}"
-            SelectedItem="{Binding SelectedColumn}"/>
+        <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_COLUMN}">
+            <ursa:AutoCompleteBox
+                Classes="Common" FilterMode="Contains"
+                ItemsSource="{Binding AllColumns}"
+                SelectedItem="{Binding SelectedColumn}"
+                Width="300"/>
+        </HeaderedContentControl>
     </ctrl:ConfirmDialog>
     
 </UserControl>
