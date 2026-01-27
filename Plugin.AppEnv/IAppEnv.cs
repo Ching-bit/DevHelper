@@ -13,4 +13,5 @@ public interface IAppEnv : IPlugin
     public Architecture CpuArchitecture { get; }
     public string OsType { get; }
     public UserInfo? User { get; set; }
+    public string UserDataDir { get; }
 }

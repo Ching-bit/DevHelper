@@ -8,6 +8,10 @@
         <Name>GlobalSetting</Name>
     </PluginInfo>
     <PluginInfo>
+        <Assembly>Plugin.AppEnv</Assembly>
+        <Name>UserSetting</Name>
+    </PluginInfo>
+    <PluginInfo>
         <Assembly>Plugin.Log</Assembly>
         <Name>Log</Name>
     </PluginInfo>

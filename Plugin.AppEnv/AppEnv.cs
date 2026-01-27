@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Framework.Common;
 
 namespace Plugin.AppEnv;
 
@@ -43,6 +44,8 @@ internal class AppEnv : IAppEnv
     public string OsType => OsPlatform?.ToString().ToLower() + "_" + CpuArchitecture.ToString().ToLower();
 
     public UserInfo? User { get; set; }
+    
+    public string UserDataDir { get; private set; } = string.Empty;
     #endregion
     
 
@@ -50,8 +53,20 @@ internal class AppEnv : IAppEnv
     public void OnStart() { }
     public void OnStop() { }
     public void OnLogin() { }
-    public void OnLoggedIn() { }
-    public void OnLoggedOut() { }
+
+    public void OnLoggedIn()
+    {
+        UserDataDir = Path.Combine(SystemConfig.AppConf.UserDataDir, User?.Username ?? string.Empty);
+        if (!Directory.Exists(UserDataDir))
+        {
+            Directory.CreateDirectory(UserDataDir);
+        }
+    }
+
+    public void OnLoggedOut()
+    {
+        UserDataDir = string.Empty;
+    }
     #endregion
     
 }
