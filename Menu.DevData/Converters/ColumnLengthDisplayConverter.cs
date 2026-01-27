@@ -13,7 +13,7 @@ public class ColumnLengthDisplayConverter : IMultiValueConverter
             return string.Empty;
         }
 
-        if (columnType is ColumnType.Number or ColumnType.Char or ColumnType.String)
+        if (columnType is ColumnType.Number or ColumnType.Char or ColumnType.Varchar)
         {
             return length.ToString();
         }

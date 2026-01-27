@@ -59,16 +59,7 @@ public partial class ColumnInfoModel : UniModel
             {
                 if (ColumnType.Number == Type)
                 {
-                    Length = Math.Min(Length, 38);                  // Number(m, n), m <= 38
-                    Scale = Math.Min(Scale, Math.Min(Length, 30));  // n <= 30, n <= m
-                }
-                else if (ColumnType.Char == Type)
-                {
-                    Length = Math.Min(Length, 255);     // Char(m), m <= 255
-                }
-                else if (ColumnType.String == Type)
-                {
-                    Length = Math.Min(Length, 4000);    // String(m), m <= 4000
+                    Scale = Math.Min(Scale, Length);
                 }
 
                 break;
@@ -77,7 +68,7 @@ public partial class ColumnInfoModel : UniModel
             {
                 if (ColumnType.Number == Type)
                 {
-                    Scale = Math.Min(Scale, Math.Min(Length, 30));   // Number(m, n), n <= 30, n <= m
+                    Scale = Math.Min(Scale, Length);
                 }
 
                 break;
@@ -93,12 +84,12 @@ public partial class ColumnInfoModel : UniModel
                 else if (ColumnType.Char == Type)
                 {
                     Length = 255;
-                    Scale = 0;
+                    Scale = 1;
                 }
-                else if (ColumnType.String == Type)
+                else if (ColumnType.Varchar == Type)
                 {
-                    Length = 4000;
-                    Scale = 0;
+                    Length = 2000;
+                    Scale = 1;
                 }
 
                 break;
@@ -125,11 +116,8 @@ public partial class ColumnInfoModel : UniModel
 
         switch (columnInfo.Type)
         {
-            case ColumnType.Number:
+            case ColumnType.Number or ColumnType.Char or ColumnType.Varchar:
                 // do nothing
-                break;
-            case ColumnType.Char or ColumnType.String:
-                columnInfo.Scale = 0;
                 break;
             default:
                 columnInfo.Length = 0;
@@ -138,6 +126,21 @@ public partial class ColumnInfoModel : UniModel
         }
 
         return columnInfo;
+    }
+
+    public string GetTypeString()
+    {
+        return Type switch
+        {
+            ColumnType.Char or ColumnType.Varchar => $"{Type}({Length})",
+            ColumnType.Number => $"{Type}({Length}, {Scale})",
+            _ => Type.ToString()
+        };
+    }
+
+    public bool IsSameType(ColumnInfoModel columnInfoModel)
+    {
+        return GetTypeString().Equals(columnInfoModel.GetTypeString());
     }
     
     public override string ToString()

@@ -37,7 +37,9 @@
     <system:String x:Key="R_STR_DESCRIPTION">說明</system:String>
     <system:String x:Key="R_STR_TYPE">類型</system:String>
     <system:String x:Key="R_STR_LENGTH">長度</system:String>
-    <system:String x:Key="R_STR_SCALE">標度</system:String>
+    <system:String x:Key="R_STR_PRECISION">精度</system:String>
+    <system:String x:Key="R_STR_SCALE">小數位數</system:String>
+    <system:String x:Key="R_STR_MAX_BYTES_PER_CHAR">字符最大字節數</system:String>
     <system:String x:Key="R_STR_DATA_DICT">數據字典</system:String>
     <system:String x:Key="R_STR_REMARK">備註</system:String>
     <system:String x:Key="R_STR_GROUP">分組</system:String>
@@ -52,7 +54,11 @@
     <system:String x:Key="R_STR_REFERENCE_COLUMN">指向字段</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分組名稱已存在</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名稱已存在</system:String>
+    <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">名稱為空</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">請選擇字段</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">請選擇參照表</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">請選擇參照字段</system:String>
+    <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">字段類型 [#1] 與參照字段類型 [#2] 不一致</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">請選擇索引</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">確認刪除以下字段？</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">確實要刪除 [#] 嗎？</system:String>

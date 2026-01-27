@@ -33,7 +33,9 @@ R_STR_NAME,Name,名稱,名称
 R_STR_DESCRIPTION,Description,說明,说明
 R_STR_TYPE,Type,類型,类型
 R_STR_LENGTH,Length,長度,长度
-R_STR_SCALE,Scale,標度,标度
+R_STR_PRECISION,Precision,精度,精度
+R_STR_SCALE,Scale,小數位數,小数位数
+R_STR_MAX_BYTES_PER_CHAR,Max Bytes of a Char,字符最大字節數,字符最大字节数
 R_STR_DATA_DICT,Data Dictionary,數據字典,数据字典
 R_STR_REMARK,Remark,備註,备注
 R_STR_GROUP,Group,分組,分组
@@ -48,7 +50,11 @@ R_STR_REFERENCE_TABLE,Reference Table,指向表,指向表
 R_STR_REFERENCE_COLUMN,Reference Column,指向字段,指向字段
 R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
 R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
+R_STR_EMPTY_NAME_NOTICE,The name is empty,名稱為空,名称为空
 R_STR_SELECT_EMPTY_COLUMN_NOTICE,Please select a column,請選擇字段,请选择字段
+R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE,Please select the reference table,請選擇參照表,请选择参照表
+R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE,Please select the reference column,請選擇參照字段,请选择参照字段
+R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE,The column type [#1] is inconsistent with the reference column type [#2],字段類型 [#1] 與參照字段類型 [#2] 不一致,字段类型 [#1] 与参照字段类型 [#2] 不一致
 R_STR_SELECT_EMPTY_INDEX_NOTICE,Please select an index,請選擇索引,请选择索引
 R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
 R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete [#]?,確實要刪除 [#] 嗎？,确实要删除 [#] 吗？

@@ -37,7 +37,9 @@
     <system:String x:Key="R_STR_DESCRIPTION">Description</system:String>
     <system:String x:Key="R_STR_TYPE">Type</system:String>
     <system:String x:Key="R_STR_LENGTH">Length</system:String>
+    <system:String x:Key="R_STR_PRECISION">Precision</system:String>
     <system:String x:Key="R_STR_SCALE">Scale</system:String>
+    <system:String x:Key="R_STR_MAX_BYTES_PER_CHAR">Max Bytes of a Char</system:String>
     <system:String x:Key="R_STR_DATA_DICT">Data Dictionary</system:String>
     <system:String x:Key="R_STR_REMARK">Remark</system:String>
     <system:String x:Key="R_STR_GROUP">Group</system:String>
@@ -52,7 +54,11 @@
     <system:String x:Key="R_STR_REFERENCE_COLUMN">Reference Column</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
+    <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">The name is empty</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">Please select a column</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">Please select the reference table</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">Please select the reference column</system:String>
+    <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">The column type [#1] is inconsistent with the reference column type [#2]</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">Please select an index</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete [#]?</system:String>

@@ -11,16 +11,7 @@ public class UniViewModel : ObservableObject
     
     public virtual void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        TopLevel? topLevel = TopLevel.GetTopLevel(View);
-        if (_lastTopLevel != topLevel)
-        {
-            _lastTopLevel = topLevel;
-            _notificationManager = new WindowNotificationManager(_lastTopLevel)
-            {
-                Position = NotificationPosition.TopCenter,
-                MaxItems = 1
-            };
-        }
+        RefreshNotificationManager();
     }
 
     
@@ -40,6 +31,21 @@ public class UniViewModel : ObservableObject
             Message = ResourceHelper.FindStringResource(message)
         };
         _notificationManager?.Show(notification, type: notificationType);
+    }
+
+    public void RefreshNotificationManager(TopLevel? host = null)
+    {
+        host ??= TopLevel.GetTopLevel(View);
+
+        if (_lastTopLevel != host)
+        {
+            _lastTopLevel = host;
+            _notificationManager = new WindowNotificationManager(_lastTopLevel)
+            {
+                Position = NotificationPosition.TopCenter,
+                MaxItems = 1
+            };
+        }
     }
     
     private WindowNotificationManager? _notificationManager;

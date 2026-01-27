@@ -4,7 +4,13 @@
     xmlns:ursa="https://irihi.tech/ursa"
     xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
     xmlns:pdata="clr-namespace:Plugin.DevData;assembly=Plugin.DevData"
+    xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.ColumnDialog">
+    
+    <UserControl.Resources>
+        <local:TypeToLengthTextConverter x:Key="TypeToLengthTextConverter"/>
+        <local:TypeToScaleTextConverter x:Key="TypeToScaleTextConverter"/>
+    </UserControl.Resources>
     
     <ctrl:ConfirmDialog ReturnParameter="{Binding ColumnInfoModel}">
         <StackPanel Classes="Common">
@@ -37,14 +43,14 @@
                                    Value="{Binding ColumnInfoModel.Type}"/>
             </HeaderedContentControl>
             <!-- Length -->
-            <HeaderedContentControl Header="{DynamicResource R_STR_LENGTH}" Classes="Common"
-                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|String}">
+            <HeaderedContentControl Header="{Binding ColumnInfoModel.Type, Converter={StaticResource TypeToLengthTextConverter}}" Classes="Common"
+                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|Varchar}">
                 <NumericUpDown Classes="Common" FormatString="N0" Minimum="1" x:Name="NumericBoxLength"
                                Value="{Binding ColumnInfoModel.Length}"/>
             </HeaderedContentControl>
             <!-- Scale -->
-            <HeaderedContentControl Header="{DynamicResource R_STR_SCALE}" Classes="Common"
-                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number}">
+            <HeaderedContentControl Header="{Binding ColumnInfoModel.Type, Converter={StaticResource TypeToScaleTextConverter}}" Classes="Common"
+                                    IsVisible="{Binding ElementName=SelectorType, Path=Value, Converter={StaticResource IsValueInConverter}, ConverterParameter=Number|Char|Varchar}">
                 <NumericUpDown Classes="Common" FormatString="N0" Minimum="0" x:Name="NumericBoxScale"
                                Value="{Binding ColumnInfoModel.Scale}"/>
             </HeaderedContentControl>

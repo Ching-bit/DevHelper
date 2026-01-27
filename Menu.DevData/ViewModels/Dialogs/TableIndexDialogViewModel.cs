@@ -1,3 +1,4 @@
+using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Control.Basic;
 using Plugin.DevData;
@@ -21,6 +22,9 @@ public partial class TableIndexDialogViewModel : ConfirmDialogViewModel
         
         TableColumnList = [];
         TableColumnList.AddRange(tableColumnList);
+        
+        OnConfirmEvent -= CheckBeforeConfirm;
+        OnConfirmEvent += CheckBeforeConfirm;
     }
     
     [ObservableProperty] private IndexInfoModel _indexInfoModel;
@@ -28,4 +32,22 @@ public partial class TableIndexDialogViewModel : ConfirmDialogViewModel
     public List<IndexType> AllTypes { get; }
     public List<ColumnInfoModel> TableColumnList { get; }
     public string TableName { get; }
+
+
+    private bool CheckBeforeConfirm()
+    {
+        if (string.IsNullOrWhiteSpace(IndexInfoModel.Name))
+        {
+            ShowNotification("R_STR_EMPTY_NAME_NOTICE", NotificationType.Error);
+            return false;
+        }
+
+        if (IndexInfoModel.ColumnList.Count <= 0)
+        {
+            ShowNotification("R_STR_SELECT_EMPTY_COLUMN_NOTICE", NotificationType.Error);
+            return false;
+        }
+        
+        return true;
+    }
 }
