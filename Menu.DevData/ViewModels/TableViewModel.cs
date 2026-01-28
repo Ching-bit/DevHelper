@@ -65,7 +65,7 @@ public partial class TableViewModel : UniViewModel
             if (Global.Get<IDevData>().Columns.All(x => x.Id != columnInfoModel.Id))
             {
                 string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_NOT_FOUND_NOTICE")
-                    .Replace("#", $"[{columnInfoModel}]");
+                    .Replace("#1", $"[{columnInfoModel}]");
                 await MessageDialog.Show(errMsg);
                 return false;
             }

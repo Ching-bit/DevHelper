@@ -8,9 +8,9 @@
     <StackPanel Classes="Common">
         <!-- User Name -->
         <StackPanel Classes="Common" Orientation="Horizontal">
-            <PathIcon Data="{StaticResource SemiIconUserStroked}" Classes="Common Large"/>
+            <PathIcon Data="{StaticResource SemiIconAppCenter}" Classes="Common Large"/>
             <ctrl:RemovableComboBox
-                Watermark="{DynamicResource R_STR_USERNAME}"
+                Watermark="{DynamicResource R_STR_SYSTEM}"
                 ItemsSource="{Binding LastUsers}"
                 IsEditable="True"
                 Text="{Binding Username, Mode=TwoWay}"/>
@@ -26,20 +26,18 @@
         -->
         
         <!-- Auto-login and Remember Me -->
-        <StackPanel Classes="Common" Orientation="Horizontal" HorizontalAlignment="Left">
-            <!--
+        <StackPanel Classes="Common" Orientation="Horizontal" HorizontalAlignment="Left" IsVisible="False">
             <CheckBox Content="{DynamicResource R_STR_AUTO_LOGIN}"
                       IsVisible="{Binding CanAutoLogin}"
                       IsChecked="{Binding IsAutoLogin}"
                       Classes="Common"/>
-            -->
             <CheckBox Content="{DynamicResource R_STR_REMEMBER_ME}"
                       IsChecked="{Binding IsRememberAccount}"
                       Classes="Common"/>
         </StackPanel>
         
         <!-- Login Button -->
-        <Button Content="{DynamicResource R_STR_LOGIN}"
+        <Button Content="{DynamicResource R_STR_ENTER}"
                 Classes="Common Primary" Margin="0,20,0,5"
                 Command="{Binding LoginCommand}"/>
         

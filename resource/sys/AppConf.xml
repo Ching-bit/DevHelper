@@ -11,5 +11,5 @@
     <PluginConfPath>sys/Plugins.xml</PluginConfPath>
     <UserDataDir>userdata</UserDataDir>
     <LogPath>logs/{YYYYMMDD}/AppLog{YYYYMMDD}.log</LogPath>
-    <CanAutoLogin>true</CanAutoLogin>
+    <CanAutoLogin>false</CanAutoLogin>
 </AppConf>

@@ -316,7 +316,8 @@ public partial class MainViewModel : UniViewModel
     private async Task DeleteItem(MenuConfModel menu)
     {
         // confirm dialog
-        string noticeMsg = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE").Replace("#", menu.Name);
+        string noticeMsg = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+            .Replace("#1", menu.Name);
         if (!await MessageDialog.Show(noticeMsg, isCancelButtonVisible: true))
         {
             return;
