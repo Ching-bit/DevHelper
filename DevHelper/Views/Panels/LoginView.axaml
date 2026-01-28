@@ -2,14 +2,18 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
     x:Class="UniClient.LoginView">
     
     <StackPanel Classes="Common">
         <!-- User Name -->
         <StackPanel Classes="Common" Orientation="Horizontal">
             <PathIcon Data="{StaticResource SemiIconUserStroked}" Classes="Common Large"/>
-            <TextBox Watermark="{DynamicResource R_STR_USERNAME}" Classes="Common ClearButton"
-                     Text="{Binding Username}"/>
+            <ctrl:RemovableComboBox
+                Watermark="{DynamicResource R_STR_USERNAME}"
+                ItemsSource="{Binding LastUsers}"
+                IsEditable="True"
+                Text="{Binding Username, Mode=TwoWay}"/>
         </StackPanel>
         
         <!-- Password -->

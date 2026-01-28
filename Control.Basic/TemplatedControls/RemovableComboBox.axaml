@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Control.Basic">
+    <Design.PreviewWith>
+        <local:RemovableComboBox />
+    </Design.PreviewWith>
+
+    <Style Selector="local|RemovableComboBox">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ComboBox
+                    x:Name="PART_AutoCompleteBox" Classes="Common"
+                    ItemsSource="{TemplateBinding ItemsSource}"
+                    SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                    IsEditable="{TemplateBinding IsEditable}"
+                    Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                    PlaceholderText="{TemplateBinding Watermark}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding}" VerticalAlignment="Center" />
+                                <Button
+                                    Grid.Column="1"
+                                    Theme="{DynamicResource InnerIconButton}"
+                                    Content="{DynamicResource IconButtonClearData}"
+                                    Command="{Binding #PART_AutoCompleteBox.TemplatedParent.RemoveItemCommand}"
+                                    CommandParameter="{Binding}"
+                                    HorizontalAlignment="Right"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

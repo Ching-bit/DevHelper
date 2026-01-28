@@ -7,5 +7,6 @@
     </Design.PreviewWith>
     
     <StyleInclude Source="TemplatedControls/ConfirmDialog.axaml"/>
+    <StyleInclude Source="TemplatedControls/RemovableComboBox.axaml"/>
     
 </Styles>
