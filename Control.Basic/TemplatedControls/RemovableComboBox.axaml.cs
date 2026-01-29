@@ -2,6 +2,7 @@ using System.Collections;
 using Attributes.Avalonia;
 using Avalonia;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using Framework.Common;
 
@@ -12,8 +13,20 @@ namespace Control.Basic;
 [WithDirectProperty(typeof(bool), "IsEditable")]
 [WithDirectProperty(typeof(string), "Text", nullable: true)]
 [WithDirectProperty(typeof(string), "Watermark", nullable: true)]
+[WithRoutedEvent(typeof(ItemRemovedEventArgs), "ItemRemoved", EventRoutingStrategies.Bubble)]
 public partial class RemovableComboBox : TemplatedControl
 {
+    public class ItemRemovedEventArgs : RoutedEventArgs
+    {
+        public ItemRemovedEventArgs(RoutedEvent routedEvent, object? removedItem)
+            : base(routedEvent)
+        {
+            RemovedItem = removedItem;
+        }
+        
+        public object? RemovedItem { get; }
+    }
+    
     [RelayCommand]
     private async Task RemoveItem(object? parameter)
     {
@@ -31,15 +44,6 @@ public partial class RemovableComboBox : TemplatedControl
         }
         
         list.Remove(parameter);
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.Property == SelectedItemProperty && null != SelectedItem)
-        {
-            Text = SelectedItem.ToString();
-        }
+        RaiseEvent(new ItemRemovedEventArgs(ItemRemovedEvent, parameter));
     }
 }

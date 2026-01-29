@@ -5,13 +5,14 @@ namespace Control.Basic;
 
 public partial class MessageDialog
 {
-    public static async Task<bool> Show(string message, bool isAutoClick = false, bool isCancelButtonVisible = false)
+    public static async Task<bool> Show(string message, bool isAutoClick = false, bool isOkDefault = true, bool isCancelButtonVisible = false)
     {
         ConfirmDialogResult? result = await Dialog.ShowCustomModal<ConfirmDialogResult>(
             new MessageDialog
             {
                 Message = ResourceHelper.FindStringResource(message),
                 IsAutoClick = isAutoClick,
+                IsOkDefault = isOkDefault,
                 IsCancelButtonVisible = isCancelButtonVisible
             },
             new ConfirmDialogViewModel(),

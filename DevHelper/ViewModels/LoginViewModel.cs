@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,7 +11,6 @@ using Framework.Common;
 using Plugin.AppEnv;
 using Plugin.Log;
 using UniClient.Domains;
-using Ursa.Controls;
 
 namespace UniClient;
 
@@ -31,20 +31,7 @@ public partial class LoginViewModel : UniViewModel
         IsAutoLogin = Global.Get<IGlobalSetting>().IsAutoLogin;
 
         LastUsers = [];
-        foreach (UserInfo userInfo in Global.Get<IGlobalSetting>().LastUsers)
-        {
-            LastUsers.Add(new UserInfo
-            {
-                Username = userInfo.Username,
-                Password = IsAutoLogin ? userInfo.Password : string.Empty,
-            });
-        }
-        LastUsers.CollectionChanged += (_, _) =>
-        {
-            Global.Get<IGlobalSetting>().LastUsers.Clear();
-            Global.Get<IGlobalSetting>().LastUsers.AddRange(LastUsers);
-            Global.Get<IGlobalSetting>().Save();
-        };
+        LoadLastUsers();
 
         if (IsRememberAccount && LastUsers.Count > 0)
         {
@@ -89,11 +76,25 @@ public partial class LoginViewModel : UniViewModel
             worker.RunWorkerAsync();
         }
     }
+
+    private void LoadLastUsers()
+    {
+        LastUsers.Clear();
+        foreach (UserInfo userInfo in Global.Get<IGlobalSetting>().LastUsers)
+        {
+            LastUsers.Add(new UserInfo
+            {
+                Username = userInfo.Username,
+                Password = IsAutoLogin ? userInfo.Password : string.Empty,
+            });
+        }
+    }
     #endregion
 
 
     #region Properties
     [ObservableProperty] private ObservableCollection<UserInfo> _lastUsers;
+    [ObservableProperty] private UserInfo? _selectedLastUser;
     [ObservableProperty] private bool _canAutoLogin;
     [ObservableProperty] private bool _isAutoLogin;
     [ObservableProperty] private bool _isRememberAccount;
@@ -143,8 +144,6 @@ public partial class LoginViewModel : UniViewModel
         ErrMsg = string.Empty;
         IsLogining = true;
         IsUpdating = false;
-
-        BackgroundWorker worker = new();
         
         ErrorInfo loginResponse = new();
         await OnLoginResponse(loginResponse);
@@ -170,18 +169,21 @@ public partial class LoginViewModel : UniViewModel
 
             if (IsRememberAccount)
             {
-                for (int i = LastUsers.Count - 1; i >= 0; --i)
+                UserInfo? userInfo = LastUsers.FirstOrDefault(x => x.Username.Equals(Username));
+                if (null != userInfo)
                 {
-                    if (LastUsers[i].Username == Username)
-                    {
-                        LastUsers.RemoveAt(i);
-                    }
+                    LastUsers.Move(LastUsers.IndexOf(userInfo), 0);
                 }
-                LastUsers.Insert(0, new()
+                else
                 {
-                    Username = Username,
-                    Password = IsAutoLogin ? Password : string.Empty,
-                });
+                    userInfo = new UserInfo { Username = Username };
+                    LastUsers.Insert(0, userInfo);
+                }
+                userInfo.Password = IsAutoLogin ? Password : string.Empty;
+                SelectedLastUser = userInfo;
+                
+                Global.Get<IGlobalSetting>().LastUsers = LastUsers.ToList();
+                Global.Get<IGlobalSetting>().Save();
             }
             
             // Update
@@ -193,7 +195,7 @@ public partial class LoginViewModel : UniViewModel
                         SystemConfig.AppConf.UpdatePassword,
                         this))
                 {
-                    if (!await MessageDialog.Show("R_STR_UPDATE_FAILED_NOTICE", isAutoClick: true))
+                    if (!await MessageDialog.Show("R_STR_UPDATE_FAILED_NOTICE", isAutoClick: true, isOkDefault: false, isCancelButtonVisible: true))
                     {
                         Global.Get<IAppEnv>().User = null;
                         return;
@@ -208,6 +210,36 @@ public partial class LoginViewModel : UniViewModel
         {
             IsLogining = false;
             IsUpdating = false;
+        }
+    }
+    
+    [RelayCommand]
+    private async Task RemoveLastUser(RemovableComboBox.ItemRemovedEventArgs args)
+    {
+        if (args.RemovedItem is not UserInfo userInfo)
+        {
+            return;
+        }
+
+        UserInfo? removedUser = Global.Get<IGlobalSetting>().LastUsers
+            .FirstOrDefault(x => x.Username.Equals(userInfo.Username));
+        if (null == removedUser)
+        {
+            return;
+        }
+
+        Global.Get<IGlobalSetting>().LastUsers.Remove(removedUser);
+        Global.Get<IGlobalSetting>().Save();
+        
+        if (!await MessageDialog.Show("R_STR_REMOVE_USER_DATA_NOTICE", isCancelButtonVisible: true))
+        {
+            return;
+        }
+        
+        string userDataDir = Path.Combine(SystemConfig.AppConf.UserDataDir, userInfo.Username);
+        if (Directory.Exists(userDataDir))
+        {
+            Directory.Delete(userDataDir, true);
         }
     }
 }

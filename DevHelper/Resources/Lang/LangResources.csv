@@ -18,6 +18,7 @@ R_STR_HOMEPAGE,Home,主頁,主页
 R_STR_DEMO,Demo,示例,示例
 R_STR_TEST,Test,測試,测试
 R_STR_DELETE_CONFIRM_NOTICE,Confirm to delete [#1]?,確定要刪除 [#1] 嗎？,确定要删除 [#1] 吗？
+R_STR_REMOVE_USER_DATA_NOTICE,Delete the user data at the same time?,是否同時刪除用戶數據？,是否同时删除用户数据？
 R_STR_CHANGE_CONN_NOTICE,The client will disconnect and reconnect to the server if you change the connection. Continue?,若改變連接地址客戶端將斷開重連，是否繼續？,若改变连接地址客户端将断开重连，是否继续？
 R_STR_NEW_VERSION_RELEASED,A new version released. Please Update.,新版本已發佈，請更新,新版本已发布，请更新
 R_STR_UPDATE_FAILED_NOTICE,Failed to update the client. Continue?,更新客戶端失敗，是否繼續？,更新客户端失败，是否继续？

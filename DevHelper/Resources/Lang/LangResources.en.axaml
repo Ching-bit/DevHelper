@@ -22,6 +22,7 @@
     <system:String x:Key="R_STR_DEMO">Demo</system:String>
     <system:String x:Key="R_STR_TEST">Test</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">Confirm to delete [#1]?</system:String>
+    <system:String x:Key="R_STR_REMOVE_USER_DATA_NOTICE">Delete the user data at the same time?</system:String>
     <system:String x:Key="R_STR_CHANGE_CONN_NOTICE">The client will disconnect and reconnect to the server if you change the connection. Continue?</system:String>
     <system:String x:Key="R_STR_NEW_VERSION_RELEASED">A new version released. Please Update.</system:String>
     <system:String x:Key="R_STR_UPDATE_FAILED_NOTICE">Failed to update the client. Continue?</system:String>

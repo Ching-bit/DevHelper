@@ -27,6 +27,11 @@
                     SelectedValueBinding="{Binding Key}"
                     SelectedValue="{Binding Setting.Theme}"/>
             </HeaderedContentControl>
+            
+            <CheckBox Content="{DynamicResource R_STR_AUTO_LOGIN}"
+                      IsVisible="{Binding Setting.CanAutoLogin}"
+                      IsChecked="{Binding Setting.IsAutoLogin}"
+                      Classes="Common"/>
         </StackPanel>
     </ctrl:ConfirmDialog>
     

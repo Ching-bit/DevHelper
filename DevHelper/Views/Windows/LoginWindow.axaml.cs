@@ -27,7 +27,7 @@ public partial class LoginWindow : UniWindow
         {
             try
             {
-                string pipeName = Global.Get<IAppEnv>().AppNameWithExtension;
+                string pipeName = Global.Get<IAppEnv>().AppName;
                 using NamedPipeServerStream server = new(pipeName);
                 Task connTask = server.WaitForConnectionAsync();
                 if (!connTask.Wait(5 * 1000))

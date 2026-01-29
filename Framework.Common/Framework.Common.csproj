@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Attributes.Avalonia" Version="1.0.4" />
+      <PackageReference Include="Attributes.Avalonia" Version="1.0.5" />
       <PackageReference Include="Avalonia" Version="11.3.11" />
       <PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
       <PackageReference Include="Avalonia.Diagnostics" Version="11.3.11" />

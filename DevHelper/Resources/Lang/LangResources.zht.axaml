@@ -22,6 +22,7 @@
     <system:String x:Key="R_STR_DEMO">示例</system:String>
     <system:String x:Key="R_STR_TEST">測試</system:String>
     <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">確定要刪除 [#1] 嗎？</system:String>
+    <system:String x:Key="R_STR_REMOVE_USER_DATA_NOTICE">是否同時刪除用戶數據？</system:String>
     <system:String x:Key="R_STR_CHANGE_CONN_NOTICE">若改變連接地址客戶端將斷開重連，是否繼續？</system:String>
     <system:String x:Key="R_STR_NEW_VERSION_RELEASED">新版本已發佈，請更新</system:String>
     <system:String x:Key="R_STR_UPDATE_FAILED_NOTICE">更新客戶端失敗，是否繼續？</system:String>

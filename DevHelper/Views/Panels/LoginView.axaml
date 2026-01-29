@@ -12,8 +12,15 @@
             <ctrl:RemovableComboBox
                 Watermark="{DynamicResource R_STR_SYSTEM}"
                 ItemsSource="{Binding LastUsers}"
+                SelectedItem="{Binding SelectedLastUser}"
                 IsEditable="True"
-                Text="{Binding Username, Mode=TwoWay}"/>
+                Text="{Binding Username, Mode=TwoWay}">
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="ItemRemoved">
+                        <InvokeCommandAction Command="{Binding RemoveLastUserCommand}" PassEventArgsToCommand="True"/>
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
+            </ctrl:RemovableComboBox>
         </StackPanel>
         
         <!-- Password -->
