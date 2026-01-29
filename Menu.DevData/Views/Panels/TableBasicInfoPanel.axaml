@@ -2,7 +2,6 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
-    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
     xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.TableBasicInfoPanel">
     
@@ -24,11 +23,12 @@
                     Margin="5,0,0,0"/>
             </HeaderedContentControl>
         </StackPanel>
+        
         <HeaderedContentControl Grid.Row="1" Header="{DynamicResource R_STR_HISTORY_TABLE}" Classes="Common">
-            <CheckBox
+            <ToggleSwitch
                 Classes="Common"
-                ctrl:CheckBoxHelper.CheckedContent="{DynamicResource R_STR_HAS_HISTORY_TABLE}"
-                ctrl:CheckBoxHelper.UncheckedContent="{DynamicResource R_STR_NOT_HAS_HISTORY_TABLE}"
+                OnContent="{DynamicResource R_STR_HAS_HISTORY_TABLE}"
+                OffContent="{DynamicResource R_STR_NOT_HAS_HISTORY_TABLE}"
                 IsChecked="{Binding HasHistoryTable, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
                 Foreground="{Binding InternalHasHistoryTableModifyStatus, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource ModifyStatusToColorConverter}}"/>
         </HeaderedContentControl>

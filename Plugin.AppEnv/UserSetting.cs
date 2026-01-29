@@ -5,6 +5,11 @@ namespace Plugin.AppEnv;
 
 public class UserSetting : IUserSetting
 {
+    public string DatabaseType { get; set; } = string.Empty;
+    public string HistoryDatabaseName { get; set; } = string.Empty;
+    public string HistoryTableName { get; set; } = string.Empty;
+    public string ArchiveDateColumnName { get; set; } = string.Empty;
+    
     public void OnStart() { }
 
     public void OnStop() { }

@@ -64,6 +64,20 @@
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
     <system:String x:Key="R_STR_REFERENCE_TABLE">Reference Table</system:String>
     <system:String x:Key="R_STR_REFERENCE_COLUMN">Reference Column</system:String>
+    <system:String x:Key="R_STR_SYSTEM_SETTING">System Setting</system:String>
+    <system:String x:Key="R_STR_GENERATE">Generate</system:String>
+    <system:String x:Key="R_STR_TASK">Task</system:String>
+    <system:String x:Key="R_STR_GENERATION_PATH">Generation Path</system:String>
+    <system:String x:Key="R_STR_LOG">Log</system:String>
+    <system:String x:Key="R_STR_DATABASE_TYPE">Database Type</system:String>
+    <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>
+    <system:String x:Key="R_STR_HIS_TABLE_NAME">History Table Name</system:String>
+    <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">Date column name of the history tables</system:String>
+    <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
+    <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
+    <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
+    <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
+    <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
     <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">The name is empty</system:String>
@@ -79,10 +93,5 @@
     <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">The column [#1] is used by the index [#2]</system:String>
     <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">The column information of [#1] is not found</system:String>
     <system:String x:Key="R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE">The default value is inconsistent with its type</system:String>
-    <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
-    <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
-    <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
-    <system:String x:Key="R_STR_SAVE_SUCCESS">Saved successfully</system:String>
-    <system:String x:Key="R_STR_SAVE_FAILED">Failed to save</system:String>
 
 </ResourceDictionary>

@@ -1,11 +1,45 @@
 <frw:UniMenu
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ursa="https://irihi.tech/ursa"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
     x:Class="UniClient.HomeView">
     
-    <TextBlock Text="This is Home"/>
+    <Grid RowDefinitions="Auto,*,*">
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <ursa:IconButton
+                Icon="{StaticResource SemiIconSettingStroked}"
+                Content="{DynamicResource R_STR_SYSTEM_SETTING}"
+                Command="{Binding SystemSettingCommand}"/>
+            <Button Classes="Common" Content="{DynamicResource R_STR_GENERATE}"/>
+        </StackPanel>
+        
+        <Border Grid.Row="1" Theme="{DynamicResource CardBorder}" Padding="0">
+            <DataGrid
+                CanUserResizeColumns="True">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn/>
+                    <DataGridTextColumn Header="{DynamicResource R_STR_TASK}" Width="100"/>
+                    <DataGridTemplateColumn Header="{DynamicResource R_STR_GENERATION_PATH}" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox/>
+                                    <ursa:IconButton Icon="{StaticResource SemiIconFolderOpen}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        
+        <HeaderedContentControl Grid.Row="2" Classes="Common" Header="{DynamicResource R_STR_LOG}">
+            <Border Theme="{DynamicResource CardBorder}" Padding="0">
+                <TextBox Classes="TextArea" IsReadOnly="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </Border>
+        </HeaderedContentControl>
+    </Grid>
     
 </frw:UniMenu>

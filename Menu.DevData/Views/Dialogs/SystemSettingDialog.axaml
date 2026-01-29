@@ -1,0 +1,37 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    xmlns:pdata="clr-namespace:Plugin.DevData;assembly=Plugin.DevData"
+    x:Class="Menu.DevData.SystemSettingDialog">
+    
+    <UserControl.Resources>
+        <pdata:DatabaseTypeConst x:Key="DatabaseTypeConst"/>
+    </UserControl.Resources>
+    
+    <ctrl:ConfirmDialog ReturnParameter="{Binding SystemSettingModel}">
+        <StackPanel>
+            <!-- database type -->
+            <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_DATABASE_TYPE}">
+                <ComboBox
+                    Classes="Common"
+                    ItemsSource="{StaticResource DatabaseTypeConst}"
+                    SelectedValue="{Binding SystemSettingModel.DatabaseType}"
+                    SelectedValueBinding="{Binding Key}"/>
+            </HeaderedContentControl>
+            <!-- history database name -->
+            <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_DB_NAME}">
+                <TextBox Classes="Common" Text="{Binding SystemSettingModel.HistoryDatabaseName}"/>
+            </HeaderedContentControl>
+            <!-- history table name -->
+            <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_TABLE_NAME}">
+                <TextBox Classes="Common" Text="{Binding SystemSettingModel.HistoryTableName}"/>
+            </HeaderedContentControl>
+            <!-- data column name of history tables -->
+            <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_TABLE_DATE_COLUMN_NAME}">
+                <TextBox Classes="Common" Text="{Binding SystemSettingModel.ArchiveDateColumnName}"/>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ctrl:ConfirmDialog>
+    
+</UserControl>
