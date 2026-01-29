@@ -55,6 +55,10 @@
     <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
     <system:String x:Key="R_STR_ADD_DATABASE">Add Database</system:String>
     <system:String x:Key="R_STR_ADD_TABLE">Add Table</system:String>
+    <system:String x:Key="R_STR_BASIC_INFO">Basic Info</system:String>
+    <system:String x:Key="R_STR_HISTORY_TABLE">History Table</system:String>
+    <system:String x:Key="R_STR_HAS_HISTORY_TABLE">Has History Table</system:String>
+    <system:String x:Key="R_STR_NOT_HAS_HISTORY_TABLE">No History Table</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">Primary Key</system:String>
     <system:String x:Key="R_STR_INDEXES">Indexes</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>

@@ -15,6 +15,7 @@ public class TableInfo : FileNode
     public List<int> ColumnIdList { get; set; } = [];
     public List<IndexInfo> IndexList { get; set; } = [];
     public List<ForeignKeyInfo> ForeignKeyList { get; set; } = [];
+    public bool HasHistoryTable { get; set; }
     public string Remark { get; set; } = string.Empty;
     #endregion
     
@@ -29,6 +30,8 @@ public class TableInfo : FileNode
             IndexList.AddRange(fileContent.IndexList);
             ForeignKeyList.Clear();
             ForeignKeyList.AddRange(fileContent.ForeignKeyList);
+            HasHistoryTable = fileContent.HasHistoryTable;
+            Remark = fileContent.Remark;
             return true;
         }
         catch

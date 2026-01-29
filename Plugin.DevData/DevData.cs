@@ -313,13 +313,14 @@ public class DevData : IDevData
         return tableList;
     }
     
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, string remark)
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark)
     {
         TableInfo tmp = new(tableInfo.Name, tableInfo.Description, tableInfo.Parent)
         {
             ColumnIdList = columnIdList,
             IndexList = indexList,
             ForeignKeyList = foreignKeyList,
+            HasHistoryTable = hasHistoryTable,
             Remark = remark
         };
         if (!tmp.ToFile())
@@ -333,6 +334,7 @@ public class DevData : IDevData
         tableInfo.IndexList.AddRange(indexList);
         tableInfo.ForeignKeyList.Clear();
         tableInfo.ForeignKeyList.AddRange(foreignKeyList);
+        tableInfo.HasHistoryTable = hasHistoryTable;
         tableInfo.Remark = remark;
         return true;
     }

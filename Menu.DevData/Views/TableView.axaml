@@ -6,9 +6,9 @@
     xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.TableView">
     
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
         
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Classes="Common"
                     Content="{DynamicResource R_STR_SAVE}"
                     Command="{Binding SaveCommand}"
@@ -19,11 +19,15 @@
                     IsEnabled="{Binding IsTableChanged}"/>
         </StackPanel>
         
-        <ursa:Divider Grid.Row="1"/>
-        
-        <local:TableBasicInfoPanel Grid.Row="2" TableInfoModel="{Binding TableInfoModel}"/>
-        
-        <TabControl Grid.Row="3">
+        <TabControl Grid.Row="1">
+            <TabItem Header="{DynamicResource R_STR_BASIC_INFO}">
+                <local:TableBasicInfoPanel
+                    TableName="{Binding TableInfoModel.Name}"
+                    TableDescription="{Binding TableInfoModel.Description}"
+                    HasHistoryTable="{Binding TableInfoModel.HasHistoryTable, Mode=TwoWay}"
+                    Remark="{Binding TableInfoModel.Remark, Mode=TwoWay}"
+                    IsBasicInfoChanged="{Binding IsTableChanged, Mode=TwoWay}"/>
+            </TabItem>
             <TabItem Header="{DynamicResource R_STR_COLUMNS}">
                 <local:TableColumnsPanel
                     x:Name="TableColumnsPanel"

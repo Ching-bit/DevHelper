@@ -47,6 +47,7 @@ public partial class TableViewModel : UniViewModel
                 TableInfoModel.ColumnList.Select(x => x.Id).ToList(),
                 TableInfoModel.IndexList.Select(x => x.GetIndexInfo()).ToList(),
                 TableInfoModel.ForeignKeyList.Select(x => x.GetForeignKeyInfo()).ToList(),
+                TableInfoModel.HasHistoryTable,
                 TableInfoModel.Remark) ||
             !tableInfo.ToFile())
         {

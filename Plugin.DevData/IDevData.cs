@@ -21,5 +21,5 @@ public interface IDevData : IPlugin
     public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode);
 
     public List<TableInfo> GetTableList();
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, string remark);
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark);
 }

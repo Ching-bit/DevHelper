@@ -55,6 +55,10 @@
     <system:String x:Key="R_STR_ADD_GROUP">新增分組</system:String>
     <system:String x:Key="R_STR_ADD_DATABASE">新增數據庫</system:String>
     <system:String x:Key="R_STR_ADD_TABLE">新增表</system:String>
+    <system:String x:Key="R_STR_BASIC_INFO">基本資訊</system:String>
+    <system:String x:Key="R_STR_HISTORY_TABLE">歷史表</system:String>
+    <system:String x:Key="R_STR_HAS_HISTORY_TABLE">有歷史表</system:String>
+    <system:String x:Key="R_STR_NOT_HAS_HISTORY_TABLE">無歷史表</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">主鍵</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外鍵</system:String>

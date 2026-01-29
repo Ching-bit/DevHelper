@@ -27,6 +27,7 @@ public partial class TableInfoModel : UniModel
     {
         Name = tableInfo.Name;
         Description = tableInfo.Description;
+        HasHistoryTable = tableInfo.HasHistoryTable;
         Remark = tableInfo.Remark;
         
         foreach (int columnId in tableInfo.ColumnIdList)
@@ -64,10 +65,11 @@ public partial class TableInfoModel : UniModel
     
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _description;
-    [ObservableProperty] private string _remark;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
     [ObservableProperty] private ObservableCollection<IndexInfoModel> _indexList;
     [ObservableProperty] private ObservableCollection<ForeignKeyInfoModel> _foreignKeyList;
+    [ObservableProperty] private bool _hasHistoryTable;
+    [ObservableProperty] private string _remark;
     
     private List<ColumnInfoModel> AllColumns { get; }
 

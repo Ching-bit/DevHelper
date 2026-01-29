@@ -2,16 +2,45 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
-    x:Class="Menu.DevData.TableBasicInfoPanel"
-    x:Name="This">
+    xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
+    xmlns:local="clr-namespace:Menu.DevData"
+    x:Class="Menu.DevData.TableBasicInfoPanel">
     
-    <StackPanel HorizontalAlignment="Left">
-        <HeaderedContentControl Header="{DynamicResource R_STR_NAME}" Classes="Common">
-            <TextBlock Text="{Binding ElementName=This, Path=TableInfoModel.Name}" Margin="5,0,0,0"/>
+    <frw:UniPanel.Resources>
+        <local:ModifyStatusToColorConverter x:Key="ModifyStatusToColorConverter"/>
+    </frw:UniPanel.Resources>
+    
+    <Grid RowDefinitions="Auto,Auto,*" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        
+        <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+            <HeaderedContentControl Header="{DynamicResource R_STR_NAME}" Classes="Common">
+                <TextBlock
+                    Text="{Binding TableName, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                    Margin="5,0,0,0"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_DESCRIPTION}" Classes="Common">
+                <TextBlock
+                    Text="{Binding TableDescription, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                    Margin="5,0,0,0"/>
+            </HeaderedContentControl>
+        </StackPanel>
+        <HeaderedContentControl Grid.Row="1" Header="{DynamicResource R_STR_HISTORY_TABLE}" Classes="Common">
+            <CheckBox
+                Classes="Common"
+                ctrl:CheckBoxHelper.CheckedContent="{DynamicResource R_STR_HAS_HISTORY_TABLE}"
+                ctrl:CheckBoxHelper.UncheckedContent="{DynamicResource R_STR_NOT_HAS_HISTORY_TABLE}"
+                IsChecked="{Binding HasHistoryTable, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                Foreground="{Binding InternalHasHistoryTableModifyStatus, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource ModifyStatusToColorConverter}}"/>
         </HeaderedContentControl>
-        <HeaderedContentControl Header="{DynamicResource R_STR_DESCRIPTION}" Classes="Common">
-            <TextBlock Text="{Binding ElementName=This, Path=TableInfoModel.Description}" Margin="5,0,0,0"/>
+        
+        <HeaderedContentControl Grid.Row="2" Header="{DynamicResource R_STR_REMARK}" Classes="Common">
+            <TextBox
+                Classes="TextArea" Margin="5"
+                Text="{Binding Remark, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                Foreground="{Binding InternalRemarkModifyStatus, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource ModifyStatusToColorConverter}}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </HeaderedContentControl>
-    </StackPanel>
+        
+    </Grid>
     
 </frw:UniPanel>

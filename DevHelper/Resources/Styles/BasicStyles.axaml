@@ -119,7 +119,7 @@
                             Text="{Binding Title}"
                             IsVisible="{Binding Title, Converter={StaticResource StringNotEmptyConverter}}"
                             VerticalAlignment="Center"
-                            Width="120" Margin="4"
+                            Width="160" Margin="4"
                             FontSize="14"
                             Foreground="{DynamicResource SemiColorText0}"/>
                     </StackPanel>
