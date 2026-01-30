@@ -53,13 +53,13 @@ public partial class HomeViewModel : UniViewModel
             switch (task.TaskType)
             {
                 case GenTaskType.TableDocument:
-                    CodeGenHelper.GenerateTableDocument(task.GeneratingDir);
+                    CodeGenerator.GenerateTableDocument(task.GeneratingDir);
                     break;
                 case GenTaskType.TableScripts:
-                    CodeGenHelper.GenerateTableScripts(task.GeneratingDir);
+                    CodeGenerator.GenerateTableScripts(task.GeneratingDir);
                     break;
                 case GenTaskType.UserDefined:
-                    CodeGenHelper.GenerateUserDefined(task.GeneratingDir);
+                    CodeGenerator.GenerateUserDefined(task.GeneratingDir);
                     break;
                 default:
                     await MessageDialog.Show($"The task type [{task.TaskType}] is not supported yet.");

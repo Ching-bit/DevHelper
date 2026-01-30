@@ -58,6 +58,10 @@ public partial class GenTaskModel : UniModel
         }
         
         GeneratingDir = result[0].Path.AbsolutePath.Replace('/', Path.DirectorySeparatorChar);
+        if (GeneratingDir.StartsWith(Global.Get<IAppEnv>().AppDir + Path.DirectorySeparatorChar))
+        {
+            GeneratingDir = GeneratingDir.Replace(Global.Get<IAppEnv>().AppDir, ".");
+        }
     }
     
 }
