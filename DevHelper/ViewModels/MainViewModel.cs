@@ -193,7 +193,7 @@ public partial class MainViewModel : UniViewModel
             Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add an item, but the selected menu doesn't have its directory object");
             return;
         }
-            
+        
         AddItemDialogViewModel vm = new();
         vm.OnConfirmEvent += () =>
         {

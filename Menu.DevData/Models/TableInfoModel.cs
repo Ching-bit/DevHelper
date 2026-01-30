@@ -25,6 +25,7 @@ public partial class TableInfoModel : UniModel
 
     public TableInfoModel(TableInfo tableInfo) : this()
     {
+        Id = tableInfo.Id;
         Name = tableInfo.Name;
         Description = tableInfo.Description;
         HasHistoryTable = tableInfo.HasHistoryTable;
@@ -63,6 +64,7 @@ public partial class TableInfoModel : UniModel
         }
     }
     
+    [ObservableProperty] private int _id;
     [ObservableProperty] private string _name;
     [ObservableProperty] private string _description;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;

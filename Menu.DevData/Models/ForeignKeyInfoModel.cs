@@ -18,8 +18,7 @@ public partial class ForeignKeyInfoModel : UniModel
     {
         Column = columnList.FirstOrDefault(x => x.Id == foreignKeyInfo.ColumnId);
 
-        TableInfo? tableInfo = Global.Get<IDevData>().GetTableList()
-            .FirstOrDefault(x => x.Name.Equals(foreignKeyInfo.TableName));
+        TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(foreignKeyInfo.TableId);
         if (null != tableInfo)
         {
             ReferenceTable = new TableInfoModel(tableInfo);
@@ -57,7 +56,7 @@ public partial class ForeignKeyInfoModel : UniModel
         {
             ColumnId = Column?.Id ?? 0,
             Name = Name,
-            TableName = ReferenceTable?.Name ?? string.Empty,
+            TableId = ReferenceTable?.Id ?? 0,
             ReferenceColumnId = ReferenceColumn?.Id ?? 0
         };
     }

@@ -289,9 +289,19 @@ public class DevData : IDevData
 
 
     #region Table Methods
-    public List<TableInfo> GetTableList()
+    public Dictionary<string, List<TableInfo>> GetAllTables()
     {
-        return null == TableRoot ? [] : GetTableListInner(TableRoot);
+        if (null == TableRoot)
+        {
+            return [];
+        }
+
+        Dictionary<string, List<TableInfo>> ret = [];
+        foreach (IDirectoryNode databaseNode in TableRoot.SubDirectories)
+        {
+            ret.Add(databaseNode.Name, GetTableListInner(databaseNode));
+        }
+        return ret;
     }
 
     private List<TableInfo> GetTableListInner(IDirectoryNode tableDirectory)
@@ -311,6 +321,34 @@ public class DevData : IDevData
         }
         
         return tableList;
+    }
+
+    public TableInfo? GetTableById(int tableId)
+    {
+        Dictionary<string, List<TableInfo>> tables = GetAllTables();
+        foreach (List<TableInfo> tableList in tables.Values)
+        {
+            TableInfo? tableInfo = tableList.FirstOrDefault(x => x.Id == tableId);
+            if (null != tableInfo)
+            {
+                return tableInfo;
+            }
+        }
+
+        return null;
+    }
+
+    public string GetDatabaseNameByTableId(int tableId)
+    {
+        Dictionary<string, List<TableInfo>> tables = GetAllTables();
+        foreach (KeyValuePair<string, List<TableInfo>> keyValuePair in tables)
+        {
+            if (keyValuePair.Value.Any(x => x.Id == tableId))
+            {
+                return keyValuePair.Key;
+            }
+        }
+        return string.Empty;
     }
     
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark)

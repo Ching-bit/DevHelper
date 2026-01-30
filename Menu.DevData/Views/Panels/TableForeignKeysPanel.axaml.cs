@@ -10,7 +10,7 @@ namespace Menu.DevData;
 [WithDirectProperty(typeof(ObservableCollection<ForeignKeyInfoModel>), "ForeignKeyList")]
 [WithDirectProperty(typeof(ObservableCollection<ColumnInfoModel>), "ColumnList")]
 [WithDirectProperty(typeof(bool), "IsForeignKeyChanged")]
-[WithDirectProperty(typeof(string), "TableName", "")]
+[WithDirectProperty(typeof(int), "TableId")]
 public partial class TableForeignKeysPanel : UniPanel
 {
     public TableForeignKeysPanel()
@@ -23,19 +23,23 @@ public partial class TableForeignKeysPanel : UniPanel
     [RelayCommand]
     private async Task Add()
     {
+        TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(TableId);
+        string databaseName = Global.Get<IDevData>().GetDatabaseNameByTableId(TableId);
+        
         List<ColumnInfoModel> sourceColumnList =
             ColumnList.Where(x => !ForeignKeyList.Select(y => y.Column?.Id).Contains(x.Id)).ToList();
         List<TableInfoModel> tableList = [];
-        foreach (TableInfo tableInfo in Global.Get<IDevData>().GetTableList())
+        
+        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[databaseName])
         {
-            if (tableInfo.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
-                tableInfo.Name != TableName)
+            if (item.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
+                item.Id != TableId)
             {
-                tableList.Add(new TableInfoModel(tableInfo));
+                tableList.Add(new TableInfoModel(item));
             }
         }
         
-        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, TableName);
+        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, tableInfo?.Name ?? string.Empty);
         ConfirmDialogResult result = await ConfirmDialog.Show<TableForeignKeyDialog>(vm);
         if (!result.IsConfirmed || result.ReturnParameter is not ForeignKeyInfoModel foreignKeyInfoModel)
         {
@@ -56,19 +60,22 @@ public partial class TableForeignKeysPanel : UniPanel
             return;
         }
         
+        TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(TableId);
+        string databaseName = Global.Get<IDevData>().GetDatabaseNameByTableId(TableId);
+        
         List<ColumnInfoModel> sourceColumnList =
             ColumnList.Where(x => !ForeignKeyList.Where(z => z.Column?.Id != selecttedForeignKey.Column?.Id).Select(y => y.Column?.Id).Contains(x.Id)).ToList();
         List<TableInfoModel> tableList = [];
-        foreach (TableInfo tableInfo in Global.Get<IDevData>().GetTableList())
+        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[databaseName])
         {
-            if (tableInfo.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
-                tableInfo.Name != TableName)
+            if (item.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
+                item.Id != TableId)
             {
-                tableList.Add(new TableInfoModel(tableInfo));
+                tableList.Add(new TableInfoModel(item));
             }
         }
         
-        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, TableName)
+        TableForeignKeyDialogViewModel vm = new(sourceColumnList, tableList, tableInfo?.Name ?? string.Empty)
         {
             ForeignKeyInfoModel =
             {

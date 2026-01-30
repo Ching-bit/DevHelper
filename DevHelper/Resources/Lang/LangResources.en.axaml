@@ -73,6 +73,8 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">History Table Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">Date column name of the history tables</system:String>
+    <system:String x:Key="R_STR_TABLE_STRUCTURE_SPECIFICATION">Table Structure Specification</system:String>
+    <system:String x:Key="R_STR_TABLE_SCRIPTS">Table Scripts</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>

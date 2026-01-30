@@ -47,7 +47,7 @@
                     ForeignKeyList="{Binding TableInfoModel.ForeignKeyList}"
                     ColumnList="{Binding ElementName=TableColumnsPanel, Path=ColumnList}"
                     IsForeignKeyChanged="{Binding IsTableChanged, Mode=TwoWay}"
-                    TableName="{Binding TableInfoModel.Name}"/>
+                    TableId="{Binding TableInfoModel.Id}"/>
             </TabItem>
         </TabControl>
         

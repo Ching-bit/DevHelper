@@ -12,22 +12,37 @@
                 Icon="{StaticResource SemiIconSettingStroked}"
                 Content="{DynamicResource R_STR_SYSTEM_SETTING}"
                 Command="{Binding SystemSettingCommand}"/>
-            <Button Classes="Common" Content="{DynamicResource R_STR_GENERATE}"/>
+            <Button
+                Classes="Common" Content="{DynamicResource R_STR_GENERATE}"
+                Command="{Binding GenerateCommand}"/>
         </StackPanel>
         
         <Border Grid.Row="1" Theme="{DynamicResource CardBorder}" Padding="0">
             <DataGrid
+                ItemsSource="{Binding GenTasks}"
                 CanUserResizeColumns="True">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn/>
-                    <DataGridTextColumn Header="{DynamicResource R_STR_TASK}" Width="100"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    IsChecked="{Binding ShouldGenerate}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                        Header="{DynamicResource R_STR_TASK}" IsReadOnly="True" Width="200"
+                        Binding="{Binding TaskName}"/>
                     <DataGridTemplateColumn Header="{DynamicResource R_STR_GENERATION_PATH}" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBox/>
-                                    <ursa:IconButton Icon="{StaticResource SemiIconFolderOpen}"/>
-                                </StackPanel>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Text="{Binding GeneratingDir}" VerticalAlignment="Center"/>
+                                    <ursa:IconButton
+                                        Grid.Column="1" Icon="{StaticResource SemiIconFolderOpen}"
+                                        Command="{Binding PickFolderCommand}"/>
+                                </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

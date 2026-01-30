@@ -73,6 +73,8 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">歷史庫名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">歷史表名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">歷史表的日期字段名稱</system:String>
+    <system:String x:Key="R_STR_TABLE_STRUCTURE_SPECIFICATION">表結構規範</system:String>
+    <system:String x:Key="R_STR_TABLE_SCRIPTS">表腳本</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失敗</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">刪除失敗</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">修改失敗</system:String>
