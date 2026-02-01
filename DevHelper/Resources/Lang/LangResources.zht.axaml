@@ -73,8 +73,8 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">歷史庫名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">歷史表名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">歷史表的日期字段名稱</system:String>
-    <system:String x:Key="R_STR_TABLE_STRUCTURE_SPECIFICATION">表結構規範</system:String>
-    <system:String x:Key="R_STR_TABLE_SCRIPTS">表腳本</system:String>
+    <system:String x:Key="R_STR_START_TO_RUN_TASK">開始運行任務：#1</system:String>
+    <system:String x:Key="R_STR_TASK_FINISHED">任務 [#1] 運行完成</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失敗</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">刪除失敗</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">修改失敗</system:String>
@@ -83,6 +83,7 @@
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">分組名稱已存在</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">名稱已存在</system:String>
     <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">名稱為空</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_TASK_NOTICE">請選擇任務</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">請選擇字段</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">請選擇參照表</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">請選擇參照字段</system:String>

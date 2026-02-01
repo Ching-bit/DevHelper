@@ -38,7 +38,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid ColumnDefinitions="*,Auto">
-                                    <TextBlock Grid.Column="0" Text="{Binding GeneratingDir}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="0" Text="{Binding OutputDir}" VerticalAlignment="Center"/>
                                     <ursa:IconButton
                                         Grid.Column="1" Icon="{StaticResource SemiIconFolderOpen}"
                                         Command="{Binding PickFolderCommand}"/>
@@ -52,7 +52,12 @@
         
         <HeaderedContentControl Grid.Row="2" Classes="Common" Header="{DynamicResource R_STR_LOG}">
             <Border Theme="{DynamicResource CardBorder}" Padding="0">
-                <TextBox Classes="TextArea" IsReadOnly="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <ScrollViewer>
+                    <TextBox
+                        Classes="TextArea" IsReadOnly="True" TextWrapping="Wrap"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Text="{Binding Logs}"/>
+                </ScrollViewer>
             </Border>
         </HeaderedContentControl>
     </Grid>

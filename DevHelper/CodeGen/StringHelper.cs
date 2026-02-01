@@ -20,6 +20,8 @@ public partial class StringHelper
             NameStyle.UpperCamel => string.Concat(words.Select(Capitalize)),
             NameStyle.lower_snake => string.Join("_", words.Select(w => w.ToLower())),
             NameStyle.UPPER_SNAKE => string.Join("_", words.Select(w => w.ToUpper())),
+            NameStyle.all_lower => input.ToLower(),
+            NameStyle.ALL_UPPER => input.ToUpper(),
             _ => input
         };
     }

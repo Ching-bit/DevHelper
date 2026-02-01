@@ -1,0 +1,4 @@
+CREATE TABLE `${TableName(lower_snake)}` (
+  `${ColumnName(lower_snake)}` ${ColumnDbType(ALL_UPPER)}${ColumnNullableFlag(ALL_UPPER)}${ColumnDefaultString(ALL_UPPER)}${ColumnDefaultValue}${ColumnComma}
+)
+ALTER TABLE `${TableName(lower_snake)}` ADD PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_lower)});

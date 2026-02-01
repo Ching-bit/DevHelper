@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Framework.Common;
 using Plugin.AppEnv;
 
@@ -15,26 +14,23 @@ public partial class GenTaskModel : UniModel
 {
     public GenTaskModel(GenTask task, Avalonia.Controls.Control? view)
     {
-        TaskType = task.TaskType;
-        TaskNameResource = task.TaskNameResource;
-        TaskName = ResourceHelper.FindStringResource(TaskNameResource, TaskNameResource);
-        GeneratingDir = task.OutputDir;
+        TaskName = task.TaskName;
+        RecursionLevel = task.RecursionLevel;
+        TemplateFile = task.TemplateFile;
+        OutputFile = task.OutputFile;
+        OutputDir = task.OutputDir;
+        TemplateDir = task.TemplateDir;
         
         _view = view;
-        
-        // Register for language change message to update the task name
-        WeakReferenceMessenger.Default.Register<LanguageChangedMessage>(this, (_, _) =>
-        {
-            TaskName = ResourceHelper.FindStringResource(TaskNameResource, TaskNameResource);
-        });
     }
     
-    public GenTaskType TaskType { get; }
-    private string TaskNameResource { get; }
-    
     [ObservableProperty] private bool _shouldGenerate;
+    [ObservableProperty] private RecursionLevel _recursionLevel;
     [ObservableProperty] private string _taskName = string.Empty;
-    [ObservableProperty] private string _generatingDir = string.Empty;
+    [ObservableProperty] private string _templateFile = string.Empty;
+    [ObservableProperty] private string _outputFile = string.Empty;
+    [ObservableProperty] private string _outputDir = string.Empty;
+    [ObservableProperty] private string _templateDir = string.Empty;
 
     private readonly Avalonia.Controls.Control? _view;
 
@@ -57,11 +53,24 @@ public partial class GenTaskModel : UniModel
             return;
         }
         
-        GeneratingDir = result[0].Path.AbsolutePath.Replace('/', Path.DirectorySeparatorChar);
-        if (GeneratingDir.StartsWith(Global.Get<IAppEnv>().AppDir + Path.DirectorySeparatorChar))
+        OutputDir = result[0].Path.AbsolutePath.Replace('/', Path.DirectorySeparatorChar);
+        if (OutputDir.StartsWith(Global.Get<IAppEnv>().AppDir + Path.DirectorySeparatorChar))
         {
-            GeneratingDir = GeneratingDir.Replace(Global.Get<IAppEnv>().AppDir, ".");
+            OutputDir = OutputDir.Replace(Global.Get<IAppEnv>().AppDir, ".");
         }
+    }
+
+    public GenTask GetTask()
+    {
+        return new GenTask
+        {
+            TaskName = TaskName,
+            RecursionLevel = RecursionLevel,
+            TemplateFile = TemplateFile,
+            OutputFile = OutputFile,
+            OutputDir = OutputDir,
+            TemplateDir = TemplateDir
+        };
     }
     
 }

@@ -12,84 +12,89 @@ namespace UniClient;
 
 public class CodeGenerator
 {
-    public static void GenerateTableDocument(string dir)
+    public static void GenFile(GenTask task)
     {
-        
-    }
-    
-    public static void GenerateTableScripts(string dir)
-    {
-        if (!Directory.Exists(dir))
+        if (Directory.Exists(task.OutputDir))
         {
-            Directory.CreateDirectory(dir);
+            Directory.Delete(task.OutputDir, true);
         }
-        
-        // initialize script
-        string initializeScriptDir = Path.Combine(dir, "initialize");
-        if (Directory.Exists(initializeScriptDir))
-        {
-            Directory.Delete(initializeScriptDir, true);
-        }
-        Directory.CreateDirectory(initializeScriptDir);
-        
-        foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
-        {
-            List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[databaseName];
-            string filePath = Path.Combine(initializeScriptDir, $"{databaseName}.sql");
-            string databaseTemplatePath = string.Empty;
-            string tableTemplatePath = string.Empty;
-            if (Global.Get<IUserSetting>().DatabaseType == DatabaseTypeConst.MySQL)
-            {
-                databaseTemplatePath = Path.Combine(Global.Get<IAppEnv>().AppDir, "templates", "sys", "mysql_db_initialize.sql.template");
-                tableTemplatePath = Path.Combine(Global.Get<IAppEnv>().AppDir, "templates", "sys", "mysql_table_initialize.sql.template");
-            }
-            string outputContent = GenFile(databaseTemplatePath,
-                new Dictionary<string, string>
-                {
-                    { "DatabaseName", databaseName }
-                },
-                [
-                Tuple.Create(
-                    new Dictionary<string, Func<object, string>>
-                    {
-                        { "TableCreateScript", x => GenTableFile(tableTemplatePath, (TableInfo)x) },
-                    },
-                    tables.ConvertAll<object>(x => x))
-                ]);
-            StreamWriter sw = new(filePath, false, Encoding.UTF8);
-            sw.Write(outputContent);
-            sw.Close();
-        }
-    }
-    
-    public static void GenerateUserDefined(string dir)
-    {
-        
-    }
-    
-    private static string GenTableFile(string templatePath, TableInfo tableInfo)
-    {
-        List<IndexInfo> primaryKeyList = tableInfo.IndexList.Where(x => IndexType.Primary == x.Type).ToList();
-        string primaryKeys = "";
-        IndexInfo? primaryKeyInfo = null;
-        if (tableInfo.IndexList.Any(x => IndexType.Primary == x.Type))
-        {
-            primaryKeyInfo = tableInfo.IndexList.First(x => IndexType.Primary == x.Type);
-            foreach (int columnId in primaryKeyInfo.ColumnIdList)
-            {
-                ColumnInfo columnInfo = Global.Get<IDevData>().Columns.First(x => x.Id == columnId);
-                primaryKeys += (primaryKeys.Length > 0 ? "," : "") + columnInfo.Name;
-            }
-        }
+        Directory.CreateDirectory(task.OutputDir);
 
-        return GenFile(templatePath,
+        if (RecursionLevel.Database == task.RecursionLevel)
+        {
+            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            {
+                _currentDatabase = databaseName;
+                string outputFileName = task.OutputFile;
+                if (ContainsMacro(outputFileName, "DatabaseName", out int startIndex, out int endIndex, out string remark))
+                {
+                    outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase, remark));
+                }
+
+                string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
+                StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
+                string outputContent = GenFile_Database(Path.Combine(task.TemplateDir, task.TemplateFile), _currentDatabase);
+                sw.Write(outputContent);
+                sw.Close();
+            }
+        }
+        else if (RecursionLevel.Table == task.RecursionLevel)
+        {
+            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            {
+                _currentDatabase = databaseName;
+                string outputDir = Path.Combine(task.OutputDir, _currentDatabase);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+                
+                foreach (TableInfo tableInfo in Global.Get<IDevData>().GetAllTables()[databaseName])
+                {
+                    string outputFileName = task.OutputFile;
+                    if (ContainsMacro(outputFileName, "TableName", out int startIndex, out int endIndex, out string remark))
+                    {
+                        outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase, remark));
+                    }
+                    string outputFilePath = Path.Combine(outputDir, outputFileName);
+                    
+                    StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
+                    string outputContent = GenFile_Table(Path.Combine(task.TemplateDir, task.TemplateFile), tableInfo);
+                    sw.Write(outputContent);
+                    sw.Close();
+                }
+            }
+        }
+    }
+    
+    // database level template
+    private static string GenFile_Database(string templatePath, string databaseName)
+    {
+        return GenFileByTemplate(templatePath,
+            new Dictionary<string, string>
+            {
+                { "DatabaseName", databaseName }
+            },
+            []);
+    }
+    
+    // table level template
+    private static string GenFile_Table(string templatePath, TableInfo tableInfo)
+    {
+        IndexInfo? primaryKeyInfo = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
+        
+        List<ColumnInfo> columns = tableInfo.ColumnIdList.Select(x => Global.Get<IDevData>().Columns.First(y => y.Id == x)).ToList();
+        List<ColumnInfo> primaryKeyColumns = columns.Where(x => primaryKeyInfo?.ColumnIdList.Contains(x.Id) ?? false).ToList();
+        
+        return GenFileByTemplate(templatePath,
             new Dictionary<string, string>
             {
                 { "DatabaseName", Global.Get<IDevData>().GetDatabaseNameByTableId(tableInfo.Id) },
                 { "TableName", tableInfo.Name },
                 { "TableDescription", tableInfo.Description },
-                { "PrimaryKeys", primaryKeys },
-                { "PrimaryKeyColumnCount", primaryKeyList.Count.ToString() }
+                { "PrimaryKeyColumnCount", primaryKeyColumns.Count + "" },
+                { "PrimaryKeyColumns", string.Join(", ", primaryKeyColumns.Select(x => x.Name)) },
+                { "PrimaryKeyColumnsWithBackQuota", string.Join(", ", primaryKeyColumns.Select(x => $"`{x.Name}`")) },
             },
             [
                 // columns related
@@ -99,22 +104,22 @@ public class CodeGenerator
                         { "ColumnName", x => ((ColumnInfo)x).Name },
                         { "ColumnDescription", x => ((ColumnInfo)x).Description },
                         { "ColumnDbType", x => ToDbType((ColumnInfo)x) },
-                        { "ColumnDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default " : string.Empty},
+                        { "ColumnDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "ColumnDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "ColumnNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
                         { "ColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," }
                     },
-                    tableInfo.ColumnIdList.ToList().ConvertAll<object>(x => Global.Get<IDevData>().Columns.First(y => y.Id == x))),
+                    columns.ConvertAll<object>(x => x)),
                 // primary key related
                 Tuple.Create
                 (
-                    null == primaryKeyInfo ? [] :
                     new Dictionary<string, Func<object, string>>
                     {
                         { "PrimaryKeyName", x => ((IndexInfo)x).Name },
-                        { "PrimaryKeyColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => Global.Get<IDevData>().Columns.First(z => y == z.Id).Name)) },
+                        { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
+                        { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" }
                     },
-                    primaryKeyList.ConvertAll<object>(x => x)),
+                    primaryKeyColumns.ConvertAll<object>(x => x)),
                 // indexes related
                 Tuple.Create(
                     new Dictionary<string, Func<object, string>>()
@@ -123,7 +128,7 @@ public class CodeGenerator
                         { "IndexName", x => ((IndexInfo)x).Name },
                         { "IndexColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => Global.Get<IDevData>().Columns.First(z => y == z.Id).Name)) },
                     },
-                    tableInfo.IndexList.ToList().ConvertAll<object>(x => x.Type is IndexType.Unique or IndexType.Index)),
+                    tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList().ConvertAll<object>(y => y)),
                 ]);
     }
 
@@ -201,7 +206,7 @@ public class CodeGenerator
     /// <param name="globalMacros"></param>
     /// <param name="repeatedMacros"></param>
     /// <returns>file content</returns>
-    private static string GenFile(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros)
+    private static string GenFileByTemplate(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros)
     {
         StringBuilder outputContent = new();
         StreamReader templateReader = new(templatePath, Encoding.UTF8);
@@ -219,9 +224,9 @@ public class CodeGenerator
             // replace global micros
             foreach (string key in globalMacros.Keys)
             {
-                if (ContainsMacro(line, key, out int startIndex, out int endIndex, out NameStyle nameStyle))
+                if (ContainsMacro(line, key, out int startIndex, out int endIndex, out string remark))
                 {
-                    line = ReplaceRange(line, startIndex, endIndex, StringHelper.ToNameStyle(globalMacros[key], nameStyle));
+                    line = ReplaceRange(line, startIndex, endIndex, ToNameStyle(globalMacros[key], remark));
                 }
             }
             string outputLine = line;
@@ -252,10 +257,10 @@ public class CodeGenerator
                     foreach (string macroKey in macro.Item1.Keys)
                     {
                         if (ContainsMacro(lineCopy, macroKey, out int startIndex, out int endIndex,
-                                out NameStyle nameStyle))
+                                out string remark))
                         {
                             string macroValue = macro.Item1[macroKey](column);
-                            lineCopy = ReplaceRange(lineCopy, startIndex, endIndex, StringHelper.ToNameStyle(macroValue, nameStyle));
+                            lineCopy = ReplaceRange(lineCopy, startIndex, endIndex, ToNameStyle(macroValue, remark));
                         }
                     }
                     outputLine += lineCopy + Environment.NewLine;
@@ -263,13 +268,28 @@ public class CodeGenerator
             }
             
             // replace special micros
+            // BACKSPACE
             {
-                if (ContainsMacro(outputLine, "BACKSPACE", out int startIndex, out int endIndex, out _))
+                if (ContainsMacro(outputLine, "BACKSPACE", out int startIndex, out int endIndex, out _)) 
                 {
-                    ReplaceRange(outputLine, startIndex, endIndex, string.Empty);
+                    outputLine = ReplaceRange(outputLine, startIndex, endIndex, string.Empty);
                     if (startIndex > 0)
                     {
-                        ReplaceRange(outputLine, startIndex - 1, startIndex - 1, string.Empty);
+                        outputLine = ReplaceRange(outputLine, startIndex - 1, startIndex - 1, string.Empty);
+                    }
+                }
+            }
+            // TEMPLATE
+            {
+                if (ContainsMacro(outputLine, "TEMPLATE", out int startIndex, out int endIndex, out string remark))
+                {
+                    string[] arr = remark.Split(",");
+                    if (arr.Length == 2)
+                    {
+                        string subTemplatePath = Path.Combine(Path.GetDirectoryName(templatePath)!, arr[0]);
+                        RecursionLevel recursionLevel = Enum.Parse<RecursionLevel>(arr[1]);
+                        string subOutputContent = GenSubTemplate(subTemplatePath, recursionLevel);
+                        outputLine = ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
                     }
                 }
             }
@@ -287,11 +307,11 @@ public class CodeGenerator
         return outputContent.ToString();
     }
 
-    private static bool ContainsMacro(string line, string macro, out int startIndex, out int endIndex, out NameStyle nameStyle)
+    private static bool ContainsMacro(string line, string macro, out int startIndex, out int endIndex, out string remark)
     {
         startIndex = -1;
         endIndex = -1;
-        nameStyle = NameStyle.Original;
+        remark = string.Empty;
         
         string pattern = $@"\$\{{{Regex.Escape(macro)}(?:\((?<arg>[^\)]*)\))?\}}";
 
@@ -301,7 +321,7 @@ public class CodeGenerator
         {
             startIndex = match.Index;
             endIndex = match.Index + match.Length - 1;
-            nameStyle = match.Groups["arg"].Success ? Enum.Parse<NameStyle>(match.Groups["arg"].Value) : NameStyle.Original;
+            remark = match.Groups["arg"].Success ? match.Groups["arg"].Value : string.Empty;
             return true;
         }
 
@@ -320,5 +340,46 @@ public class CodeGenerator
 
         return before + replacement + after;
     }
-    
+
+    private static string GenSubTemplate(string templatePath, RecursionLevel recursionLevel)
+    {
+        if (RecursionLevel.Database == recursionLevel)
+        {
+            StringBuilder sb = new();
+            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            {
+                _currentDatabase = databaseName;
+                sb.Append(GenFile_Database(templatePath, databaseName));
+            }
+            return sb.ToString();
+        }
+        
+        if (RecursionLevel.Table == recursionLevel)
+        {
+            StringBuilder sb = new();
+            List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[_currentDatabase];
+            foreach (TableInfo tableInfo in tables)
+            {
+                sb.Append(GenFile_Table(templatePath, tableInfo));
+            }
+
+            return sb.ToString();
+        }
+
+        throw new ArgumentOutOfRangeException();
+    }
+
+    #region Helper Functions
+
+    private static string ToNameStyle(string input, string nameStyle)
+    {
+        _ = Enum.TryParse(nameStyle, out NameStyle ns);
+        return StringHelper.ToNameStyle(input, ns);
+    }
+
+    #endregion
+
+    #region Pointers
+    private static string _currentDatabase = string.Empty;
+    #endregion
 }

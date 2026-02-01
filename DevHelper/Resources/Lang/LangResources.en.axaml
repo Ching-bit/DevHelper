@@ -73,8 +73,8 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">History Table Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">Date column name of the history tables</system:String>
-    <system:String x:Key="R_STR_TABLE_STRUCTURE_SPECIFICATION">Table Structure Specification</system:String>
-    <system:String x:Key="R_STR_TABLE_SCRIPTS">Table Scripts</system:String>
+    <system:String x:Key="R_STR_START_TO_RUN_TASK">Start to run task: #1</system:String>
+    <system:String x:Key="R_STR_TASK_FINISHED">The task [#1] was completed</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">Failed to modify</system:String>
@@ -83,6 +83,7 @@
     <system:String x:Key="R_STR_GROUP_NAME_EXIST_NOTICE">The group name already exists</system:String>
     <system:String x:Key="R_STR_NAME_EXIST_NOTICE">The name already exists</system:String>
     <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">The name is empty</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_TASK_NOTICE">Please select a task</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">Please select a column</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">Please select the reference table</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">Please select the reference column</system:String>

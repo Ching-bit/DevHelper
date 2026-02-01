@@ -10,4 +10,8 @@ public enum NameStyle
     lower_snake,
     // ReSharper disable once InconsistentNaming
     UPPER_SNAKE,
+    // ReSharper disable once InconsistentNaming
+    all_lower,
+    // ReSharper disable once InconsistentNaming
+    ALL_UPPER
 }

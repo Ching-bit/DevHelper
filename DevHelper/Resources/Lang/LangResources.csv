@@ -70,8 +70,8 @@ R_STR_DATABASE_TYPE,Database Type,資料庫類型,数据库类型
 R_STR_HIS_DB_NAME,History Database Name,歷史庫名稱,历史库名称
 R_STR_HIS_TABLE_NAME,History Table Name,歷史表名稱,历史表名称
 R_STR_HIS_TABLE_DATE_COLUMN_NAME,Date column name of the history tables,歷史表的日期字段名稱,历史表的日期字段名称
-R_STR_TABLE_STRUCTURE_SPECIFICATION,Table Structure Specification,表結構規範,表结构规范
-R_STR_TABLE_SCRIPTS,Table Scripts,表腳本,表脚本
+R_STR_START_TO_RUN_TASK,Start to run task: #1,開始運行任務：#1,开始运行任务：#1
+R_STR_TASK_FINISHED,The task [#1] was completed,任務 [#1] 運行完成,任务 [#1] 运行完成
 
 R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败
 R_STR_DELETE_FAILED,Failed to delete,刪除失敗,删除失败
@@ -81,6 +81,7 @@ R_STR_SAVE_FAILED,Failed to save,保存失敗,保存失败
 R_STR_GROUP_NAME_EXIST_NOTICE,The group name already exists,分組名稱已存在,分组名称已存在
 R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
 R_STR_EMPTY_NAME_NOTICE,The name is empty,名稱為空,名称为空
+R_STR_SELECT_EMPTY_TASK_NOTICE,Please select a task,請選擇任務,请选择任务
 R_STR_SELECT_EMPTY_COLUMN_NOTICE,Please select a column,請選擇字段,请选择字段
 R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE,Please select the reference table,請選擇參照表,请选择参照表
 R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE,Please select the reference column,請選擇參照字段,请选择参照字段
