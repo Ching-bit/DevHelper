@@ -70,7 +70,7 @@ R_STR_DATABASE_TYPE,Database Type,資料庫類型,数据库类型
 R_STR_HIS_DB_NAME,History Database Name,歷史庫名稱,历史库名称
 R_STR_HIS_TABLE_NAME,History Table Name,歷史表名稱,历史表名称
 R_STR_HIS_TABLE_DATE_COLUMN_NAME,Date column name of the history tables,歷史表的日期字段名稱,历史表的日期字段名称
-R_STR_START_TO_RUN_TASK,Start to run task: #1,開始運行任務：#1,开始运行任务：#1
+R_STR_START_TO_RUN_TASK,Start to run task: [#1],開始運行任務：[#1],开始运行任务：[#1]
 R_STR_TASK_FINISHED,The task [#1] was completed,任務 [#1] 運行完成,任务 [#1] 运行完成
 
 R_STR_ADD_FAILED,Failed to add,新增失敗,新增失败

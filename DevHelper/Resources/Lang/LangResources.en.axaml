@@ -73,7 +73,7 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">History Table Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">Date column name of the history tables</system:String>
-    <system:String x:Key="R_STR_START_TO_RUN_TASK">Start to run task: #1</system:String>
+    <system:String x:Key="R_STR_START_TO_RUN_TASK">Start to run task: [#1]</system:String>
     <system:String x:Key="R_STR_TASK_FINISHED">The task [#1] was completed</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">Failed to add</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">Failed to delete</system:String>

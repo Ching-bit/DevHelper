@@ -73,7 +73,7 @@
     <system:String x:Key="R_STR_HIS_DB_NAME">歷史庫名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">歷史表名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">歷史表的日期字段名稱</system:String>
-    <system:String x:Key="R_STR_START_TO_RUN_TASK">開始運行任務：#1</system:String>
+    <system:String x:Key="R_STR_START_TO_RUN_TASK">開始運行任務：[#1]</system:String>
     <system:String x:Key="R_STR_TASK_FINISHED">任務 [#1] 運行完成</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失敗</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">刪除失敗</system:String>

@@ -6,4 +6,9 @@ public static class DateTimeHelper
     {
         return DateTime.Now.ToString(format);
     }
+    
+    public static string CurrentTime(string format = "HH:mm:ss")
+    {
+        return DateTime.Now.ToString(format);
+    }
 }
