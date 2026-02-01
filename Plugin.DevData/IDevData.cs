@@ -20,8 +20,8 @@ public interface IDevData : IPlugin
     public IDirectoryNode? GetRootDirectory(IFileNode fileNode);
     public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode);
 
-    public Dictionary<string, List<TableInfo>> GetAllTables();
+    public Dictionary<DatabaseInfo, List<TableInfo>> GetAllTables();
     public TableInfo? GetTableById(int tableId);
-    public string GetDatabaseNameByTableId(int tableId);
+    public DatabaseInfo? GetDatabaseInfoByTableId(int tableId);
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark);
 }

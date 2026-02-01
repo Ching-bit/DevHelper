@@ -1,6 +1,5 @@
 <GenTask>
-    <TaskName>MySQL 新建</TaskName>
-    <TemplateFile>database_create.template</TemplateFile>
+    <TemplateFile>mysql_init.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
     <OutputFile>${DatabaseName(lower_snake)}.sql</OutputFile>
     <OutputDir>.\code_autogen\</OutputDir>

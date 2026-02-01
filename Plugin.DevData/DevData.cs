@@ -289,17 +289,21 @@ public class DevData : IDevData
 
 
     #region Table Methods
-    public Dictionary<string, List<TableInfo>> GetAllTables()
+    public Dictionary<DatabaseInfo, List<TableInfo>> GetAllTables()
     {
         if (null == TableRoot)
         {
             return [];
         }
 
-        Dictionary<string, List<TableInfo>> ret = [];
+        Dictionary<DatabaseInfo, List<TableInfo>> ret = [];
         foreach (IDirectoryNode databaseNode in TableRoot.SubDirectories)
         {
-            ret.Add(databaseNode.Name, GetTableListInner(databaseNode));
+            DatabaseInfo databaseInfo = new(databaseNode.Name)
+            {
+                Description = databaseNode.Description
+            };
+            ret.Add(databaseInfo, GetTableListInner(databaseNode));
         }
         return ret;
     }
@@ -325,7 +329,7 @@ public class DevData : IDevData
 
     public TableInfo? GetTableById(int tableId)
     {
-        Dictionary<string, List<TableInfo>> tables = GetAllTables();
+        Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables();
         foreach (List<TableInfo> tableList in tables.Values)
         {
             TableInfo? tableInfo = tableList.FirstOrDefault(x => x.Id == tableId);
@@ -338,17 +342,17 @@ public class DevData : IDevData
         return null;
     }
 
-    public string GetDatabaseNameByTableId(int tableId)
+    public DatabaseInfo? GetDatabaseInfoByTableId(int tableId)
     {
-        Dictionary<string, List<TableInfo>> tables = GetAllTables();
-        foreach (KeyValuePair<string, List<TableInfo>> keyValuePair in tables)
+        Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables();
+        foreach (KeyValuePair<DatabaseInfo, List<TableInfo>> keyValuePair in tables)
         {
             if (keyValuePair.Value.Any(x => x.Id == tableId))
             {
                 return keyValuePair.Key;
             }
         }
-        return string.Empty;
+        return null;
     }
     
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark)

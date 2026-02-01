@@ -1,14 +1,14 @@
 using Framework.Common;
 using Framework.Utils.Helpers;
-
 namespace Plugin.AppEnv;
 
 public class UserSetting : IUserSetting
 {
-    public string DatabaseType { get; set; } = string.Empty;
-    public string HistoryDatabaseName { get; set; } = string.Empty;
-    public string HistoryTableName { get; set; } = string.Empty;
-    public string ArchiveDateColumnName { get; set; } = string.Empty;
+    public string DatabaseType { get; set; } = "1";
+    public string HistoryDatabaseName { get; set; } = "his_${DatabaseName}";
+    public string HistoryTableName { get; set; } = "his_${TableName}";
+    public string ArchiveDateColumnName { get; set; } = "archive_data";
+    public List<GenTaskConf> GenTaskConfs { get; set; } = [];
     
     
     public void OnStart() { }

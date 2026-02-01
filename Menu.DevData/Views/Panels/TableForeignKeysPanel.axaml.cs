@@ -24,13 +24,17 @@ public partial class TableForeignKeysPanel : UniPanel
     private async Task Add()
     {
         TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(TableId);
-        string databaseName = Global.Get<IDevData>().GetDatabaseNameByTableId(TableId);
+        DatabaseInfo? database = Global.Get<IDevData>().GetDatabaseInfoByTableId(TableId);
+        if (null == database)
+        {
+            throw new ArgumentException("Null database info when add a foreign key");
+        }
         
         List<ColumnInfoModel> sourceColumnList =
             ColumnList.Where(x => !ForeignKeyList.Select(y => y.Column?.Id).Contains(x.Id)).ToList();
         List<TableInfoModel> tableList = [];
         
-        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[databaseName])
+        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[database])
         {
             if (item.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
                 item.Id != TableId)
@@ -61,12 +65,16 @@ public partial class TableForeignKeysPanel : UniPanel
         }
         
         TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(TableId);
-        string databaseName = Global.Get<IDevData>().GetDatabaseNameByTableId(TableId);
+        DatabaseInfo? database = Global.Get<IDevData>().GetDatabaseInfoByTableId(TableId);
+        if (null == database)
+        {
+            throw new ArgumentException("Null database info when modify a foreign key");
+        }
         
         List<ColumnInfoModel> sourceColumnList =
             ColumnList.Where(x => !ForeignKeyList.Where(z => z.Column?.Id != selecttedForeignKey.Column?.Id).Select(y => y.Column?.Id).Contains(x.Id)).ToList();
         List<TableInfoModel> tableList = [];
-        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[databaseName])
+        foreach (TableInfo item in Global.Get<IDevData>().GetAllTables()[database])
         {
             if (item.IndexList.Any(x => x.Type is IndexType.Primary or IndexType.Unique) &&
                 item.Id != TableId)

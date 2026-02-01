@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -14,6 +15,7 @@ public partial class GenTaskModel : UniModel
 {
     public GenTaskModel(GenTask task, Avalonia.Controls.Control? view)
     {
+        ShouldGenerate = true;
         TaskName = task.TaskName;
         RecursionLevel = task.RecursionLevel;
         TemplateFile = task.TemplateFile;
@@ -58,6 +60,16 @@ public partial class GenTaskModel : UniModel
         {
             OutputDir = OutputDir.Replace(Global.Get<IAppEnv>().AppDir, ".");
         }
+
+        GenTaskConf? conf = Global.Get<IUserSetting>().GenTaskConfs.FirstOrDefault(x => x.TemplateDir.Equals(TemplateDir));
+        if (null == conf)
+        {
+            conf = new GenTaskConf() { TemplateDir = TemplateDir };
+            Global.Get<IUserSetting>().GenTaskConfs.Add(conf);
+        }
+
+        conf.OutputDir = OutputDir;
+        Global.Get<IUserSetting>().Save();
     }
 
     public GenTask GetTask()

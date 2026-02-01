@@ -22,13 +22,13 @@ public class CodeGenerator
 
         if (RecursionLevel.Database == task.RecursionLevel)
         {
-            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
             {
-                _currentDatabase = databaseName;
+                _currentDatabase = database;
                 string outputFileName = task.OutputFile;
                 if (ContainsMacro(outputFileName, "DatabaseName", out int startIndex, out int endIndex, out string remark))
                 {
-                    outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase, remark));
+                    outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase.Name, remark));
                 }
 
                 string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
@@ -40,21 +40,21 @@ public class CodeGenerator
         }
         else if (RecursionLevel.Table == task.RecursionLevel)
         {
-            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
             {
-                _currentDatabase = databaseName;
-                string outputDir = Path.Combine(task.OutputDir, _currentDatabase);
+                _currentDatabase = database;
+                string outputDir = Path.Combine(task.OutputDir, database.Name);
                 if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
                 
-                foreach (TableInfo tableInfo in Global.Get<IDevData>().GetAllTables()[databaseName])
+                foreach (TableInfo tableInfo in Global.Get<IDevData>().GetAllTables()[database])
                 {
                     string outputFileName = task.OutputFile;
                     if (ContainsMacro(outputFileName, "TableName", out int startIndex, out int endIndex, out string remark))
                     {
-                        outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase, remark));
+                        outputFileName = ReplaceRange(outputFileName, startIndex, endIndex, ToNameStyle(_currentDatabase.Name, remark));
                     }
                     string outputFilePath = Path.Combine(outputDir, outputFileName);
                     
@@ -68,12 +68,13 @@ public class CodeGenerator
     }
     
     // database level template
-    private static string GenFile_Database(string templatePath, string databaseName)
+    private static string GenFile_Database(string templatePath, DatabaseInfo databaseInfo)
     {
         return GenFileByTemplate(templatePath,
             new Dictionary<string, string>
             {
-                { "DatabaseName", databaseName }
+                { "DatabaseName", databaseInfo.Name },
+                { "DatabaseDescription", databaseInfo.Description }
             },
             []);
     }
@@ -89,9 +90,10 @@ public class CodeGenerator
         return GenFileByTemplate(templatePath,
             new Dictionary<string, string>
             {
-                { "DatabaseName", Global.Get<IDevData>().GetDatabaseNameByTableId(tableInfo.Id) },
+                { "DatabaseName", Global.Get<IDevData>().GetDatabaseInfoByTableId(tableInfo.Id)?.Name ?? string.Empty },
                 { "TableName", tableInfo.Name },
                 { "TableDescription", tableInfo.Description },
+                { "PrimaryKeyName", primaryKeyInfo?.Name ?? string.Empty },
                 { "PrimaryKeyColumnCount", primaryKeyColumns.Count + "" },
                 { "PrimaryKeyColumns", string.Join(", ", primaryKeyColumns.Select(x => x.Name)) },
                 { "PrimaryKeyColumnsWithBackQuota", string.Join(", ", primaryKeyColumns.Select(x => $"`{x.Name}`")) },
@@ -115,7 +117,6 @@ public class CodeGenerator
                 (
                     new Dictionary<string, Func<object, string>>
                     {
-                        { "PrimaryKeyName", x => ((IndexInfo)x).Name },
                         { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
                         { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" }
                     },
@@ -346,16 +347,21 @@ public class CodeGenerator
         if (RecursionLevel.Database == recursionLevel)
         {
             StringBuilder sb = new();
-            foreach (string databaseName in Global.Get<IDevData>().GetAllTables().Keys)
+            foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
             {
-                _currentDatabase = databaseName;
-                sb.Append(GenFile_Database(templatePath, databaseName));
+                _currentDatabase = database;
+                sb.Append(GenFile_Database(templatePath, database));
             }
             return sb.ToString();
         }
         
         if (RecursionLevel.Table == recursionLevel)
         {
+            if (null == _currentDatabase)
+            {
+                throw new ArgumentException("Null database info when recurse tables");
+            }
+            
             StringBuilder sb = new();
             List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[_currentDatabase];
             foreach (TableInfo tableInfo in tables)
@@ -379,7 +385,8 @@ public class CodeGenerator
 
     #endregion
 
+    
     #region Pointers
-    private static string _currentDatabase = string.Empty;
+    private static DatabaseInfo? _currentDatabase;
     #endregion
 }
