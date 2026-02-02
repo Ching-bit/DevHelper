@@ -1,0 +1,3 @@
+USE `${DatabaseName}`;
+
+${TEMPLATE(table_upgrade.template,Table)}

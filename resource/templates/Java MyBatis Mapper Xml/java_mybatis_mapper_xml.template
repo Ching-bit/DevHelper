@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtjas.cmsplatform.system.mapper.I${TableName(UpperCamel)}Mapper">
+
+    <resultMap type="com.gtjas.cmsplatform.common.api.system.domain.${TableName(UpperCamel)}" id="${TableName(UpperCamel)}Result">
+        <id     property="${PrimaryKeyColumnName(lowerCamel)}" column="${PrimaryKeyColumnName(lower_snake)}" />
+        <result property="${GeneralColumnName(lowerCamel)}" column="${GeneralColumnName(lower_snake)}" />
+    </resultMap>
+
+    <sql id="select${TableName(UpperCamel)}Vo">
+        SELECT
+            ${ColumnName(lower_snake)}${ColumnComma}
+        FROM ${TableName(lower_snake)}
+    </sql>
+
+    <select id="selectBy${PrimaryKeyColumnName(UpperCamel)}" parameterType="${PrimaryKeyColumnJavaType}" resultMap="${TableName(UpperCamel)}Result">${NEWLINE}        <include refid="select${TableName(UpperCamel)}Vo"/>${NEWLINE}        WHERE ${PrimaryKeyColumnName(lower_snake)} = #{${PrimaryKeyColumnName(lowerCamel)}}${NEWLINE}    </select>
+
+    <select id="select" parameterType="com.gtjas.cmsplatform.common.api.system.domain.${TableName(UpperCamel)}">
+        <include refid="select${TableName(UpperCamel)}Vo"/>
+        <where>
+            <if test="${ColumnName(lowerCamel)} != null">${NEWLINE}                AND ${ColumnName(lower_snake)} = #{${ColumnName(lowerCamel)}}${NEWLINE}            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.gtjas.cmsplatform.common.api.system.domain.${TableName(UpperCamel)}" useGeneratedKeys="true" keyProperty="${PrimaryKeyColumnName(lowerCamel)}">
+        INSERT INTO ${TableName(lower_snake)} (
+            ${GeneralColumnName(lower_snake)}${GeneralColumnComma}
+        ) VALUES (
+            #{${GeneralColumnName(lowerCamel)}}${GeneralColumnComma}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE ${TableName(lower_snake)}
+        <set>
+            <if test="${GeneralColumnName(lowerCamel)} != null">${GeneralColumnName(lower_snake)} = #{${GeneralColumnName(lowerCamel)}},</if>
+        </set>
+        WHERE ${PrimaryKeyColumnName(lower_snake)} = #{${PrimaryKeyColumnName(lowerCamel)}}
+    </update>
+
+    <delete id="deleteBy${PrimaryKeyColumnName(UpperCamel)}">
+        DELETE FROM ${TableName(lower_snake)}
+        WHERE ${PrimaryKeyColumnName(lower_snake)} = #{${PrimaryKeyColumnName(lowerCamel)}}
+    </delete>
+    
+</mapper>

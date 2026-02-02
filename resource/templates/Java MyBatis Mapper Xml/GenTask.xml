@@ -1,0 +1,5 @@
+<GenTask>
+    <TemplateFile>java_mybatis_mapper_xml.template</TemplateFile>
+    <RecursionLevel>Table</RecursionLevel>
+    <OutputFile>${TableName(UpperCamel)}.xml</OutputFile>
+</GenTask>

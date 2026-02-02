@@ -1,0 +1,12 @@
+package com.gtjas.cmsplatform.system.mapper;
+
+import java.util.List;
+
+public interface I${TableName(UpperCamel)}Mapper {
+
+    ${TableName(UpperCamel)} selectBy${PrimaryKeyColumnName(UpperCamel)}(${PrimaryKeyColumnJavaType} ${PrimaryKeyColumnName(lowerCamel)});
+    List<${TableName(UpperCamel)}> select(${TableName(UpperCamel)} ${TableName(lowerCamel)});
+    int insert(${TableName(UpperCamel)} ${TableName(lowerCamel)});
+    int update(${TableName(UpperCamel)} ${TableName(lowerCamel)});
+    int deleteBy${PrimaryKeyColumnName(UpperCamel)}(${PrimaryKeyColumnJavaType} ${PrimaryKeyColumnName(lowerCamel)});
+}

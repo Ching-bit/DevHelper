@@ -1,0 +1,18 @@
+package com.gtjas.cmsplatform.common.api.system.domain;
+
+import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+@Data
+public class ${TableName(UpperCamel)} {
+
+    @Excel(name = "${ColumnDescription}")${NEWLINE}    private ${ColumnJavaType} ${ColumnName(lowerCamel)};${NEWLINE}
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+            .append("${ColumnName(lowerCamel)}", ${ColumnName(lowerCamel)})
+            .toString();
+    }
+}

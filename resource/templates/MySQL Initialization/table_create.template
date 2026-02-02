@@ -1,4 +1,11 @@
+
+/* Table structure for `${TableName(lower_snake)}` */
+
+DROP TABLE IF EXISTS `${TableName(lower_snake)}`;
+
 CREATE TABLE `${TableName(lower_snake)}` (
-  `${ColumnName(lower_snake)}` ${ColumnDbType(ALL_UPPER)}${ColumnNullableFlag(ALL_UPPER)}${ColumnDefaultString(ALL_UPPER)}${ColumnDefaultValue}${ColumnComma}
-)
-ALTER TABLE `${TableName(lower_snake)}` ADD PRIMARY KEY ${PrimaryKeyName(UPPER_SNAKE)}(${PrimaryKeyColumnsWithBackQuota(all_lower)});
+  `${PrimaryKeyColumnName(lower_snake)}` ${PrimaryKeyColumnDbType(ALL_UPPER)} NOT NULL AUTO_INCREMENT,
+  `${GeneralColumnName(lower_snake)}` ${GeneralColumnDbType(ALL_UPPER)}${GeneralColumnDbNullableFlag(ALL_UPPER)}${GeneralColumnDbDefaultString(ALL_UPPER)}${GeneralColumnDbDefaultValue} COMMENT '${GeneralColumnDescription}'${GeneralColumnComma}
+${BACKSPACE}${BACKSPACE},${NEWLINE}  PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_lower)})
+${BACKSPACE}${BACKSPACE},${NEWLINE}  ${IndexTypeWithKey(ALL_UPPER)} ${IndexName(UPPER_SNAKE)} (${IndexColumnsWithBackQuota(all_lower)})
+);

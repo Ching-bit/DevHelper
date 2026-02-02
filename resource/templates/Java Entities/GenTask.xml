@@ -1,0 +1,5 @@
+<GenTask>
+    <TemplateFile>java_entity.template</TemplateFile>
+    <RecursionLevel>Table</RecursionLevel>
+    <OutputFile>${TableName(UpperCamel)}.java</OutputFile>
+</GenTask>
