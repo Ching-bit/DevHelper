@@ -30,6 +30,7 @@
       <PackageReference Include="Dock.Model.Mvvm" Version="11.3.11" />
       <PackageReference Include="Irihi.Ursa" Version="1.14.1" />
       <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.14.1" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.0.0" />
       <PackageReference Include="NLog" Version="6.0.7" />
       <PackageReference Include="Semi.Avalonia" Version="11.3.7.2" />
       <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.3.7.2" />

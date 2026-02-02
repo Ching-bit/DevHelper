@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Framework.Common;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Plugin.AppEnv;
 using Plugin.DevData;
 
@@ -12,14 +14,42 @@ namespace UniClient;
 
 public class CodeGenerator
 {
-    public static void GenFile(GenTask task)
+    public static async Task GenFile(GenTask task)
     {
-        if (Directory.Exists(task.OutputDir))
+        if (!Directory.Exists(task.OutputDir))
         {
-            Directory.Delete(task.OutputDir, true);
+            Directory.CreateDirectory(task.OutputDir);
         }
-        Directory.CreateDirectory(task.OutputDir);
+        
+        if (task.TemplateFile.EndsWith(".cs"))
+        {
+            await GenFileUsingCSharpScript(task);
+        }
+        else if (task.TemplateFile.EndsWith(".template"))
+        {
+            await GenFileUsingTemplate(task);
+        }
+    }
+    
+    private static async Task GenFileUsingCSharpScript(GenTask task)
+    {
+        CodeGenScriptVars scriptVars = new()
+        {
+            Columns = Global.Get<IDevData>().Columns,
+            TableRoot = Global.Get<IDevData>().TableRoot
+        };
+        string scriptContent = await File.ReadAllTextAsync(Path.Combine(task.TemplateDir, task.TemplateFile));
+        await CSharpScript.EvaluateAsync(scriptContent,
+            globals: scriptVars,
+            options: Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default
+                .WithReferences(AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location)))
+                .WithImports("System", "System.IO", "System.Text", "System.Collections.Generic",
+                    "Framework.Common", "Plugin.DevData", "UniClient"));
+    }
 
+    private static async Task GenFileUsingTemplate(GenTask task)
+    {
         switch (task.RecursionLevel)
         {
             case RecursionLevel.Database:
@@ -33,10 +63,10 @@ public class CodeGenerator
                     string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
                     StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
                     string outputContent = GenFile_Database(Path.Combine(task.TemplateDir, task.TemplateFile), _currentDatabase);
-                    sw.Write(outputContent);
+                    await sw.WriteAsync(outputContent);
                     sw.Close();
                 }
-
+                
                 break;
             }
             case RecursionLevel.Table:
@@ -44,7 +74,10 @@ public class CodeGenerator
                 foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
                 {
                     _currentDatabase = database;
-                    string outputDir = Path.Combine(task.OutputDir, database.Name);
+                    string outputDir =
+                        Global.Get<IDevData>().GetAllTables().Keys.Count > 1 ?
+                        Path.Combine(task.OutputDir, database.Name) :
+                        task.OutputDir;
                     if (!Directory.Exists(outputDir))
                     {
                         Directory.CreateDirectory(outputDir);
@@ -52,17 +85,18 @@ public class CodeGenerator
                 
                     foreach (TableInfo tableInfo in Global.Get<IDevData>().GetAllTables()[database])
                     {
+                        _currentTable = tableInfo;
                         string outputFileName = task.OutputFile;
                         outputFileName = ReplaceMacro(outputFileName, "TableName", tableInfo.Name);
                         string outputFilePath = Path.Combine(outputDir, outputFileName);
                     
                         StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
                         string outputContent = GenFile_Table(Path.Combine(task.TemplateDir, task.TemplateFile), tableInfo);
-                        sw.Write(outputContent);
+                        await sw.WriteAsync(outputContent);
                         sw.Close();
                     }
                 }
-
+                
                 break;
             }
         }
@@ -71,7 +105,7 @@ public class CodeGenerator
     // database level template
     private static string GenFile_Database(string templatePath, DatabaseInfo databaseInfo)
     {
-        return GenFileByTemplate(templatePath,
+        return GenFile_Template(templatePath,
             new Dictionary<string, string>
             {
                 { "DatabaseName", databaseInfo.Name },
@@ -90,7 +124,7 @@ public class CodeGenerator
         List<ColumnInfo> generalColumns = columns.Except(primaryKeyColumns).ToList();
         List<IndexInfo> indexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList();
         
-        return GenFileByTemplate(templatePath,
+        return GenFile_Template(templatePath,
             new Dictionary<string, string>
             {
                 { "DatabaseName", Global.Get<IDevData>().GetDatabaseInfoByTableId(tableInfo.Id)?.Name ?? string.Empty },
@@ -247,7 +281,7 @@ public class CodeGenerator
     /// <param name="globalMacros"></param>
     /// <param name="repeatedMacros"></param>
     /// <returns>file content</returns>
-    private static string GenFileByTemplate(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros)
+    private static string GenFile_Template(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros)
     {
         StringBuilder outputContent = new();
         StreamReader templateReader = new(templatePath, Encoding.UTF8);
@@ -317,7 +351,7 @@ public class CodeGenerator
                     {
                         string subTemplatePath = Path.Combine(Path.GetDirectoryName(templatePath)!, arr[0]);
                         RecursionLevel recursionLevel = Enum.Parse<RecursionLevel>(arr[1]);
-                        string subOutputContent = GenSubTemplate(subTemplatePath, recursionLevel);
+                        string subOutputContent = GenFile_SubTemplate(subTemplatePath, recursionLevel);
                         outputLine = ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
                     }
                 }
@@ -390,7 +424,7 @@ public class CodeGenerator
         return before + replacement + after;
     }
 
-    private static string GenSubTemplate(string templatePath, RecursionLevel recursionLevel)
+    private static string GenFile_SubTemplate(string templatePath, RecursionLevel recursionLevel)
     {
         switch (recursionLevel)
         {
@@ -404,6 +438,7 @@ public class CodeGenerator
                 List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[_currentDatabase];
                 foreach (TableInfo tableInfo in tables)
                 {
+                    _currentTable = tableInfo;
                     sb.Append(GenFile_Table(templatePath, tableInfo));
                 }
 
@@ -417,5 +452,6 @@ public class CodeGenerator
     
     #region Pointers
     private static DatabaseInfo? _currentDatabase;
+    private static TableInfo? _currentTable;
     #endregion
 }
