@@ -4,7 +4,6 @@ namespace Plugin.AppEnv;
 
 public class UserSetting : IUserSetting
 {
-    public string DatabaseType { get; set; } = "1";
     public string HistoryDatabaseName { get; set; } = "his_${DatabaseName}";
     public string HistoryTableName { get; set; } = "his_${TableName}";
     public string ArchiveDateColumnName { get; set; } = "archive_data";

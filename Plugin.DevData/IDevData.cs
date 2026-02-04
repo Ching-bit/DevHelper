@@ -20,6 +20,7 @@ public interface IDevData : IPlugin
     public IDirectoryNode? GetRootDirectory(IFileNode fileNode);
     public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode);
 
+    public List<DatabaseInfo> GetAllDatabases();
     public Dictionary<DatabaseInfo, List<TableInfo>> GetAllTables();
     public TableInfo? GetTableById(int tableId);
     public DatabaseInfo? GetDatabaseInfoByTableId(int tableId);

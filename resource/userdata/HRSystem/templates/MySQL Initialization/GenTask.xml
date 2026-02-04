@@ -1,5 +1,6 @@
 <GenTask>
     <TemplateFile>mysql_init.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
-    <OutputFile>${DatabaseName(lower_snake)}.sql</OutputFile>
+    <OutputFile>${DatabaseName(lower_snake)}_init.sql</OutputFile>
+    <DatabaseType>MySQL</DatabaseType>
 </GenTask>

@@ -27,6 +27,7 @@ R_STR_SYSTEM,System,系統,系统
 R_STR_ENTER,Enter,進入,进入
 R_STR_COLUMN,Column,字段,字段
 R_STR_COLUMNS,Columns,字段,字段
+R_STR_DATABASES,Databases,資料庫,数据库
 R_STR_TABLES,Tables,表,表
 R_STR_SAVE,Save,保存,保存
 R_STR_RESTORE,Restore,還原,还原
@@ -65,6 +66,7 @@ R_STR_SYSTEM_SETTING,System Setting,系統設置,系统设置
 R_STR_GENERATE,Generate,生成,生成
 R_STR_TASK,Task,任務,任务
 R_STR_GENERATION_PATH,Generation Path,生成路徑,生成路径
+R_STR_TARGET_DATABASES,Target Databases,目標資料庫,目标数据库
 R_STR_LOG,Log,日誌,日志
 R_STR_DATABASE_TYPE,Database Type,資料庫類型,数据库类型
 R_STR_HIS_DB_NAME,History Database Name,歷史庫名稱,历史库名称

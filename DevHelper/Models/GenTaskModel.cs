@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,8 +7,11 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Control.Basic;
 using Framework.Common;
+using Menu.DevData;
 using Plugin.AppEnv;
+using Plugin.DevData;
 
 namespace UniClient.Models;
 
@@ -20,7 +24,17 @@ public partial class GenTaskModel : UniModel
         RecursionLevel = task.RecursionLevel;
         TemplateFile = task.TemplateFile;
         OutputFile = task.OutputFile;
+        
+        TargetDatabases = [];
+        foreach (string databaseName in task.TargetDatabases)
+        {
+            if (Global.Get<IDevData>().GetAllDatabases().Select(x => x.Name).Contains(databaseName))
+            {
+                TargetDatabases.Add(databaseName);
+            }
+        }
         OutputDir = task.OutputDir;
+        
         TemplateDir = task.TemplateDir;
         
         _view = view;
@@ -31,7 +45,10 @@ public partial class GenTaskModel : UniModel
     [ObservableProperty] private string _taskName = string.Empty;
     [ObservableProperty] private string _templateFile = string.Empty;
     [ObservableProperty] private string _outputFile = string.Empty;
+    
     [ObservableProperty] private string _outputDir = string.Empty;
+    [ObservableProperty] private ObservableCollection<string> _targetDatabases;
+    
     [ObservableProperty] private string _templateDir = string.Empty;
 
     private readonly Avalonia.Controls.Control? _view;
@@ -72,6 +89,28 @@ public partial class GenTaskModel : UniModel
         Global.Get<IUserSetting>().Save();
     }
 
+    [RelayCommand]
+    private async Task PickDatabase()
+    {
+        ConfirmDialogResult result =
+            await ConfirmDialog.Show<DatabaseSelectionDialog, DatabaseSelectionDialogViewModel>();
+        if (!result.IsConfirmed || result.ReturnParameter is not ObservableCollection<string> targetDatabases)
+        {
+            return;
+        }
+
+        TargetDatabases = targetDatabases;
+
+        GenTaskConf? conf = Global.Get<IUserSetting>().GenTaskConfs.FirstOrDefault(x => x.TemplateDir.Equals(TemplateDir));
+        if (null == conf)
+        {
+            return;
+        }
+
+        conf.TargetDatabases = TargetDatabases.ToList();
+        Global.Get<IUserSetting>().Save();
+    }
+
     public GenTask GetTask()
     {
         return new GenTask
@@ -80,7 +119,10 @@ public partial class GenTaskModel : UniModel
             RecursionLevel = RecursionLevel,
             TemplateFile = TemplateFile,
             OutputFile = OutputFile,
+            
             OutputDir = OutputDir,
+            TargetDatabases = TargetDatabases.ToList(),
+            
             TemplateDir = TemplateDir
         };
     }

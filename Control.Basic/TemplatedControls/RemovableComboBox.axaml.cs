@@ -1,6 +1,5 @@
 using System.Collections;
 using Attributes.Avalonia;
-using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
@@ -8,12 +7,12 @@ using Framework.Common;
 
 namespace Control.Basic;
 
-[WithDirectProperty(typeof(IEnumerable), "ItemsSource")]
+[WithDirectProperty(typeof(IEnumerable), "ItemsSource", nullable: true)]
 [WithDirectProperty(typeof(object), "SelectedItem", nullable: true)]
 [WithDirectProperty(typeof(bool), "IsEditable")]
 [WithDirectProperty(typeof(string), "Text", nullable: true)]
 [WithDirectProperty(typeof(string), "Watermark", nullable: true)]
-[WithRoutedEvent(typeof(ItemRemovedEventArgs), "ItemRemoved", EventRoutingStrategies.Bubble)]
+[WithRoutedEvent(typeof(ItemRemovedEventArgs), "ItemRemoved")]
 public partial class RemovableComboBox : TemplatedControl
 {
     public class ItemRemovedEventArgs : RoutedEventArgs

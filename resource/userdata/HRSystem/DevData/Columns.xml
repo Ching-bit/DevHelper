@@ -1,0 +1,114 @@
+<ArrayOfColumnInfo>
+    <ColumnInfo>
+        <Group>PrimaryKeys</Group>
+        <Id>1</Id>
+        <Name>employee_id</Name>
+        <Description>Employee ID</Description>
+        <Type>Int32</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>2</Id>
+        <Name>employee_name</Name>
+        <Description>Employee Name</Description>
+        <Type>Varchar</Type>
+        <Length>255</Length>
+        <Scale>1</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>3</Id>
+        <Name>age</Name>
+        <Description>Age</Description>
+        <Type>Int32</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>4</Id>
+        <Name>postal_code</Name>
+        <Description>Postal Code</Description>
+        <Type>Char</Type>
+        <Length>8</Length>
+        <Scale>1</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>5</Id>
+        <Name>salary</Name>
+        <Description>Salary</Description>
+        <Type>Number</Type>
+        <Length>16</Length>
+        <Scale>2</Scale>
+        <IsNullable>true</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>6</Id>
+        <Name>onboard_date</Name>
+        <Description>Onboard Date</Description>
+        <Type>Datetime</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <IsNullable>true</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>PrimaryKeys</Group>
+        <Id>7</Id>
+        <Name>dept_id</Name>
+        <Description>Department ID</Description>
+        <Type>Int32</Type>
+        <Length>0</Length>
+        <Scale>0</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>8</Id>
+        <Name>dept_name</Name>
+        <Description>Department Name</Description>
+        <Type>Varchar</Type>
+        <Length>255</Length>
+        <Scale>1</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
+</ArrayOfColumnInfo>

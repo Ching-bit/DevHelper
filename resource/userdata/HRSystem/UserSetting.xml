@@ -1,0 +1,27 @@
+<UserSetting>
+    <HistoryDatabaseName>his_${DatabaseName}</HistoryDatabaseName>
+    <HistoryTableName>his_${TableName}</HistoryTableName>
+    <ArchiveDateColumnName>archive_data</ArchiveDateColumnName>
+    <GenTaskConfs>
+        <GenTaskConf>
+            <TemplateDir>.\templates\Java Entities</TemplateDir>
+            <OutputDir>.\code_autogen</OutputDir>
+        </GenTaskConf>
+        <GenTaskConf>
+            <TemplateDir>.\templates\Java MyBatis Mapper</TemplateDir>
+            <OutputDir>.\code_autogen</OutputDir>
+        </GenTaskConf>
+        <GenTaskConf>
+            <TemplateDir>.\templates\Java MyBatis Mapper Xml</TemplateDir>
+            <OutputDir>.\code_autogen</OutputDir>
+        </GenTaskConf>
+        <GenTaskConf>
+            <TemplateDir>.\templates\MySQL Initialization</TemplateDir>
+            <OutputDir>.\code_autogen</OutputDir>
+        </GenTaskConf>
+        <GenTaskConf>
+            <TemplateDir>.\templates\MySQL Upgrade</TemplateDir>
+            <OutputDir>.\code_autogen</OutputDir>
+        </GenTaskConf>
+    </GenTaskConfs>
+</UserSetting>

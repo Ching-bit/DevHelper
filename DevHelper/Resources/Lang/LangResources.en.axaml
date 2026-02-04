@@ -30,6 +30,7 @@
     <system:String x:Key="R_STR_ENTER">Enter</system:String>
     <system:String x:Key="R_STR_COLUMN">Column</system:String>
     <system:String x:Key="R_STR_COLUMNS">Columns</system:String>
+    <system:String x:Key="R_STR_DATABASES">Databases</system:String>
     <system:String x:Key="R_STR_TABLES">Tables</system:String>
     <system:String x:Key="R_STR_SAVE">Save</system:String>
     <system:String x:Key="R_STR_RESTORE">Restore</system:String>
@@ -68,6 +69,7 @@
     <system:String x:Key="R_STR_GENERATE">Generate</system:String>
     <system:String x:Key="R_STR_TASK">Task</system:String>
     <system:String x:Key="R_STR_GENERATION_PATH">Generation Path</system:String>
+    <system:String x:Key="R_STR_TARGET_DATABASES">Target Databases</system:String>
     <system:String x:Key="R_STR_LOG">Log</system:String>
     <system:String x:Key="R_STR_DATABASE_TYPE">Database Type</system:String>
     <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>

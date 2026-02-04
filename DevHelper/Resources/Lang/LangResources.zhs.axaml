@@ -30,6 +30,7 @@
     <system:String x:Key="R_STR_ENTER">进入</system:String>
     <system:String x:Key="R_STR_COLUMN">字段</system:String>
     <system:String x:Key="R_STR_COLUMNS">字段</system:String>
+    <system:String x:Key="R_STR_DATABASES">数据库</system:String>
     <system:String x:Key="R_STR_TABLES">表</system:String>
     <system:String x:Key="R_STR_SAVE">保存</system:String>
     <system:String x:Key="R_STR_RESTORE">还原</system:String>
@@ -68,6 +69,7 @@
     <system:String x:Key="R_STR_GENERATE">生成</system:String>
     <system:String x:Key="R_STR_TASK">任务</system:String>
     <system:String x:Key="R_STR_GENERATION_PATH">生成路径</system:String>
+    <system:String x:Key="R_STR_TARGET_DATABASES">目标数据库</system:String>
     <system:String x:Key="R_STR_LOG">日志</system:String>
     <system:String x:Key="R_STR_DATABASE_TYPE">数据库类型</system:String>
     <system:String x:Key="R_STR_HIS_DB_NAME">历史库名称</system:String>

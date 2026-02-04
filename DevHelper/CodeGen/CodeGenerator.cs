@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Framework.Common;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Plugin.AppEnv;
 using Plugin.DevData;
 
 namespace UniClient;
@@ -56,13 +55,17 @@ public class CodeGenerator
             {
                 foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
                 {
+                    if (task.TargetDatabases.Count > 0 && !task.TargetDatabases.Contains(database.Name))
+                    {
+                        continue;
+                    }
                     _currentDatabase = database;
                     string outputFileName = task.OutputFile;
                     outputFileName = ReplaceMacro(outputFileName, "DatabaseName", _currentDatabase.Name);
 
                     string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
                     StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
-                    string outputContent = GenFile_Database(Path.Combine(task.TemplateDir, task.TemplateFile), _currentDatabase);
+                    string outputContent = GenFile_Database(Path.Combine(task.TemplateDir, task.TemplateFile), _currentDatabase, task);
                     await sw.WriteAsync(outputContent);
                     sw.Close();
                 }
@@ -73,9 +76,13 @@ public class CodeGenerator
             {
                 foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
                 {
+                    if (task.TargetDatabases.Count > 0 && !task.TargetDatabases.Contains(database.Name))
+                    {
+                        continue;
+                    }
                     _currentDatabase = database;
                     string outputDir =
-                        Global.Get<IDevData>().GetAllTables().Keys.Count > 1 ?
+                        task.TargetDatabases.Count > 1 ?
                         Path.Combine(task.OutputDir, database.Name) :
                         task.OutputDir;
                     if (!Directory.Exists(outputDir))
@@ -91,7 +98,7 @@ public class CodeGenerator
                         string outputFilePath = Path.Combine(outputDir, outputFileName);
                     
                         StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
-                        string outputContent = GenFile_Table(Path.Combine(task.TemplateDir, task.TemplateFile), tableInfo);
+                        string outputContent = GenFile_Table(Path.Combine(task.TemplateDir, task.TemplateFile), tableInfo, task);
                         await sw.WriteAsync(outputContent);
                         sw.Close();
                     }
@@ -103,7 +110,7 @@ public class CodeGenerator
     }
     
     // database level template
-    private static string GenFile_Database(string templatePath, DatabaseInfo databaseInfo)
+    private static string GenFile_Database(string templatePath, DatabaseInfo databaseInfo, GenTask task)
     {
         return GenFile_Template(templatePath,
             new Dictionary<string, string>
@@ -111,11 +118,12 @@ public class CodeGenerator
                 { "DatabaseName", databaseInfo.Name },
                 { "DatabaseDescription", databaseInfo.Description }
             },
-            []);
+            [],
+            task);
     }
     
     // table level template
-    private static string GenFile_Table(string templatePath, TableInfo tableInfo)
+    private static string GenFile_Table(string templatePath, TableInfo tableInfo, GenTask task)
     {
         IndexInfo? primaryKeyInfo = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
         
@@ -138,7 +146,7 @@ public class CodeGenerator
                     {
                         { "ColumnName", x => ((ColumnInfo)x).Name },
                         { "ColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "ColumnDbType", x => ToDbType((ColumnInfo)x) },
+                        { "ColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
                         { "ColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
@@ -151,7 +159,7 @@ public class CodeGenerator
                     {
                         { "GeneralColumnName", x => ((ColumnInfo)x).Name },
                         { "GeneralColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "GeneralColumnDbType", x => ToDbType((ColumnInfo)x) },
+                        { "GeneralColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
                         { "GeneralColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
@@ -170,7 +178,7 @@ public class CodeGenerator
                         { "PrimaryKeyColumnsWithBackQuota", _ => string.Join(", ", primaryKeyColumns.Select(x => $"`{x.Name}`")) },
                         { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
                         { "PrimaryKeyColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "PrimaryKeyColumnDbType", x => ToDbType((ColumnInfo)x) },
+                        { "PrimaryKeyColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
                         { "PrimaryKeyColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
@@ -190,12 +198,13 @@ public class CodeGenerator
                         { "IndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + Global.Get<IDevData>().Columns.First(z => y == z.Id).Name + "`")) },
                     },
                     indexes.ConvertAll<object>(y => y)),
-                ]);
+                ],
+            task);
     }
 
-    private static string ToDbType(ColumnInfo columnInfo)
+    private static string ToDbType(ColumnInfo columnInfo, DatabaseType databaseType)
     {
-        if (Global.Get<IUserSetting>().DatabaseType == DatabaseTypeConst.MySQL)
+        if (DatabaseType.MySQL == databaseType)
         {
             return columnInfo.Type switch
             {
@@ -210,7 +219,7 @@ public class CodeGenerator
                 _ => string.Empty
             };
         }
-        if (Global.Get<IUserSetting>().DatabaseType == DatabaseTypeConst.Oracle)
+        if (DatabaseType.Oracle == databaseType)
         {
             return columnInfo.Type switch
             {
@@ -225,7 +234,7 @@ public class CodeGenerator
                 _ => string.Empty
             };
         }
-        if (Global.Get<IUserSetting>().DatabaseType == DatabaseTypeConst.SQLServer)
+        if (DatabaseType.SQLServer == databaseType)
         {
             return columnInfo.Type switch
             {
@@ -280,8 +289,9 @@ public class CodeGenerator
     /// <param name="templatePath"></param>
     /// <param name="globalMacros"></param>
     /// <param name="repeatedMacros"></param>
+    /// <param name="task"></param>
     /// <returns>file content</returns>
-    private static string GenFile_Template(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros)
+    private static string GenFile_Template(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros, GenTask task)
     {
         StringBuilder outputContent = new();
         StreamReader templateReader = new(templatePath, Encoding.UTF8);
@@ -351,7 +361,7 @@ public class CodeGenerator
                     {
                         string subTemplatePath = Path.Combine(Path.GetDirectoryName(templatePath)!, arr[0]);
                         RecursionLevel recursionLevel = Enum.Parse<RecursionLevel>(arr[1]);
-                        string subOutputContent = GenFile_SubTemplate(subTemplatePath, recursionLevel);
+                        string subOutputContent = GenFile_SubTemplate(subTemplatePath, recursionLevel, task);
                         outputLine = ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
                     }
                 }
@@ -424,12 +434,12 @@ public class CodeGenerator
         return before + replacement + after;
     }
 
-    private static string GenFile_SubTemplate(string templatePath, RecursionLevel recursionLevel)
+    private static string GenFile_SubTemplate(string templatePath, RecursionLevel recursionLevel, GenTask task)
     {
         switch (recursionLevel)
         {
             case RecursionLevel.Database:
-                return null != _currentDatabase ? GenFile_Database(templatePath, _currentDatabase) : string.Empty;
+                return null != _currentDatabase ? GenFile_Database(templatePath, _currentDatabase, task) : string.Empty;
             case RecursionLevel.Table when null == _currentDatabase:
                 throw new ArgumentException("Null database info when recurse tables");
             case RecursionLevel.Table:
@@ -439,7 +449,7 @@ public class CodeGenerator
                 foreach (TableInfo tableInfo in tables)
                 {
                     _currentTable = tableInfo;
-                    sb.Append(GenFile_Table(templatePath, tableInfo));
+                    sb.Append(GenFile_Table(templatePath, tableInfo, task));
                 }
 
                 return sb.ToString();

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Plugin.DevData;
+
 namespace UniClient;
 
 public class GenTask
@@ -6,7 +9,10 @@ public class GenTask
     public RecursionLevel RecursionLevel { get; set; }
     public string TemplateFile { get; set; } = string.Empty;
     public string OutputFile { get; set; } = string.Empty;
+    public DatabaseType DatabaseType { get; set; }
+    
     public string OutputDir { get; set; } = string.Empty;
+    public List<string> TargetDatabases { get; set; } = [];
 
     public string TemplateDir { get; set; } = string.Empty;
 }

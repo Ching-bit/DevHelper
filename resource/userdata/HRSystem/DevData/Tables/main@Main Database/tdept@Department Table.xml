@@ -1,0 +1,19 @@
+<TableInfo>
+    <Id>0</Id>
+    <ColumnIdList>
+        <int>7</int>
+        <int>8</int>
+    </ColumnIdList>
+    <IndexList>
+        <IndexInfo>
+            <Name>PK_TDEPT</Name>
+            <Type>Primary</Type>
+            <ColumnIdList>
+                <int>7</int>
+            </ColumnIdList>
+        </IndexInfo>
+    </IndexList>
+    <ForeignKeyList />
+    <HasHistoryTable>false</HasHistoryTable>
+    <Remark />
+</TableInfo>

@@ -1,4 +1,4 @@
-package com.gtjas.cmsplatform.common.api.system.domain;
+package com.xxx.domain;
 
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;

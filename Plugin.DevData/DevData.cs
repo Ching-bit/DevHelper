@@ -289,6 +289,25 @@ public class DevData : IDevData
 
 
     #region Table Methods
+    public List<DatabaseInfo> GetAllDatabases()
+    {
+        if (null == TableRoot)
+        {
+            return [];
+        }
+
+        List<DatabaseInfo> ret = [];
+        foreach (IDirectoryNode databaseNode in TableRoot.SubDirectories)
+        {
+            DatabaseInfo databaseInfo = new(databaseNode.Name)
+            {
+                Description = databaseNode.Description
+            };
+            ret.Add(databaseInfo);
+        }
+        return ret;
+    }
+    
     public Dictionary<DatabaseInfo, List<TableInfo>> GetAllTables()
     {
         if (null == TableRoot)

@@ -1,0 +1,31 @@
+<TableInfo>
+    <Id>1</Id>
+    <ColumnIdList>
+        <int>1</int>
+        <int>7</int>
+        <int>2</int>
+        <int>3</int>
+        <int>4</int>
+        <int>5</int>
+        <int>6</int>
+    </ColumnIdList>
+    <IndexList>
+        <IndexInfo>
+            <Name>PK_TEMPLOYEE</Name>
+            <Type>Primary</Type>
+            <ColumnIdList>
+                <int>1</int>
+            </ColumnIdList>
+        </IndexInfo>
+    </IndexList>
+    <ForeignKeyList>
+        <ForeignKeyInfo>
+            <ColumnId>7</ColumnId>
+            <Name>FK_TEMPLOYEE_DEPT_ID</Name>
+            <TableId>0</TableId>
+            <ReferenceColumnId>7</ReferenceColumnId>
+        </ForeignKeyInfo>
+    </ForeignKeyList>
+    <HasHistoryTable>false</HasHistoryTable>
+    <Remark />
+</TableInfo>

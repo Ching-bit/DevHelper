@@ -3,7 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ursa="https://irihi.tech/ursa"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:UniClient"
     x:Class="UniClient.HomeView">
+    
+    <frw:UniMenu.Resources>
+        <local:TargetDatabasesToStringConverter x:Key="TargetDatabasesToStringConverter"/>
+    </frw:UniMenu.Resources>
     
     <Grid RowDefinitions="Auto,*,*">
         
@@ -22,6 +27,7 @@
                 ItemsSource="{Binding GenTasks}"
                 CanUserResizeColumns="True">
                 <DataGrid.Columns>
+                    <!-- Check Box -->
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -31,9 +37,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <!-- Task Name -->
                     <DataGridTextColumn
                         Header="{DynamicResource R_STR_TASK}" IsReadOnly="True" Width="200"
                         Binding="{Binding TaskName}"/>
+                    <!-- Generation Path -->
                     <DataGridTemplateColumn Header="{DynamicResource R_STR_GENERATION_PATH}" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -42,6 +50,21 @@
                                     <ursa:IconButton
                                         Grid.Column="1" Icon="{StaticResource SemiIconFolderOpen}"
                                         Command="{Binding PickFolderCommand}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Target Databases -->
+                    <DataGridTemplateColumn Header="{DynamicResource R_STR_TARGET_DATABASES}" Width="250">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding TargetDatabases, Converter={StaticResource TargetDatabasesToStringConverter}}"
+                                               VerticalAlignment="Center" TextAlignment="Center"/>
+                                    <ursa:IconButton
+                                        Grid.Column="1" Icon="{StaticResource SemiIconArchive}"
+                                        Command="{Binding PickDatabaseCommand}"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

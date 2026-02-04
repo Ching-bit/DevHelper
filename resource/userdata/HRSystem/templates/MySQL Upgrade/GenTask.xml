@@ -1,5 +1,6 @@
 <GenTask>
     <TemplateFile>mysql_upgrade.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
-    <OutputFile>${DatabaseName(lower_snake)}.sql</OutputFile>
+    <OutputFile>${DatabaseName(lower_snake)}_upgrade.sql</OutputFile>
+    <DatabaseType>MySQL</DatabaseType>
 </GenTask>

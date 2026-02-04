@@ -10,11 +10,7 @@ public class TableInfo : FileNode
 
     public TableInfo(string name, string description, IDirectoryNode? parent)
         : base(name, description, parent)
-    {
-        // max Id + 1 to this table
-        List<TableInfo> allTableList = Global.Get<IDevData>().GetAllTables().Values.SelectMany(list => list).ToList();
-        Id = allTableList.Count > 0 ? allTableList.Max(x => x.Id) + 1 : 1;
-    }
+    { }
     #endregion
     
     

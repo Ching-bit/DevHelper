@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -149,7 +150,13 @@ public partial class MainViewModel : UniViewModel
     [RelayCommand]
     private async Task AddTable(MenuConfModel menu)
     {
-        await AddItem(menu, MenuType.Table);
+        MenuConfModel? menuAdded = await AddItem(menu, MenuType.Table);
+        if (menuAdded?.Entity is TableInfo tableInfo)
+        {
+            // max Id + 1 to this table
+            List<TableInfo> allTableList = Global.Get<IDevData>().GetAllTables().Values.SelectMany(list => list).Where(x => x != tableInfo).ToList();
+            tableInfo.Id = allTableList.Count > 0 ? allTableList.Max(x => x.Id) + 1 : 1;
+        }
     }
     
     private async Task AddGroup(MenuConfModel menu, MenuType menuType)
@@ -186,12 +193,12 @@ public partial class MainViewModel : UniViewModel
         AddGroupMenu(menu, newDirectoryNode!, menuType);
     }
     
-    private async Task AddItem(MenuConfModel menu, MenuType menuType)
+    private async Task<MenuConfModel?> AddItem(MenuConfModel menu, MenuType menuType)
     {
         if (menu.Entity is not DirectoryNode directory)
         {
             Global.Get<ILog>().Error(LogModule.PUBLIC, "Try to add an item, but the selected menu doesn't have its directory object");
-            return;
+            return null;
         }
         
         AddItemDialogViewModel vm = new();
@@ -208,7 +215,7 @@ public partial class MainViewModel : UniViewModel
         ConfirmDialogResult result = await ConfirmDialog.Show<AddItemDialog>(vm);
         if (!result.IsConfirmed)
         {
-            return;
+            return null;
         }
 
         AddItemModel itemModel = (AddItemModel)result.ReturnParameter!;
@@ -216,10 +223,10 @@ public partial class MainViewModel : UniViewModel
         if (!Global.Get<IDevData>().AddItem(directory, itemModel.Name, itemModel.Description, out IFileNode? item, menu.LeafEntityType!))
         {
             ShowNotification("R_STR_ADD_FAILED", NotificationType.Error);
-            return;
+            return null;
         }
-            
-        _ = AddItemMenu(menu, item!, menuType);
+
+        return AddItemMenu(menu, item!, menuType);
     }
 
     [RelayCommand]

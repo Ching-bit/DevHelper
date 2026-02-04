@@ -3,5 +3,7 @@ namespace UniClient;
 public enum RecursionLevel
 {
     Database,
-    Table
+    Table,
+    HistoryDatabase,
+    HistoryTable
 }
