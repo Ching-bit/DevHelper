@@ -38,7 +38,7 @@ public class CodeGenerator
             Columns = Global.Get<IDevData>().Columns,
             TableRoot = Global.Get<IDevData>().TableRoot
         };
-        string scriptContent = await File.ReadAllTextAsync(Path.Combine(task.TemplateDir, task.TemplateFile));
+        string scriptContent = await File.ReadAllTextAsync(task.GetTemplatePath());
         await CSharpScript.EvaluateAsync(scriptContent,
             globals: scriptVars,
             options: Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default
@@ -61,12 +61,12 @@ public class CodeGenerator
                         continue;
                     }
                     _currentDatabase = database;
-                    string outputFileName = task.OutputFile;
-                    outputFileName = ReplaceMacro(outputFileName, "DatabaseName", _currentDatabase.Name);
-
+                    string outputFileName = GenFile_Database(task.OutputFile, _currentDatabase, null);
                     string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
+                    
                     StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
-                    string outputContent = GenFile_Database(Path.Combine(task.TemplateDir, task.TemplateFile), _currentDatabase, task);
+                    string templateText = await File.ReadAllTextAsync(task.GetTemplatePath());
+                    string outputContent = GenFile_Database(templateText, _currentDatabase, task);
                     await sw.WriteAsync(outputContent);
                     sw.Close();
                 }
@@ -95,12 +95,12 @@ public class CodeGenerator
                     foreach (TableInfo tableInfo in tableList)
                     {
                         _currentTable = tableInfo;
-                        string outputFileName = task.OutputFile;
-                        outputFileName = ReplaceMacro(outputFileName, "TableName", tableInfo.Name);
+                        string outputFileName = GenFile_Table(task.OutputFile, tableInfo, null);
                         string outputFilePath = Path.Combine(outputDir, outputFileName);
                     
                         StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
-                        string outputContent = GenFile_Table(Path.Combine(task.TemplateDir, task.TemplateFile), tableInfo, task);
+                        string templateText = await File.ReadAllTextAsync(task.GetTemplatePath());
+                        string outputContent = GenFile_Table(templateText, tableInfo, task);
                         await sw.WriteAsync(outputContent);
                         sw.Close();
                     }
@@ -112,9 +112,9 @@ public class CodeGenerator
     }
     
     // database level template
-    private static string GenFile_Database(string templatePath, DatabaseInfo databaseInfo, GenTask task)
+    private static string GenFile_Database(string templateText, DatabaseInfo databaseInfo, GenTask? task)
     {
-        return GenFile_Template(templatePath,
+        return GenFile_Template(templateText,
             new Dictionary<string, string>
             {
                 { "DatabaseName", databaseInfo.Name },
@@ -125,7 +125,7 @@ public class CodeGenerator
     }
     
     // table level template
-    private static string GenFile_Table(string templatePath, TableInfo tableInfo, GenTask task)
+    private static string GenFile_Table(string templateText, TableInfo tableInfo, GenTask? task)
     {
         IndexInfo? primaryKeyInfo = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
         
@@ -135,13 +135,14 @@ public class CodeGenerator
         List<IndexInfo> indexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList();
         List<ForeignKeyInfo> foreignKeys = tableInfo.ForeignKeyList;
         
-        return GenFile_Template(templatePath,
+        return GenFile_Template(templateText,
             new Dictionary<string, string>
             {
                 { "DatabaseName", Global.Get<IDevData>().GetDatabaseInfoByTableId(tableInfo.Id)?.Name ?? string.Empty },
                 { "TableName", tableInfo.Name },
                 { "TableDescription", tableInfo.Description },
             },
+            null == task ? [] :
             [
                 // columns related
                 Tuple.Create(
@@ -329,15 +330,15 @@ public class CodeGenerator
     /// <summary>
     /// General method to generate a file
     /// </summary>
-    /// <param name="templatePath"></param>
+    /// <param name="templateText"></param>
     /// <param name="globalMacros"></param>
     /// <param name="repeatedMacros"></param>
     /// <param name="task"></param>
     /// <returns>file content</returns>
-    private static string GenFile_Template(string templatePath, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros, GenTask task)
+    private static string GenFile_Template(string templateText, Dictionary<string, string> globalMacros, List<Tuple<Dictionary<string, Func<object, string>>, List<object>>> repeatedMacros, GenTask? task)
     {
         StringBuilder outputContent = new();
-        StreamReader templateReader = new(templatePath, Encoding.UTF8);
+        StringReader templateReader = new(templateText);
         
         Dictionary<string, string> defaultGlobalMacros = new()
         {
@@ -394,30 +395,31 @@ public class CodeGenerator
             
             // replace special micros
             // TEMPLATE
+            if (null != task)
             {
                 if (ContainsMacro(outputLine, "TEMPLATE", out int startIndex, out int endIndex, out string remark))
                 {
                     string[] arr = remark.Split(",");
                     if (arr.Length == 2)
                     {
-                        string subTemplatePath = Path.Combine(Path.GetDirectoryName(templatePath)!, arr[0]);
+                        string subTemplatePath = Path.Combine(task.TemplateDir, arr[0]);
+                        string subTemplateText = File.ReadAllText(subTemplatePath);
                         RecursionLevel recursionLevel = Enum.Parse<RecursionLevel>(arr[1]);
-                        string subOutputContent = GenFile_SubTemplate(subTemplatePath, recursionLevel, task);
+                        string subOutputContent = GenFile_SubTemplate(subTemplateText, recursionLevel, task);
                         outputLine = ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
                     }
                 }
             }
-
+            
+            line = templateReader.ReadLine();
             if (outputLine.Length > 0 || null == repeatedMacro)
             {
-                if (!outputLine.EndsWith(Environment.NewLine))
+                if (null != line && !outputLine.EndsWith(Environment.NewLine))
                 {
                     outputLine += Environment.NewLine;
                 }
                 outputContent.Append(outputLine);
             }
-            
-            line = templateReader.ReadLine();
         }
 
         templateReader.Close();
@@ -485,12 +487,12 @@ public class CodeGenerator
         return before + replacement + after;
     }
 
-    private static string GenFile_SubTemplate(string templatePath, RecursionLevel recursionLevel, GenTask task)
+    private static string GenFile_SubTemplate(string templateText, RecursionLevel recursionLevel, GenTask task)
     {
         switch (recursionLevel)
         {
             case RecursionLevel.Database:
-                return null != _currentDatabase ? GenFile_Database(templatePath, _currentDatabase, task) : string.Empty;
+                return null != _currentDatabase ? GenFile_Database(templateText, _currentDatabase, task) : string.Empty;
             case RecursionLevel.Table when null == _currentDatabase:
                 throw new ArgumentException("Null database info when recurse tables");
             case RecursionLevel.Table:
@@ -501,7 +503,7 @@ public class CodeGenerator
                 foreach (TableInfo tableInfo in tables)
                 {
                     _currentTable = tableInfo;
-                    sb.Append(GenFile_Table(templatePath, tableInfo, task));
+                    sb.Append(GenFile_Table(templateText, tableInfo, task));
                 }
                 
                 return sb.ToString();

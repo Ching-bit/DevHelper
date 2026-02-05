@@ -1,4 +1,5 @@
 
+
 /* Table structure for `${TableName(lower_snake)}` */
 
 DROP TABLE IF EXISTS `${TableName(lower_snake)}`;

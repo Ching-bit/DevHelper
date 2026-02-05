@@ -13,8 +13,8 @@ public class TableListSorter
             {
                 if (null == refNode) { continue; }
 
-                indegree.TryAdd(refNode, 0);
-                indegree[refNode]++;
+                indegree.TryAdd(node, 0);
+                indegree[node]++;
             }
         }
         

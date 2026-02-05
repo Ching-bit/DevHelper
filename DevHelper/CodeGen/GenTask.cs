@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Plugin.DevData;
 
 namespace UniClient;
@@ -17,4 +18,10 @@ public class GenTask
     public List<string> TargetDatabases { get; set; } = [];
 
     public string TemplateDir { get; set; } = string.Empty;
+    
+    
+    public string GetTemplatePath()
+    {
+        return Path.Combine(TemplateDir, TemplateFile);
+    }
 }
