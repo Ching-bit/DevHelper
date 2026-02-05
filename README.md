@@ -1,221 +1,160 @@
 # 介紹
-一個通用的客戶端模板，主要目的是將客戶端開發的一些通用的功能實現，並實現組件可插拔式的配置化，能快速地修改為實際項目所需要的形式。項目主要使用了以下開源框架：
+這是一個表結構管理並自動生成代碼的開發輔助工具。
 
-**Avalonia**：基本框架，社區開源，Avalonia可看成是WPF的升級版，在WPF上進行了多項優化，而且最重要地，Avalonia是跨平台的，一套代碼支持Windows、Linux、MacOS；
+在開發中，很多代碼都是由表結構而相應編寫的，如 Java 中的類、Mapper，C++的結構體等。這部分代碼與表結構是對應的，具有固定的模式。因此開發一個通用的工具，能根據表結構生成任意類型的代碼，使開發人員最大限度減少編碼工作量。
 
-**Semi.Avalonia**、**Irihi.Ursa**：UI庫，三方開源；
+本工具是基於本倉庫的客戶端通用框架項目 UniClient 開發而成。
 
-**CommunityToolkit.Mvvm**：MVVM設計模式，Microsoft開源；
+# 使用
 
-**Dock.Avalonia**：界面浮動、拖拉效果，三方開源；
+### 多系統管理
 
-**NLog**：日誌，三方開源。
+本工具能同時管理多個系統的表結構資料。在打開後的初始界面輸入系統名稱並進入，工具將自動創建該系統的資料文件夾。也可在下拉列表中選擇或刪除已創建的系統資料。不同系統的資料相互隔離。
 
-項目中的類名常以Uni開頭，表示Universal，通用的。
+### 字段管理
 
-# 開發
+首先在字段管理頁面定義字段。本工具是先定義字段，再在表中引用字段而定義表結構的。這樣做的好處在於：
 
-## 1. 插件
+（1）保證不同表的同名字段具有相同的含意和類型。對於名字相同的字段，C++ 程序中可以放心地使用 strcpy 方法而無需做額外的保護；
 
-插件即是一個能被框架啟動、保存的特定類型。Framework.Common中定義了插件接口IPlugin，其中定義了插件的生命週期方法。框架將在客戶端開啟、登錄、退出時調用相應方法。
+（2）若需要變更字段類型，只需維護一次而所有表都生效，無需個各表逐一操作。
 
-開發一個新插件：
+本工具定義的字段類型及與各程序語言、Database 的對應關係如下。
 
-（1）創建插件接口，該接口繼承IPlugin；
+| 類型 | 用途 | C++ | C# | Java | MySQL | SQL Server | Oracle | Thrift | gRPC |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Int32 | 32位整型 | int32_t | int | Integer | INT | INT | NUMBER(10) | i32 | int32 |
+| Int64 |  64位整型 | int64_t | long | Long | BIGINT | BIGINT | NUMBER(19) | i64 | int64 |
+| Number(m,n) | 浮點數值 | double | double | Double | DECIMAL(m,n) | DECIMAL(m,n) | NUMBER(m,n) | double | double |
+| Char(m), n | 定長字串 | std::string<br>char[m * n + 1] | string<br>byte[m * n + 1] | String<br>Byte[m * n + 1] | CHAR(m) | CHAR(m) | CHAR(m) | string | string |
+| Varchar(m), n | 變長字串 | std::string<br>char[m * n + 1] | string<br>byte[m * n + 1] | String<br>Byte[m * n + 1] | VARCHAR(m) | VARCHAR(m) | VARCHAR2(m) | string | string |
+| Bool | 真假值 | bool | bool | Boolean | TINYINT | BIT | Number(1) | bool | bool |
+| Datetime | 時間 | std::chrono | (System.)DateTime | (java.time.)LocalDateTime | DATETIME | DATETIME | DATE | string | string |
 
-（2）創建接口的實現類。必須是3層繼承關係：IPlugin -> 插件接口 -> 插件實現類。插件接口和實現類需要位於最外層命名空間；
+**說明**
 
-建議：所有項目的類都放在最外層的項目名稱命名空間；
+（1）Number(m,n)，m 為精度，n 為小數位數；
 
-（3）在sys\Plugins.xml中增加該插件的配置，Assembly填寫該插件所在dll的名稱，不加dll擴展名；Name填寫實現類的名稱。
+（2）Char、Varchar，m 為字符個數，n 為單字符所占最大字節數。n 的值須根據實際使用場景確定，如編碼為UTF-8，而字段實際只會存放英文字符，則 n = 1。m 和 n 的數值影響對應的程序中字符數組的長度；
 
-框架啟動時將根據Plugins.xml中的配置利用反射創建插件實例並保存，使用時以Global.Get\<T>()獲取插件，其中T是插件接口類型。
+（3）工具中精度和字符個數共用一列展示，小數位數和單字符所占最大字節數共用一列展示。
 
-## 2. MVVM設計模式
+### 表管理
 
-Avalonia、WPF本身支持面向事件的開發，但更推薦使用MVVM設計模式。
+在表菜單下進行表的管理。工具考慮到了可能有多資料庫的情況，首先添加資料庫，在資料庫下添加表。在表菜單中，可設置表的字段、索引等。
 
-MVVM即是指——M：Model，代表數據；V：View，代表界面；VM：ViewModel，代表邏輯。通過綁定（Binding）將界面元素於ViewModel中的數據關聯，使得客戶端的開發成為面向數據的開發。
+**注意** 在字段、表的管理菜單中，增、刪、改數據後需要保存方生效。
 
-在本項目中，MVVM的基類都定義在Framework.Common中。
+字段和表的數據是以 xml 文件的形式保存在 userdata 目錄下。
 
-**View**：窗口繼承UniWindow類，用戶控件（指不能獨立展現，需作為窗口的一部分）繼承UniPanel類；
+# 代碼生成
 
-**ViewModel**：繼承UniViewModel類。
+### 生成任務
 
-框架將根據類名自動將View和ViewModel關聯，關聯規則：對於名稱為XxxView或Xxx（不以View結尾）的View類，對應的ViewModel類名為XxxViewModel。View和ViewModel或者位於相同命名空間，或者分別位於Xxx.Views、Xxx.ViewModels命名空間。因此再次建議——
+為達到通用的目的，代碼生成的任務是由用戶自行配置的，配置方法如下。
 
-建議：所有項目的類都放在最外層的項目名稱命名空間。
+在 **userdata\對應系統\templates** 的目錄下新增文件夾，文件夾名稱對應生成任務的名稱。在文件夾下添加 GenTask.xml 生成任務配置文件，該配置文件中設置以下內容：
 
-**Model**：繼承UniModel類。UniModel類目前僅繼承了Communitytoolkit.Mvvm庫的ObservableObject類，未做其他處理。Model中的屬性，可通過Communitytoolkit.Mvvm庫提供的在私有變量上添加[ObservableProperty]特性來快捷地創建（否則就需要繼承INotifiedPropertyChanged接口來實現，多數情況下不需要如此勞煩）。
+- **TemplateFile**：模板文件名稱，以 .template 擴展名結尾；若以 .cs 擴展名結尾，則工具將其作為 C# 腳本進行執行，並將已設置的字段、表數據傳入，此功能尚待驗證；
+- **RecursionLevel**：迭代層級，可選擇 Database 或 Table；對於迭代層級為 Database 的生成任務，工具將從資料庫層級開始，逐一按模板生成代碼，每個 database 對應一個生成文件；對於迭代層級為 Table 的生成任務，工具將從表的層級開始，每張表生成一個代碼文件，並分資料庫目錄存放（若只有一個 Database 則直接存放至生成路徑下）；
+- **OutputFile**：輸出文件名稱；
+- **ProgramLanguage**：編程語言，可選擇Cpp、CSharp、Java，影響對應的程序字段類型；
+- **IsUsingString**：是否使用String，是則 Char、Varchar 類型字段對應的程序字段類型為 String，否則為 byte 數組；
+- **DatabaseType**：資料庫類型，影響對應的資料庫字段類型。
 
-## 3. 控件
+### 生成模板
 
-**Control.Basic** 項目用於提供封裝好的可複用的控件。
+工具以模板文件，按照維護的表數據生成實際的代碼文件，而模板文件中包含以各類宏定義，使得用戶能靈活地定製生成的代碼文件。
 
-目前主要有一個對話框控件，創建一個對話框——
+模板文件中的宏可分為全局類宏和迭代類宏，以模板生成代碼的規則可概括為：若行中不包含宏，則以原文複製到生成文件中；若行中包含全局類宏，則將宏替換為對應值後，輸出到生成文件中；若行中包含迭代類宏，則將對應的對象列表依次替換宏的值，並依次輸出到生成文件中。
 
-（1）創建對話框用戶控件，繼承Avalonia的UserControl，不要繼承UniPanel，**Irihi.Ursa** 庫會在顯示對話框的方法中將View和ViewModel關聯；
+不同迭代層級中，如以資料庫和以表迭代時，對應的全局類宏和迭代類宏各不相同。迭代類宏有分組，在使用迭代類宏時，必須在一行內使用同一組的宏，也必須將一組宏寫在同一行內。若一行內使用了多組迭代類宏，僅會處理第一個匹配的宏，其餘的宏不會替換，會原樣在代碼文件輸出，導致結果不正確；一組宏寫在同一行內，若需要生成的代碼產生換行，需使用全局類宏 NEWLINE。
 
-（2）用戶控件中添加ConfirmDialog控件，這是一個TemplatedControl，設置其ReturnParameter參數，用於對話框確認後返回；
+所有宏的書寫方式可按照 **${宏名稱(命名風格)}** 格式。各迭代層級的宏見後文；命名風格包含以下選項：
 
-（3）用戶控件的ViewModel繼承ConfirmDialogViewModel；
+- lowerCamel：首字母小寫駝峰命名；
+- UpperCamel：首字母大寫駝峰命名；
+- lower_snake：小寫下劃綫蛇形命名；
+- UPPER_SNAKE：大寫下劃綫蛇形命名；
+- all_lower：全小寫；
+- ALL_UPPER：全大寫。
 
-（4）可使用 await Dialog.ShowCustomModal<View, ViewModel, ReturnClass>() 方法展示對話框，對話框被確認或取消後將返回 ConfirmDialogResult 參數，其中包含對話框點擊的結果和返回的參數。
+其中命名風格也可省略，則工具會按照原樣的表名、字段名等替代。命名風格的支持，使得可以在工具內以任意統一的命名風格維護表和字段，而在通過模板生成另一個命名風格的代碼。
 
-## 4. 菜單
+# 宏
 
-菜單的View繼承UniMenu類。UniMenu本身是UniPanel，但增加了菜單生命週期的方法，這些方法將在菜單打開、顯示、隱藏、關閉時相應被調用。菜單的ViewModel與上述相同，繼承UniViewModel並按照名稱與View對應。
+### 通用宏
 
-菜單開發好後，在sys\Menus.xml中配置，框架將按照配置文件的層級關係在登錄後的左側菜單樹型結構中進行展示。
+- NEWLINE：換行；
+- BACKSPACE：退格；
+- TEMPLATE：子模板，該宏的書寫規範為 ${TEMPLATE(模板文件名稱,迭代層級)}。
 
-## 5. 多語言
+### 資料庫迭代
 
-多語言按照Avalonia本身的動態關聯資源名稱的方式實現，對於一些無法動態關聯的字段，目前框架也做了處理。
+全局類宏：
 
-目前只需在UniClient項目的Resources\Lang中配置各個語言的axaml資源文件。有一個簡單的Python腳本，更簡化了開發。只需配置LangResources.csv文件，運行GenLangResources.py，即會生成相應axaml資源文件。
+- DatabaseName：資料庫名稱；
+- DatabaseDescription：資料庫描述。
 
-添加新語言：（1）在Framework.Common中的Helpers\LanguageConst.cs添加新的語言的常量，其中常量名稱就是在設置中語言列表展示的選項，值用來關聯資源文件；（2）按上述生成新語言的axaml資源文件。即可完成新語言的支持。
+### 表迭代
 
-## 6. Roslyn 編譯期代碼生成
+全局類宏：
 
-.Net平台提供了Roslyn編譯接口，可利用其提供的機制和C#的特性（類似Java的註解），進一步簡化代碼。
-
-目前開發了 **Attributes.Avalonia** 項目，可利用一條特性方便地為控件添加StyledProperty、DirectProperty，以及為幫助類添加AttachedProperty。項目已打包上傳NuGet，可具體查看項目的說明文件。
-
-## 7. 客戶端升級
-
-支持了以 Http 部署升級服務。
-
-升級地址配置在 sys\AppConf.xml 的 UpdateAddrs 配置項中，多個地址以英文分號隔開。升級時將首先在此URL地址下查找 UpdateConf.xml 文件，UpdateConf.xml 文件示例如下。
-
-```
-<UpdateConf>
-  <UpdateListPath>/${Platform}/FileList.xml</UpdateListPath>
-  <ChangeLogPath>/changelogs/ChangeLog.txt</ChangeLogPath>
-  <RemoteClientDir>/${Platform}/client</RemoteClientDir>
-  <IsForce>false</IsForce>
-</UpdateConf>
-```
-
-UpdateListPath: 客戶端文件列表路徑，其中記錄升級服務器上客戶端文件列表及其MD5值，客戶端登錄後將逐一比對此文件中記錄的文件MD5值和本地文件MD5值，若有不一致即判斷需要升級；
-
-ChangeLogPath：升級內容文本文件路徑，支持多語言，若該路徑有值，客戶端將彈出升級內容提示對話框並展示改文本內容，否則將只彈出需要升級的提示；
-
-RemoteClientDir：升級服務器客戶端文件所在路徑，支持多平台配置；
-
-IsForce：是否強制，若不強制，用戶可取消升級並繼續登錄。
-
-升級服務器一個可用的文件部署目錄——
-```
-webapps
-  - uniserver
-    - UpdateConf.xml // 升級配置文件
-    - changelogs     // 升級內容文本
-      - ChangeLog.en.txt  // 英文升級內容
-      - ChangeLog.zht.txt // 中文升級內容
-    - windows_x64    // Windows x64 客戶端目錄
-      - FileList.xml // 客戶端文件信息文件
-      - client       // 客戶端文件目錄
-        - ...        // 客戶端文件
-    - linux_x64      // Linux x64 客戶端目錄
-      - FileList.xml // 客戶端文件信息文件
-      - client       // 客戶端文件目錄
-        - ...        // 客戶端文件
-    - WEB-INF
-      - web.xml      // 配置文件，可進行一些Http安全配置
-```
-
-## 8. 前後台通信
-
-### 8.1 RPC vs MQ
-
-當系統需要即時響應並依賴結果時，用RPC；當系統需要解耦、異步處理或削峰填谷時，用MQ。
-
-### 8.2 RPC
-
-目前常用Thrift和gPRC。
-
-#### 8.2.1 Thrift
-
-Plugin.Thrift插件實現了Thrift的RPC調用。一些實踐建議——
-
-（1）Thrift接口定義文件示例
-
-```
-namespace netstd Plugin.Thrift
-
-struct UserServiceLoginRequest {
-    1: string username
-    2: string password
-}
-
-struct UserServiceLoginResponse {
-    1: i32 errorCode
-    2: string errorMsg
-}
-
-service UserService {
-    UserServiceLoginResponse Login(1: UserServiceLoginRequest request)
-}
-```
-
-可按service分文件定義，每個thrift文件定義一個service，命名空間都為項目名的最外層命名空間。若有struct定義封裝請求、應答，以 **service名稱+方法名稱+Request/Response** 命名，變量名以小駝峰命名。Thrift支持方法定義多入參，但建議將方法的入參都封裝成一個struct，使得每個方法都只有一個struct入參，與GRPC有一致習慣，對於協議更換更有利（GRPC要求每個方法只能有一個入參）。
-
-**注意**：thrift.exe（0.22.0版本）生成的C#代碼中，上方會加一段針對NETSTANDARD2_0_OR_GREATER宏的判斷，但.Net後續版本沒有這個宏，會編譯報錯。這段編譯判斷代碼需要被刪去。
-
-（2）Plugin.Thrift
-
-對於Thrift，每個service都將生成一個client，目前將各client都按照同樣的服務端地址（即登錄時選擇的地址）鏈接。在插件登錄前的OnLogging()方法中進行初始化。
-
-thrift.exe 生成的代碼都放在 Plugin.Thrift 項目的 AutoGen\Services 下，初始化放在 AutoGen\ThriftService.cs 中。每定義一個新的service，都要在 AutoGen\ThriftService.cs 中進行添加。這個文件連同 thrift.exe 生成的代碼，都可由一個開發輔助工具來自動生成（這個工具可後續開發）。
-
-（3）服務調用示例
-```
-await Global.Get<IThriftService>().DoServiceAsync<UserService.Client>(async client =>
-{
-    
-});
-```
-
-將在服務調用前後進行在客戶端池中獲取Thrift的Client、調用後歸還等操作。
-
-#### 8.2.2 GRPC
-
-Plugin.Grpc插件實現了GRPC調用。一些實踐建議——
-
-（1）gRPC接口定義文件示例
-
-```
-syntax = "proto3";
-
-package services;
-option csharp_namespace = "Plugin.Grpc";
-
-message UserServiceLoginRequest {
-    string username = 1;
-    string password = 2;
-}
-
-message UserServiceLoginResponse {
-    int32 errorCode = 1;
-    string errorMsg = 2;
-}
-
-service UserService {
-    rpc Login(UserServiceLoginRequest) returns (UserServiceLoginResponse) {}
-}
-```
-
-gRPC要求每個RPC只能有一個入參，故若有多個參數必須封裝為一個message。命名方式可參考8.2.1節Thrift。
-
-（2）Plugin.Grpc
-
-對於Grpc，每個service都包含一個client，目前各client都共用一個GrpcChannel（即登錄時選擇的地址）。在插件登錄前的OnLogging()方法中進行初始化。
-
-protoc.exe 生成的代碼都放在 Plugin.Grpc 項目的 AutoGen\Services 下，初始化放在 AutoGen\GrpcService.cs 中。每定義一個新的service，都要在 AutoGen\GrpcService.cs 中進行添加。這個文件連同 protoc.exe 生成的代碼，都可由一個開發輔助工具來自動生成（這個工具可後續開發）。
-
-（3）服務調用示例
-```
-UserServiceLoginResponse response = Global.Get<IGrpcService>().GetService<UserService.UserServiceClient>().Login(request);
-```
+- DatabaseName：資料庫名稱；
+- TableName：表名稱；
+- TableDescription：表描述；
+
+迭代類宏：
+
+（1）字段迭代
+
+- ColumnName：字段名稱；
+- ColumnDescription：字段描述；
+- ColumnDbType：字段資料庫類型，其值與生成任務的 DatabaseType 設置有關，並按照 **字段管理** 一節的對應關係確定其值；
+- ColumnDbDefaultString：字段缺省字串，對於無缺省值的字段為空串，對於有缺省值的字段為 " default "，該宏可用於建表語句；
+- ColumnDbDefaultValue：資料庫缺省值，對於無缺省值的字段為空串，對於有缺省值的字段，字串類字段將在前後加單引號，該宏可用於建表語句；
+- ColumnDbNullableFlag：字段可空標誌，對於可為 null 的字段為空串，對於不可為空的字段為 " not null "，該宏可用於建表語句；
+- ColumnProgramType：字段對應程式數據類型，其值與生成任務的 ProgramLanguage 設置有關，並按照 **字段管理** 一節的對應關係確定其值；
+- ColumnComma：逗點，迭代時最後一個字段為空串，其餘為一逗號；
+
+（2）普通字段（非主鍵字段）迭代
+
+- GeneralColumnName：字段名稱；
+- GeneralColumnDescription：字段描述；
+- GeneralColumnDbType：字段資料庫類型；
+- GeneralColumnDbDefaultString：字段缺省字串；
+- GeneralColumnDbDefaultValue：資料庫缺省值；
+- GeneralColumnDbNullableFlag：字段可空標誌；
+- GeneralColumnProgramType：字段對應程式數據類型；
+- GeneralColumnComma：逗點；
+
+(3) 主鍵字段迭代
+
+- PrimaryKeyName：主鍵名稱；
+- PrimaryKeyColumnCount：主鍵字段個數；
+- PrimaryKeyColumns：以逗點隔開的主鍵字段名稱列表；
+- PrimaryKeyColumnsWithBackQuota：以逗點隔開的主鍵字段名稱列表，各名稱前後加反引號；
+- PrimaryKeyColumnName：字段名稱；
+- PrimaryKeyColumnDescription：字段描述；
+- PrimaryKeyColumnDbType：：字段資料庫類型；
+- PrimaryKeyColumnDbDefaultString：字段缺省字串；
+- PrimaryKeyColumnDbDefaultValue：資料庫缺省值；
+- PrimaryKeyColumnDbNullableFlag：字段可空標誌；
+- PrimaryKeyColumnProgramType：字段對應程式數據類型；
+- PrimaryKeyColumnComma：逗點；
+- PrimaryKeyColumnIndex：字段索引下標值；
+
+（4）索引迭代（包含 UNIQUE 和 INDEX 類索引）
+
+- IndexType：索引類型，唯一索引的值為 "unique"，非唯一索引的值為 "index"；
+- IndexTypeWithKey：帶有Key關鍵字段索引類型，唯一索引的值為 "unique key"，非唯一索引的值為 "index"；
+- IndexName：索引名稱；
+- IndexColumns：以逗點隔開的索引字段名稱列表；
+- IndexColumnsWithBackQuota：以逗點隔開的索引字段名稱列表，各名稱前後加反引號；
+
+（5）外鍵迭代
+
+- ForeignKeyName：外鍵名稱；
+- ForeignKeyColumn：外鍵字段；
+- ForeignKeyReferenceTableName：外鍵關聯表名稱；
+- ForeignKeyReferenceColumnName：外鍵關聯字段名稱。

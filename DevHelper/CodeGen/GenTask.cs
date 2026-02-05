@@ -9,6 +9,8 @@ public class GenTask
     public RecursionLevel RecursionLevel { get; set; }
     public string TemplateFile { get; set; } = string.Empty;
     public string OutputFile { get; set; } = string.Empty;
+    public ProgramLanguage ProgramLanguage { get; set; }
+    public bool IsUsingString { get; set; }
     public DatabaseType DatabaseType { get; set; }
     
     public string OutputDir { get; set; } = string.Empty;

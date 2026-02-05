@@ -24,6 +24,9 @@ public partial class GenTaskModel : UniModel
         RecursionLevel = task.RecursionLevel;
         TemplateFile = task.TemplateFile;
         OutputFile = task.OutputFile;
+        ProgramLanguage = task.ProgramLanguage;
+        IsUsingString = task.IsUsingString;
+        DatabaseType = task.DatabaseType;
         
         TargetDatabases = [];
         foreach (string databaseName in task.TargetDatabases)
@@ -41,10 +44,13 @@ public partial class GenTaskModel : UniModel
     }
     
     [ObservableProperty] private bool _shouldGenerate;
-    [ObservableProperty] private RecursionLevel _recursionLevel;
     [ObservableProperty] private string _taskName = string.Empty;
+    [ObservableProperty] private RecursionLevel _recursionLevel;
     [ObservableProperty] private string _templateFile = string.Empty;
     [ObservableProperty] private string _outputFile = string.Empty;
+    [ObservableProperty] private ProgramLanguage _programLanguage;
+    [ObservableProperty] private bool _isUsingString;
+    [ObservableProperty] private DatabaseType _databaseType;
     
     [ObservableProperty] private string _outputDir = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _targetDatabases;
@@ -119,6 +125,9 @@ public partial class GenTaskModel : UniModel
             RecursionLevel = RecursionLevel,
             TemplateFile = TemplateFile,
             OutputFile = OutputFile,
+            ProgramLanguage = ProgramLanguage,
+            IsUsingString = IsUsingString,
+            DatabaseType = DatabaseType,
             
             OutputDir = OutputDir,
             TargetDatabases = TargetDatabases.ToList(),

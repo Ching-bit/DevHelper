@@ -2,5 +2,7 @@
     <TemplateFile>mysql_upgrade.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
     <OutputFile>${DatabaseName(lower_snake)}_upgrade.sql</OutputFile>
+    <ProgramLanguage>Java</ProgramLanguage>
+    <IsUsingString>true</IsUsingString>
     <DatabaseType>MySQL</DatabaseType>
 </GenTask>

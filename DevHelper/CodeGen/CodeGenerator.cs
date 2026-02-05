@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Framework.Common;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Plugin.DevData;
+using Plugin.DevData.Helpers;
 
 namespace UniClient;
 
@@ -89,8 +90,9 @@ public class CodeGenerator
                     {
                         Directory.CreateDirectory(outputDir);
                     }
-                
-                    foreach (TableInfo tableInfo in Global.Get<IDevData>().GetAllTables()[database])
+                    
+                    List<TableInfo> tableList = TableListSorter.Sort(Global.Get<IDevData>().GetAllTables()[database]);
+                    foreach (TableInfo tableInfo in tableList)
                     {
                         _currentTable = tableInfo;
                         string outputFileName = task.OutputFile;
@@ -131,6 +133,7 @@ public class CodeGenerator
         List<ColumnInfo> primaryKeyColumns = columns.Where(x => primaryKeyInfo?.ColumnIdList.Contains(x.Id) ?? false).ToList();
         List<ColumnInfo> generalColumns = columns.Except(primaryKeyColumns).ToList();
         List<IndexInfo> indexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList();
+        List<ForeignKeyInfo> foreignKeys = tableInfo.ForeignKeyList;
         
         return GenFile_Template(templatePath,
             new Dictionary<string, string>
@@ -150,7 +153,7 @@ public class CodeGenerator
                         { "ColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
-                        { "ColumnJavaType", x => ToJavaType((ColumnInfo)x) },
+                        { "ColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
                         { "ColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," }
                     },
                     columns.ConvertAll<object>(x => x)),
@@ -163,7 +166,7 @@ public class CodeGenerator
                         { "GeneralColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
-                        { "GeneralColumnJavaType", x => ToJavaType((ColumnInfo)x) },
+                        { "GeneralColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
                         { "GeneralColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," }
                     },
                     generalColumns.ConvertAll<object>(x => x)),
@@ -182,14 +185,14 @@ public class CodeGenerator
                         { "PrimaryKeyColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
                         { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
-                        { "PrimaryKeyColumnJavaType", x => ToJavaType((ColumnInfo)x) },
+                        { "PrimaryKeyColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
                         { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," },
                         { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" }
                     },
                     primaryKeyColumns.ConvertAll<object>(x => x)),
                 // indexes related
                 Tuple.Create(
-                    new Dictionary<string, Func<object, string>>()
+                    new Dictionary<string, Func<object, string>>
                     {
                         { "IndexType", x => ((IndexInfo)x).Type.ToString().ToLower() },
                         { "IndexTypeWithKey", x => IndexType.Unique == ((IndexInfo)x).Type ? "unique key" : "index" },
@@ -198,6 +201,16 @@ public class CodeGenerator
                         { "IndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + Global.Get<IDevData>().Columns.First(z => y == z.Id).Name + "`")) },
                     },
                     indexes.ConvertAll<object>(y => y)),
+                // foreign keys related
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "ForeignKeyName", x => ((ForeignKeyInfo)x).Name },
+                        { "ForeignKeyColumn", x => Global.Get<IDevData>().Columns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ColumnId)?.Name ?? string.Empty},
+                        { "ForeignKeyReferenceTableName", x => Global.Get<IDevData>().GetTableById(((ForeignKeyInfo)x).TableId)?.Name ?? string.Empty},
+                        { "ForeignKeyReferenceColumnName", x => Global.Get<IDevData>().Columns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ReferenceColumnId)?.Name ?? string.Empty},
+                    },
+                    foreignKeys.ConvertAll<object>(y => y)),
                 ],
             task);
     }
@@ -269,16 +282,46 @@ public class CodeGenerator
         };
     }
     
-    private static string ToJavaType(ColumnInfo columnInfo)
+    private static string ToProgramType(ColumnInfo columnInfo, GenTask task)
     {
-        return columnInfo.Type switch
+        return task.ProgramLanguage switch
         {
-            ColumnType.Int32 => "Int",
-            ColumnType.Int64 => "Long",
-            ColumnType.Number => "Double",
-            ColumnType.Char or ColumnType.Varchar => "String",
-            ColumnType.Bool => "Boolean",
-            ColumnType.Datetime => "java.time.LocalDateTime",
+            ProgramLanguage.Cpp => columnInfo.Type switch
+            {
+                ColumnType.Int32 => "int32_t",
+                ColumnType.Int64 => "int64_t",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
+                    ? "std::string"
+                    : $"char[{columnInfo.Length * columnInfo.Scale + 1}]",
+                ColumnType.Bool => "bool",
+                ColumnType.Datetime => "std::chrono",
+                _ => string.Empty
+            },
+            ProgramLanguage.CSharp => columnInfo.Type switch
+            {
+                ColumnType.Int32 => "int",
+                ColumnType.Int64 => "long",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
+                    ? "string"
+                    : $"byte[{columnInfo.Length * columnInfo.Scale + 1}]",
+                ColumnType.Bool => "bool",
+                ColumnType.Datetime => "DateTime",
+                _ => string.Empty
+            },
+            ProgramLanguage.Java => columnInfo.Type switch
+            {
+                ColumnType.Int32 => "Int",
+                ColumnType.Int64 => "Long",
+                ColumnType.Number => "Double",
+                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
+                    ? "String"
+                    : $"Byte[{columnInfo.Length * columnInfo.Scale + 1}]",
+                ColumnType.Bool => "Boolean",
+                ColumnType.Datetime => "LocalDateTime",
+                _ => string.Empty
+            },
             _ => string.Empty
         };
     }
@@ -317,31 +360,29 @@ public class CodeGenerator
             string outputLine = line;
 
             // replace repeated micros
+            Tuple<Dictionary<string, Func<object, string>>, List<object>>? repeatedMacro = null;
             foreach (Tuple<Dictionary<string, Func<object, string>>, List<object>> macro in repeatedMacros)
             {
-                bool isContainMacros = false;
                 foreach (string macroKey in macro.Item1.Keys)
                 {
                     if (ContainsMacro(line, macroKey, out _, out _, out _))
                     {
-                        isContainMacros = true;
+                        repeatedMacro = macro;
                         break;
                     }
                 }
-                
-                if (!isContainMacros)
-                {
-                    continue;
-                }
-                
-                IList<object> columns = macro.Item2;
+            }
+
+            if (null != repeatedMacro)
+            {
+                IList<object> columns = repeatedMacro.Item2;
                 outputLine = "";
                 foreach (object column in columns)
                 {
                     string lineCopy = new(line);
-                    foreach (string macroKey in macro.Item1.Keys)
+                    foreach (string macroKey in repeatedMacro.Item1.Keys)
                     {
-                        string macroValue = macro.Item1[macroKey](column);
+                        string macroValue = repeatedMacro.Item1[macroKey](column);
                         while (ContainsMacro(lineCopy, macroKey, out _, out _, out _))
                         {
                             lineCopy = ReplaceMacro(lineCopy, macroKey, macroValue);
@@ -366,25 +407,35 @@ public class CodeGenerator
                     }
                 }
             }
-            
-            if (!outputLine.EndsWith(Environment.NewLine))
+
+            if (outputLine.Length > 0 || null == repeatedMacro)
             {
-                outputLine += Environment.NewLine;
+                if (!outputLine.EndsWith(Environment.NewLine))
+                {
+                    outputLine += Environment.NewLine;
+                }
+                outputContent.Append(outputLine);
             }
             
-            outputContent.Append(outputLine);
             line = templateReader.ReadLine();
         }
 
         templateReader.Close();
         string ret = outputContent.ToString();
+        
         // replace special micros
         // BACKSPACE
         {
             while (ContainsMacro(ret, "BACKSPACE", out int startIndex, out int endIndex, out _)) 
             {
                 ret = ReplaceRange(ret, startIndex, endIndex, string.Empty);
-                if (startIndex > 0)
+                if (startIndex <= 0) { continue; }
+                
+                if (ret[..startIndex].EndsWith(Environment.NewLine))
+                {
+                    ret = ReplaceRange(ret, startIndex - Environment.NewLine.Length, startIndex - 1, string.Empty);
+                }
+                else
                 {
                     ret = ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
                 }
@@ -446,14 +497,17 @@ public class CodeGenerator
             {
                 StringBuilder sb = new();
                 List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[_currentDatabase];
+                tables = TableListSorter.Sort(tables);
                 foreach (TableInfo tableInfo in tables)
                 {
                     _currentTable = tableInfo;
                     sb.Append(GenFile_Table(templatePath, tableInfo, task));
                 }
-
+                
                 return sb.ToString();
             }
+            case RecursionLevel.HistoryDatabase:
+            case RecursionLevel.HistoryTable:
             default:
                 throw new ArgumentOutOfRangeException();
         }

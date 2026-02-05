@@ -2,5 +2,7 @@
     <TemplateFile>java_entity.template</TemplateFile>
     <RecursionLevel>Table</RecursionLevel>
     <OutputFile>${TableName(UpperCamel)}.java</OutputFile>
+    <ProgramLanguage>Java</ProgramLanguage>
+    <IsUsingString>true</IsUsingString>
     <DatabaseType>MySQL</DatabaseType>
 </GenTask>

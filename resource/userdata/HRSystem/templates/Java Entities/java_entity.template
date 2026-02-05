@@ -6,8 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
 public class ${TableName(UpperCamel)} {
-
-    @Excel(name = "${ColumnDescription}")${NEWLINE}    private ${ColumnJavaType} ${ColumnName(lowerCamel)};${NEWLINE}
+${NEWLINE}    private ${ColumnProgramType} ${ColumnName(lowerCamel)};
 
     @Override
     public String toString() {

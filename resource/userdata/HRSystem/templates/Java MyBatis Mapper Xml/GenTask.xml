@@ -1,6 +1,8 @@
 <GenTask>
     <TemplateFile>java_mybatis_mapper_xml.template</TemplateFile>
     <RecursionLevel>Table</RecursionLevel>
-    <OutputFile>${TableName(UpperCamel)}.xml</OutputFile>
+    <OutputFile>${TableName(UpperCamel)}Mapper.xml</OutputFile>
+    <ProgramLanguage>Java</ProgramLanguage>
+    <IsUsingString>true</IsUsingString>
     <DatabaseType>MySQL</DatabaseType>
 </GenTask>

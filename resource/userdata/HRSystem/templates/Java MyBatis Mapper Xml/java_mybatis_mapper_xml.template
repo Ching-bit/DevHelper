@@ -13,16 +13,16 @@
         FROM ${TableName(lower_snake)}
     </sql>
 
-    <select id="selectBy${PrimaryKeyColumnName(UpperCamel)}" parameterType="${PrimaryKeyColumnJavaType}" resultMap="${TableName(UpperCamel)}Result">${NEWLINE}        <include refid="select${TableName(UpperCamel)}Vo"/>${NEWLINE}        WHERE ${PrimaryKeyColumnName(lower_snake)} = #{${PrimaryKeyColumnName(lowerCamel)}}${NEWLINE}    </select>
+    <select id="selectBy${PrimaryKeyColumnName(UpperCamel)}" parameterType="${PrimaryKeyColumnProgramType}" resultMap="${TableName(UpperCamel)}Result">${NEWLINE}        <include refid="select${TableName(UpperCamel)}Vo"/>${NEWLINE}        WHERE ${PrimaryKeyColumnName(lower_snake)} = #{${PrimaryKeyColumnName(lowerCamel)}}${NEWLINE}    </select>
 
-    <select id="select" parameterType="com.gtjas.cmsplatform.common.api.system.domain.${TableName(UpperCamel)}">
+    <select id="select" parameterType="com.xxx.domain.${TableName(UpperCamel)}">
         <include refid="select${TableName(UpperCamel)}Vo"/>
         <where>
             <if test="${ColumnName(lowerCamel)} != null">${NEWLINE}                AND ${ColumnName(lower_snake)} = #{${ColumnName(lowerCamel)}}${NEWLINE}            </if>
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.gtjas.cmsplatform.common.api.system.domain.${TableName(UpperCamel)}" useGeneratedKeys="true" keyProperty="${PrimaryKeyColumnName(lowerCamel)}">
+    <insert id="insert" parameterType="com.xxx.domain.${TableName(UpperCamel)}" useGeneratedKeys="true" keyProperty="${PrimaryKeyColumnName(lowerCamel)}">
         INSERT INTO ${TableName(lower_snake)} (
             ${GeneralColumnName(lower_snake)}${GeneralColumnComma}
         ) VALUES (
