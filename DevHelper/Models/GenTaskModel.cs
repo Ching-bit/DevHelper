@@ -27,6 +27,7 @@ public partial class GenTaskModel : UniModel
         ProgramLanguage = task.ProgramLanguage;
         IsUsingString = task.IsUsingString;
         DatabaseType = task.DatabaseType;
+        IsIncludingHistoryDatabases = task.IsIncludingHistoryDatabases;
         
         TargetDatabases = [];
         foreach (string databaseName in task.TargetDatabases)
@@ -51,6 +52,7 @@ public partial class GenTaskModel : UniModel
     [ObservableProperty] private ProgramLanguage _programLanguage;
     [ObservableProperty] private bool _isUsingString;
     [ObservableProperty] private DatabaseType _databaseType;
+    [ObservableProperty] private bool _isIncludingHistoryDatabases;
     
     [ObservableProperty] private string _outputDir = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _targetDatabases;
@@ -128,6 +130,7 @@ public partial class GenTaskModel : UniModel
             ProgramLanguage = ProgramLanguage,
             IsUsingString = IsUsingString,
             DatabaseType = DatabaseType,
+            IsIncludingHistoryDatabases = IsIncludingHistoryDatabases,
             
             OutputDir = OutputDir,
             TargetDatabases = TargetDatabases.ToList(),

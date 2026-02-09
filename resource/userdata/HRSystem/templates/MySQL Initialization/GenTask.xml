@@ -5,4 +5,5 @@
     <ProgramLanguage>Java</ProgramLanguage>
     <IsUsingString>true</IsUsingString>
     <DatabaseType>MySQL</DatabaseType>
+    <IsIncludingHistoryDatabases>true</IsIncludingHistoryDatabases>
 </GenTask>

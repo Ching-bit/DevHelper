@@ -1,4 +1,4 @@
-namespace UniClient;
+namespace Plugin.DevData.Helpers;
 
 public enum NameStyle
 {

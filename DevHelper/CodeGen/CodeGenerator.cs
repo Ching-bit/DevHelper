@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Framework.Common;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -50,11 +49,17 @@ public class CodeGenerator
 
     private static async Task GenFileUsingTemplate(GenTask task)
     {
+        _allTables = Global.Get<IDevData>().GetAllTables();
+        if (task.IsIncludingHistoryDatabases)
+        {
+            _allTables = _allTables.Concat(Global.Get<IDevData>().GetAllHistoryTables()).ToDictionary();
+        }
+        
         switch (task.RecursionLevel)
         {
             case RecursionLevel.Database:
             {
-                foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
+                foreach (DatabaseInfo database in _allTables.Keys)
                 {
                     if (task.TargetDatabases.Count > 0 && !task.TargetDatabases.Contains(database.Name))
                     {
@@ -75,7 +80,7 @@ public class CodeGenerator
             }
             case RecursionLevel.Table:
             {
-                foreach (DatabaseInfo database in Global.Get<IDevData>().GetAllTables().Keys)
+                foreach (DatabaseInfo database in _allTables.Keys)
                 {
                     if (task.TargetDatabases.Count > 0 && !task.TargetDatabases.Contains(database.Name))
                     {
@@ -91,8 +96,7 @@ public class CodeGenerator
                         Directory.CreateDirectory(outputDir);
                     }
                     
-                    List<TableInfo> tableList = TableListSorter.Sort(Global.Get<IDevData>().GetAllTables()[database]);
-                    foreach (TableInfo tableInfo in tableList)
+                    foreach (TableInfo tableInfo in TableListSorter.Sort(_allTables[database]))
                     {
                         _currentTable = tableInfo;
                         string outputFileName = GenFile_Table(task.OutputFile, tableInfo, null);
@@ -141,6 +145,10 @@ public class CodeGenerator
                 { "DatabaseName", Global.Get<IDevData>().GetDatabaseInfoByTableId(tableInfo.Id)?.Name ?? string.Empty },
                 { "TableName", tableInfo.Name },
                 { "TableDescription", tableInfo.Description },
+                { "PrimaryKeyName", primaryKeyInfo?.Name ?? string.Empty },
+                { "PrimaryKeyColumnCount", primaryKeyColumns.Count + "" },
+                { "PrimaryKeyColumns", string.Join(", ", primaryKeyColumns.Select(x => x.Name)) },
+                { "PrimaryKeyColumnsWithBackQuota", string.Join(", ", primaryKeyColumns.Select(x => $"`{x.Name}`")) },
             },
             null == task ? [] :
             [
@@ -176,10 +184,6 @@ public class CodeGenerator
                 (
                     new Dictionary<string, Func<object, string>>
                     {
-                        { "PrimaryKeyName", _ => primaryKeyInfo?.Name ?? string.Empty },
-                        { "PrimaryKeyColumnCount", _ => primaryKeyColumns.Count + "" },
-                        { "PrimaryKeyColumns", _ => string.Join(", ", primaryKeyColumns.Select(x => x.Name)) },
-                        { "PrimaryKeyColumnsWithBackQuota", _ => string.Join(", ", primaryKeyColumns.Select(x => $"`{x.Name}`")) },
                         { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
                         { "PrimaryKeyColumnDescription", x => ((ColumnInfo)x).Description },
                         { "PrimaryKeyColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
@@ -353,9 +357,9 @@ public class CodeGenerator
             // replace global micros
             foreach (string key in globalMacros.Keys)
             {
-                while (ContainsMacro(line, key, out _, out _, out _))
+                while (StringHelper.ContainsMacro(line, key, out _, out _, out _))
                 {
-                    line = ReplaceMacro(line, key, globalMacros[key]);
+                    line = StringHelper.ReplaceMacro(line, key, globalMacros[key]);
                 }
             }
             string outputLine = line;
@@ -366,7 +370,7 @@ public class CodeGenerator
             {
                 foreach (string macroKey in macro.Item1.Keys)
                 {
-                    if (ContainsMacro(line, macroKey, out _, out _, out _))
+                    if (StringHelper.ContainsMacro(line, macroKey, out _, out _, out _))
                     {
                         repeatedMacro = macro;
                         break;
@@ -384,9 +388,9 @@ public class CodeGenerator
                     foreach (string macroKey in repeatedMacro.Item1.Keys)
                     {
                         string macroValue = repeatedMacro.Item1[macroKey](column);
-                        while (ContainsMacro(lineCopy, macroKey, out _, out _, out _))
+                        while (StringHelper.ContainsMacro(lineCopy, macroKey, out _, out _, out _))
                         {
-                            lineCopy = ReplaceMacro(lineCopy, macroKey, macroValue);
+                            lineCopy = StringHelper.ReplaceMacro(lineCopy, macroKey, macroValue);
                         }
                     }
                     outputLine += lineCopy + Environment.NewLine;
@@ -397,7 +401,7 @@ public class CodeGenerator
             // TEMPLATE
             if (null != task)
             {
-                if (ContainsMacro(outputLine, "TEMPLATE", out int startIndex, out int endIndex, out string remark))
+                if (StringHelper.ContainsMacro(outputLine, "TEMPLATE", out int startIndex, out int endIndex, out string remark))
                 {
                     string[] arr = remark.Split(",");
                     if (arr.Length == 2)
@@ -406,7 +410,7 @@ public class CodeGenerator
                         string subTemplateText = File.ReadAllText(subTemplatePath);
                         RecursionLevel recursionLevel = Enum.Parse<RecursionLevel>(arr[1]);
                         string subOutputContent = GenFile_SubTemplate(subTemplateText, recursionLevel, task);
-                        outputLine = ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
+                        outputLine = StringHelper.ReplaceRange(outputLine, startIndex, endIndex, subOutputContent);
                     }
                 }
             }
@@ -428,65 +432,24 @@ public class CodeGenerator
         // replace special micros
         // BACKSPACE
         {
-            while (ContainsMacro(ret, "BACKSPACE", out int startIndex, out int endIndex, out _)) 
+            while (StringHelper.ContainsMacro(ret, "BACKSPACE", out int startIndex, out int endIndex, out _)) 
             {
-                ret = ReplaceRange(ret, startIndex, endIndex, string.Empty);
+                ret = StringHelper.ReplaceRange(ret, startIndex, endIndex, string.Empty);
                 if (startIndex <= 0) { continue; }
                 
                 if (ret[..startIndex].EndsWith(Environment.NewLine))
                 {
-                    ret = ReplaceRange(ret, startIndex - Environment.NewLine.Length, startIndex - 1, string.Empty);
+                    ret = StringHelper.ReplaceRange(ret, startIndex - Environment.NewLine.Length, startIndex - 1, string.Empty);
                 }
                 else
                 {
-                    ret = ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
+                    ret = StringHelper.ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
                 }
             }
         }
         return ret;
     }
-
-    private static string ReplaceMacro(string input, string macro, string macroValue)
-    {
-        if (ContainsMacro(input, macro, out int startIndex, out int endIndex, out string remark))
-        {
-            _ = Enum.TryParse(remark, out NameStyle nameStyle);
-            input = ReplaceRange(input, startIndex, endIndex, StringHelper.ToNameStyle(macroValue, nameStyle));
-        }
-        return input;
-    }
-
-    private static bool ContainsMacro(string line, string macro, out int startIndex, out int endIndex, out string remark)
-    {
-        startIndex = -1;
-        endIndex = -1;
-        remark = string.Empty;
-        
-        string pattern = $@"\$\{{{Regex.Escape(macro)}(?:\((?<arg>[^\)]*)\))?\}}";
-
-        var match = Regex.Match(line, pattern);
-
-        if (!match.Success) { return false; }
-        
-        startIndex = match.Index;
-        endIndex = match.Index + match.Length - 1;
-        remark = match.Groups["arg"].Success ? match.Groups["arg"].Value : string.Empty;
-        return true;
-    }
     
-    private static string ReplaceRange(string input, int startIndex, int endIndex, string replacement)
-    {
-        if (startIndex < 0 || endIndex >= input.Length || startIndex > endIndex)
-        {
-            throw new ArgumentOutOfRangeException();
-        }
-        
-        string before = input[..startIndex];
-        string after = input[(endIndex + 1)..];
-
-        return before + replacement + after;
-    }
-
     private static string GenFile_SubTemplate(string templateText, RecursionLevel recursionLevel, GenTask task)
     {
         switch (recursionLevel)
@@ -498,7 +461,7 @@ public class CodeGenerator
             case RecursionLevel.Table:
             {
                 StringBuilder sb = new();
-                List<TableInfo> tables = Global.Get<IDevData>().GetAllTables()[_currentDatabase];
+                List<TableInfo> tables = _allTables[_currentDatabase];
                 tables = TableListSorter.Sort(tables);
                 foreach (TableInfo tableInfo in tables)
                 {
@@ -508,8 +471,6 @@ public class CodeGenerator
                 
                 return sb.ToString();
             }
-            case RecursionLevel.HistoryDatabase:
-            case RecursionLevel.HistoryTable:
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -517,6 +478,7 @@ public class CodeGenerator
 
     
     #region Pointers
+    private static Dictionary<DatabaseInfo, List<TableInfo>> _allTables = [];
     private static DatabaseInfo? _currentDatabase;
     private static TableInfo? _currentTable;
     #endregion
