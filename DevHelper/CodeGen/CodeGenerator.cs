@@ -193,7 +193,7 @@ public class CodeGenerator
                         { "PrimaryKeyColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
                         { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty },
                         { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" },
-                        { "PrimaryKeyColumnAutoIncrement", x => primaryKeyInfo?.AutoIncrementColumnId == ((ColumnInfo)x).Id ? "auto increment" : string.Empty},
+                        { "PrimaryKeyColumnAutoIncrement", x => primaryKeyInfo?.AutoIncrementColumnId == ((ColumnInfo)x).Id ? "auto_increment" : string.Empty},
                     },
                     primaryKeyColumns.ConvertAll<object>(x => x)),
                 // indexes related

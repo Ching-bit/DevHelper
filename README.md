@@ -144,7 +144,7 @@
 - PrimaryKeyColumnProgramType：字段對應程式數據類型；
 - PrimaryKeyColumnComma：逗點；
 - PrimaryKeyColumnIndex：字段索引下標值；
-- PrimaryKeyColumnAutoIncrement：被設置為自增的字段，值為“auto increment”，其他字段則為空串；
+- PrimaryKeyColumnAutoIncrement：被設置為自增的字段，值為“auto_increment”，其他字段則為空串；
 
 （4）索引迭代（包含 UNIQUE 和 INDEX 類索引）
 
