@@ -230,7 +230,7 @@ public class CodeGenerator
                 ColumnType.Int32 => "int",
                 ColumnType.Int64 => "bigint",
                 ColumnType.Number =>
-                    $"number({columnInfo.Length}{(columnInfo.Scale > 0 ? $", {columnInfo.Scale}" : string.Empty)})",
+                    $"decimal({columnInfo.Length}{(columnInfo.Scale > 0 ? $", {columnInfo.Scale}" : string.Empty)})",
                 ColumnType.Char => $"char({columnInfo.Length})",
                 ColumnType.Varchar => $"varchar({columnInfo.Length})",
                 ColumnType.Bool => "tinyint",
