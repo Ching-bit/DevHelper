@@ -16,6 +16,7 @@
             <ColumnIdList>
                 <int>1</int>
             </ColumnIdList>
+            <AutoIncrementColumnId>1</AutoIncrementColumnId>
         </IndexInfo>
     </IndexList>
     <ForeignKeyList>

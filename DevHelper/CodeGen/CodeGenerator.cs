@@ -159,11 +159,11 @@ public class CodeGenerator
                         { "ColumnName", x => ((ColumnInfo)x).Name },
                         { "ColumnDescription", x => ((ColumnInfo)x).Description },
                         { "ColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
-                        { "ColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
+                        { "ColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
                         { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
-                        { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
+                        { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "ColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "ColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," }
+                        { "ColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     columns.ConvertAll<object>(x => x)),
                 Tuple.Create(
@@ -172,11 +172,11 @@ public class CodeGenerator
                         { "GeneralColumnName", x => ((ColumnInfo)x).Name },
                         { "GeneralColumnDescription", x => ((ColumnInfo)x).Description },
                         { "GeneralColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
-                        { "GeneralColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
+                        { "GeneralColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
                         { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
-                        { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
+                        { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "GeneralColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "GeneralColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," }
+                        { "GeneralColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     generalColumns.ConvertAll<object>(x => x)),
                 // primary key related
@@ -187,12 +187,13 @@ public class CodeGenerator
                         { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
                         { "PrimaryKeyColumnDescription", x => ((ColumnInfo)x).Description },
                         { "PrimaryKeyColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
-                        { "PrimaryKeyColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? " default " : string.Empty},
+                        { "PrimaryKeyColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
                         { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
-                        { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : " not null" },
+                        { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "PrimaryKeyColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id == tableInfo.ColumnIdList[^1] ? "" : "," },
-                        { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" }
+                        { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty },
+                        { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" },
+                        { "PrimaryKeyColumnAutoIncrement", x => primaryKeyInfo?.AutoIncrementColumnId == ((ColumnInfo)x).Id ? "auto increment" : string.Empty},
                     },
                     primaryKeyColumns.ConvertAll<object>(x => x)),
                 // indexes related
@@ -445,6 +446,26 @@ public class CodeGenerator
                 {
                     ret = StringHelper.ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
                 }
+            }
+        }
+        // CONDITIONAL_SPACE
+        {
+            while (StringHelper.ContainsMacro(ret, "CONDITIONAL_SPACE", out int startIndex, out int endIndex, out _)) 
+            {
+                ret = StringHelper.ReplaceRange(ret, startIndex, endIndex, string.Empty);
+                if (startIndex <= 0 || startIndex >= ret.Length - 1) { continue; }
+                
+                while (startIndex > 0 && startIndex - 1 < ret.Length && ret[startIndex - 1] == ' ')
+                {
+                    ret = StringHelper.ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
+                    startIndex--;
+                }
+                while (startIndex < ret.Length && ret[startIndex] == ' ')
+                {
+                    ret = StringHelper.ReplaceRange(ret, startIndex, startIndex, string.Empty);
+                }
+                
+                ret = ret.Insert(startIndex, " ");
             }
         }
         return ret;

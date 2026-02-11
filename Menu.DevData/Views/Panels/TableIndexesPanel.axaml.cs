@@ -50,6 +50,8 @@ public partial class TableIndexesPanel : UniPanel
         }
         vm.IndexInfoModel.Name = selectedIndex.Name;
         vm.IndexInfoModel.Type = selectedIndex.Type;
+        vm.IndexInfoModel.AutoIncrementColumn = vm.IndexInfoModel.ColumnList.FirstOrDefault(x => x.Id == selectedIndex.AutoIncrementColumn?.Id);
+        
         
         ConfirmDialogResult result = await ConfirmDialog.Show<TableIndexDialog>(vm);
         if (!result.IsConfirmed || result.ReturnParameter is not IndexInfoModel indexInfoModel || selectedIndex.Equals(indexInfoModel))

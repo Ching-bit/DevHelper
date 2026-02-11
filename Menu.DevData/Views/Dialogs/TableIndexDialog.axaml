@@ -9,7 +9,7 @@
         <StackPanel Classes="Common">
             <HeaderedContentControl Header="{DynamicResource R_STR_TYPE}" Classes="Common">
                 <ComboBox
-                    Classes="Common"
+                    Classes="Common" x:Name="ComboBoxIndexType"
                     ItemsSource="{Binding AllTypes}"
                     SelectedItem="{Binding IndexInfoModel.Type}"/>
             </HeaderedContentControl>
@@ -24,6 +24,13 @@
                     Classes="Common"
                     ItemsSource="{Binding TableColumnList}"
                     SelectedItems="{Binding IndexInfoModel.ColumnList}"/>
+            </HeaderedContentControl>
+            <HeaderedContentControl Header="{DynamicResource R_STR_AUTO_INCREMENT_COLUMN}" Classes="Common"
+                                    IsVisible="{Binding ElementName=ComboBoxIndexType, Path=SelectedItem, Converter={StaticResource IsValueInConverter}, ConverterParameter=Primary}">
+                <ComboBox
+                    Classes="Common" IsEditable="True"
+                    ItemsSource="{Binding IndexInfoModel.ColumnList}"
+                    SelectedItem="{Binding IndexInfoModel.AutoIncrementColumn}"/>
             </HeaderedContentControl>
         </StackPanel>
     </ctrl:ConfirmDialog>

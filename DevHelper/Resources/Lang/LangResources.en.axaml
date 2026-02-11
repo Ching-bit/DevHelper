@@ -61,6 +61,7 @@
     <system:String x:Key="R_STR_HAS_HISTORY_TABLE">Has History Table</system:String>
     <system:String x:Key="R_STR_NOT_HAS_HISTORY_TABLE">No History Table</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">Primary Key</system:String>
+    <system:String x:Key="R_STR_AUTO_INCREMENT_COLUMN">Auto Increment Column</system:String>
     <system:String x:Key="R_STR_INDEXES">Indexes</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
     <system:String x:Key="R_STR_REFERENCE_TABLE">Reference Table</system:String>

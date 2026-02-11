@@ -58,6 +58,7 @@ R_STR_HISTORY_TABLE,History Table,歷史表,历史表
 R_STR_HAS_HISTORY_TABLE,Has History Table,有歷史表,有历史表
 R_STR_NOT_HAS_HISTORY_TABLE,No History Table,無歷史表,无历史表
 R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
+R_STR_AUTO_INCREMENT_COLUMN,Auto Increment Column,自增列,自增列
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键
 R_STR_REFERENCE_TABLE,Reference Table,指向表,指向表

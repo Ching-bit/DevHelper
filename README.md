@@ -87,6 +87,7 @@
 
 - NEWLINE：換行；
 - BACKSPACE：退格；
+- CONDITIONAL_SPACE：若前、後方字符都不為空格，則插入空格；若前後有多個空格，也將合併為一個空格；
 - TEMPLATE：子模板，該宏的書寫規範為 ${TEMPLATE(模板文件名稱,迭代層級)}。
 
 ### 資料庫迭代
@@ -103,6 +104,10 @@
 - DatabaseName：資料庫名稱；
 - TableName：表名稱；
 - TableDescription：表描述；
+- PrimaryKeyName：主鍵名稱；
+- PrimaryKeyColumnCount：主鍵字段個數；
+- PrimaryKeyColumns：以逗點隔開的主鍵字段名稱列表；
+- PrimaryKeyColumnsWithBackQuota：以逗點隔開的主鍵字段名稱列表，各名稱前後加反引號；
 
 迭代類宏：
 
@@ -111,9 +116,9 @@
 - ColumnName：字段名稱；
 - ColumnDescription：字段描述；
 - ColumnDbType：字段資料庫類型，其值與生成任務的 DatabaseType 設置有關，並按照 **字段管理** 一節的對應關係確定其值；
-- ColumnDbDefaultString：字段缺省字串，對於無缺省值的字段為空串，對於有缺省值的字段為 " default "，該宏可用於建表語句；
+- ColumnDbDefaultString：字段缺省字串，對於無缺省值的字段為空串，對於有缺省值的字段為 "default"，該宏可用於建表語句；
 - ColumnDbDefaultValue：資料庫缺省值，對於無缺省值的字段為空串，對於有缺省值的字段，字串類字段將在前後加單引號，該宏可用於建表語句；
-- ColumnDbNullableFlag：字段可空標誌，對於可為 null 的字段為空串，對於不可為空的字段為 " not null "，該宏可用於建表語句；
+- ColumnDbNullableFlag：字段可空標誌，對於可為 null 的字段為空串，對於不可為空的字段為 "not null"，該宏可用於建表語句；
 - ColumnProgramType：字段對應程式數據類型，其值與生成任務的 ProgramLanguage 設置有關，並按照 **字段管理** 一節的對應關係確定其值；
 - ColumnComma：逗點，迭代時最後一個字段為空串，其餘為一逗號；
 
@@ -130,10 +135,6 @@
 
 (3) 主鍵字段迭代
 
-- PrimaryKeyName：主鍵名稱；
-- PrimaryKeyColumnCount：主鍵字段個數；
-- PrimaryKeyColumns：以逗點隔開的主鍵字段名稱列表；
-- PrimaryKeyColumnsWithBackQuota：以逗點隔開的主鍵字段名稱列表，各名稱前後加反引號；
 - PrimaryKeyColumnName：字段名稱；
 - PrimaryKeyColumnDescription：字段描述；
 - PrimaryKeyColumnDbType：：字段資料庫類型；
@@ -143,6 +144,7 @@
 - PrimaryKeyColumnProgramType：字段對應程式數據類型；
 - PrimaryKeyColumnComma：逗點；
 - PrimaryKeyColumnIndex：字段索引下標值；
+- PrimaryKeyColumnAutoIncrement：被設置為自增的字段，值為“auto increment”，其他字段則為空串；
 
 （4）索引迭代（包含 UNIQUE 和 INDEX 類索引）
 

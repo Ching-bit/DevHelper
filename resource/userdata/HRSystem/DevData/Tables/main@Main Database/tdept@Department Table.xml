@@ -11,6 +11,7 @@
             <ColumnIdList>
                 <int>7</int>
             </ColumnIdList>
+            <AutoIncrementColumnId>7</AutoIncrementColumnId>
         </IndexInfo>
     </IndexList>
     <ForeignKeyList />

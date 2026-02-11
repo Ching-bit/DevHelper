@@ -61,6 +61,7 @@
     <system:String x:Key="R_STR_HAS_HISTORY_TABLE">有历史表</system:String>
     <system:String x:Key="R_STR_NOT_HAS_HISTORY_TABLE">无历史表</system:String>
     <system:String x:Key="R_STR_PRIMARY_KEY">主键</system:String>
+    <system:String x:Key="R_STR_AUTO_INCREMENT_COLUMN">自增列</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外键</system:String>
     <system:String x:Key="R_STR_REFERENCE_TABLE">指向表</system:String>

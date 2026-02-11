@@ -1,7 +1,8 @@
 
 CALL `upgrade_table`('${TableName(lower_snake)}', "
-  `${PrimaryKeyColumnName(lower_snake)}` ${PrimaryKeyColumnDbType(ALL_UPPER)} NOT NULL AUTO_INCREMENT,
-  `${GeneralColumnName(lower_snake)}` ${GeneralColumnDbType(ALL_UPPER)}${GeneralColumnDbNullableFlag(ALL_UPPER)}${GeneralColumnDbDefaultString(ALL_UPPER)}${GeneralColumnDbDefaultValue} COMMENT '${GeneralColumnDescription}'${GeneralColumnComma}
-${BACKSPACE}${BACKSPACE},${NEWLINE}  PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_lower)})
-${BACKSPACE}${BACKSPACE},${NEWLINE}  ${IndexTypeWithKey(ALL_UPPER)} ${IndexName(UPPER_SNAKE)} (${IndexColumnsWithBackQuota(all_lower)})
+  `${PrimaryKeyColumnName(lower_snake)}` ${PrimaryKeyColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${PrimaryKeyColumnDbNullableFlag(ALL_UPPER)}${CONDITIONAL_SPACE}${PrimaryKeyColumnAutoIncrement(ALL_UPPER)},
+  `${GeneralColumnName(lower_snake)}` ${GeneralColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbNullableFlag(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbDefaultValue} COMMENT '${GeneralColumnDescription}'${GeneralColumnComma}
+${BACKSPACE},${NEWLINE}  PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_lower)})
+${BACKSPACE},${NEWLINE}  ${IndexTypeWithKey(ALL_UPPER)} ${IndexName(UPPER_SNAKE)} (${IndexColumnsWithBackQuota(all_lower)})
+${BACKSPACE},${NEWLINE}  FOREIGN KEY (`${ForeignKeyColumn(lower_snake)}`) REFERENCES `${ForeignKeyReferenceTableName(lower_snake)}`(`${ForeignKeyReferenceColumnName(lower_snake)}`)
 ");

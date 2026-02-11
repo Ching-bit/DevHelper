@@ -21,7 +21,7 @@ public partial class IndexInfoModel : UniModel
         ColumnList.CollectionChanged += (_, _) =>
         {
             Name = GenIndexName();
-            ColumnListString = string.Join(", ", ColumnList);
+            RefreshColumnListString();
         };
     }
 
@@ -37,6 +37,7 @@ public partial class IndexInfoModel : UniModel
                 ColumnList.Add(columnInfoModel);
             }
         }
+        AutoIncrementColumn = allColumns.FirstOrDefault(x => x.Id == indexInfo.AutoIncrementColumnId);
     }
     #endregion
 
@@ -47,6 +48,7 @@ public partial class IndexInfoModel : UniModel
     [ObservableProperty] private string _name;
     [ObservableProperty] private IndexType _type;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
+    [ObservableProperty] private ColumnInfoModel? _autoIncrementColumn;
     
     [ObservableProperty] private string _columnListString;
     [ObservableProperty] private ModifyStatus _modifyStatus;
@@ -57,6 +59,11 @@ public partial class IndexInfoModel : UniModel
         if (e.PropertyName is nameof(Type) or nameof(ColumnList))
         {
             Name = GenIndexName();
+            RefreshColumnListString();
+        }
+        else if (e.PropertyName == nameof(AutoIncrementColumn))
+        {
+            RefreshColumnListString();
         }
     }
 
@@ -84,6 +91,11 @@ public partial class IndexInfoModel : UniModel
             
         return sbName.ToString();
     }
+    
+    private void RefreshColumnListString()
+    {
+        ColumnListString = string.Join(", ", ColumnList.Select(x => x.Id == AutoIncrementColumn?.Id ? $"{x.Name}※" : x.Name));
+    }
     #endregion
 
 
@@ -93,7 +105,8 @@ public partial class IndexInfoModel : UniModel
         IndexInfo indexInfo = new()
         {
             Name = Name,
-            Type = Type
+            Type = Type,
+            AutoIncrementColumnId = IndexType.Primary == Type ? AutoIncrementColumn?.Id : null
         };
         indexInfo.ColumnIdList.AddRange(ColumnList.Select(x => x.Id));
         return indexInfo;
@@ -113,6 +126,8 @@ public partial class IndexInfoModel : UniModel
                 ColumnList.Add(columnInfoModel);
             }
         }
+
+        AutoIncrementColumn = source.AutoIncrementColumn;
     }
 
     public override bool Equals(object? obj)
@@ -122,7 +137,8 @@ public partial class IndexInfoModel : UniModel
             return
                 Name.Equals(indexInfoModel.Name) &&
                 Type == indexInfoModel.Type &&
-                new HashSet<int>(ColumnList.Select(x => x.Id)).SetEquals(indexInfoModel.ColumnList.Select(x => x.Id));
+                new HashSet<int>(ColumnList.Select(x => x.Id)).SetEquals(indexInfoModel.ColumnList.Select(x => x.Id)) &&
+                AutoIncrementColumn?.Id == indexInfoModel.AutoIncrementColumn?.Id;
         }
         return false;
     }

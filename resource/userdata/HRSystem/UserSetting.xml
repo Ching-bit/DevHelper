@@ -1,7 +1,7 @@
 <UserSetting>
-    <HistoryDatabaseName>his_${DatabaseName}</HistoryDatabaseName>
-    <HistoryTableName>his_${TableName}</HistoryTableName>
-    <ArchiveDateColumnName>archive_data</ArchiveDateColumnName>
+    <HistoryDatabaseName>his_${DatabaseName(lower_snake)}</HistoryDatabaseName>
+    <HistoryTableName>his_${TableName(lower_snake)}</HistoryTableName>
+    <ArchiveDateColumnName>archive_date</ArchiveDateColumnName>
     <GenTaskConfs>
         <GenTaskConf>
             <TemplateDir>.\templates\Java Entities</TemplateDir>

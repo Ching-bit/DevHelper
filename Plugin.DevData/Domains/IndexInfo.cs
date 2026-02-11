@@ -5,4 +5,5 @@ public class IndexInfo
     public string Name { get; set; } = string.Empty;
     public IndexType Type { get; set; }
     public List<int> ColumnIdList { get; } = [];
+    public int? AutoIncrementColumnId { get; set; }
 }
