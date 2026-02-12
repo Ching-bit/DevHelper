@@ -13,8 +13,16 @@
             </ColumnIdList>
             <AutoIncrementColumnId>7</AutoIncrementColumnId>
         </IndexInfo>
+        <IndexInfo>
+            <Name>UNI_TDEPT_DEPT_NAME</Name>
+            <Type>Unique</Type>
+            <ColumnIdList>
+                <int>8</int>
+            </ColumnIdList>
+            <AutoIncrementColumnId p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+        </IndexInfo>
     </IndexList>
     <ForeignKeyList />
-    <HasHistoryTable>false</HasHistoryTable>
+    <HasHistoryTable>true</HasHistoryTable>
     <Remark />
 </TableInfo>

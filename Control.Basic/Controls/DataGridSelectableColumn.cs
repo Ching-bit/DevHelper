@@ -27,10 +27,8 @@ public partial class DataGridSelectableColumn : DataGridTemplateColumn
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        _headerCheckBox.IsCheckedChanged += (_, _) =>
-        {
-            SetAll(_headerCheckBox.IsChecked);
-        };
+        _headerCheckBox.Click += (_, _) => { _headerCheckBox.IsChecked ??= false; };
+        _headerCheckBox.IsCheckedChanged += (_, _) => { SetAll(_headerCheckBox.IsChecked); };
         
         HeaderTemplate = new FuncDataTemplate<object>((_, _) => _headerCheckBox);
         
@@ -41,15 +39,16 @@ public partial class DataGridSelectableColumn : DataGridTemplateColumn
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
-            cb.Bind(ToggleButton.IsCheckedProperty,
-                new Binding(BindingPath) { Mode = BindingMode.TwoWay });
+            cb.Bind(ToggleButton.IsCheckedProperty, new Binding(BindingPath) { Mode = BindingMode.TwoWay });
             
             if (item is INotifyPropertyChanged npc)
             {
                 npc.PropertyChanged += (_, e) =>
                 {
                     if (e.PropertyName == BindingPath)
+                    {
                         UpdateHeaderState();
+                    }
                 };
             }
             

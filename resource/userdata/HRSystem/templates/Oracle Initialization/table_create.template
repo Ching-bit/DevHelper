@@ -12,4 +12,9 @@ END;
 
 CREATE TABLE ${TableName(lower_snake)} (
   ${ColumnName(lower_snake)} ${ColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultValue}${CONDITIONAL_SPACE}${ColumnDbNullableFlag(ALL_UPPER)}${ColumnComma}
+${BACKSPACE},{NEWLINE}  CONSTRAINT ${PrimaryKeyName(UPPER_SNAKE)} PRIMARY KEY (${PrimaryKeyColumns(lower_snake)})
+${BACKSPACE},{NEWLINE}  CONSTRAINT ${UniqueIndexName(UPPER_SNAKE)} UNIQUE (${UniqueIndexColumns(lower_snake)})
+${BACKSPACE},{NEWLINE}  CONSTRAINT ${ForeignKeyName(UPPER_SNAKE)} FOREIGN KEY ${ForeignKeyColumnName(lower_snake)} REFERENCES ${ForeignKeyReferenceTableName(lower_snake)}(${ForeignKeyReferenceColumnName(lower_snake)})
 );
+CREATE INDEX ${NonUniqueIndexName(UPPER_SNAKE)} ON ${TableName(lower_snake)}(${NonUniqueIndexColumns(lower_snake)});
+

@@ -18,6 +18,23 @@
             </ColumnIdList>
             <AutoIncrementColumnId>1</AutoIncrementColumnId>
         </IndexInfo>
+        <IndexInfo>
+            <Name>IDX_TEMPLOYEE_EMPLOYEE_NAME</Name>
+            <Type>Index</Type>
+            <ColumnIdList>
+                <int>2</int>
+            </ColumnIdList>
+            <AutoIncrementColumnId p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+        </IndexInfo>
+        <IndexInfo>
+            <Name>IDX_TEMPLOYEE_AGE_ONBOARD_DATE</Name>
+            <Type>Index</Type>
+            <ColumnIdList>
+                <int>3</int>
+                <int>6</int>
+            </ColumnIdList>
+            <AutoIncrementColumnId p4:nil="true" xmlns:p4="http://www.w3.org/2001/XMLSchema-instance" />
+        </IndexInfo>
     </IndexList>
     <ForeignKeyList>
         <ForeignKeyInfo>
@@ -27,6 +44,6 @@
             <ReferenceColumnId>7</ReferenceColumnId>
         </ForeignKeyInfo>
     </ForeignKeyList>
-    <HasHistoryTable>false</HasHistoryTable>
+    <HasHistoryTable>true</HasHistoryTable>
     <Remark />
 </TableInfo>

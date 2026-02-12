@@ -6,9 +6,21 @@ public partial class StringHelper
 {
     private static string ToNameStyle(string input, NameStyle style)
     {
+        string[] words = input.Split(",");
+        for (int i = 0; i < words.Length; i++)
+        {
+            words[i] = ToNameStyleOneWord(words[i].Trim(), style);
+        }
+        return string.Join(", ", words);
+    }
+    
+    private static string ToNameStyleOneWord(string input, NameStyle style)
+    {
         if (style == NameStyle.Original)
+        {
             return input;
-        
+        }
+
         List<string> words = SplitWords(input);
         
         return style switch

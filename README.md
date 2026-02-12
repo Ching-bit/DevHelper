@@ -154,9 +154,21 @@
 - IndexColumns：以逗點隔開的索引字段名稱列表；
 - IndexColumnsWithBackQuota：以逗點隔開的索引字段名稱列表，各名稱前後加反引號；
 
-（5）外鍵迭代
+（5）唯一索引迭代
+
+- UniqueIndexName：索引名稱；
+- UniqueIndexColumns：以逗點隔開的索引字段名稱列表；
+- UniqueIndexColumnsWithBackQuota：以逗點隔開的索引字段名稱列表，各名稱前後加反引號；
+
+（6）非唯一索引迭代
+
+- NonUniqueIndexName：索引名稱；
+- NonUniqueIndexColumns：以逗點隔開的索引字段名稱列表；
+- NonUniqueIndexColumnsWithBackQuota：以逗點隔開的索引字段名稱列表，各名稱前後加反引號；
+
+（7）外鍵迭代
 
 - ForeignKeyName：外鍵名稱；
-- ForeignKeyColumn：外鍵字段；
+- ForeignKeyColumnName：外鍵字段；
 - ForeignKeyReferenceTableName：外鍵關聯表名稱；
 - ForeignKeyReferenceColumnName：外鍵關聯字段名稱。

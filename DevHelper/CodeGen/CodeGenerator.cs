@@ -148,6 +148,8 @@ public class CodeGenerator
         List<ColumnInfo> primaryKeyColumns = columns.Where(x => primaryKeyInfo?.ColumnIdList.Contains(x.Id) ?? false).ToList();
         List<ColumnInfo> generalColumns = columns.Except(primaryKeyColumns).ToList();
         List<IndexInfo> indexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList();
+        List<IndexInfo> uniqueIndexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique).ToList();
+        List<IndexInfo> nonUniqueIndexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Index).ToList();
         List<ForeignKeyInfo> foreignKeys = tableInfo.ForeignKeyList;
         
         return GenFile_Template(templateText,
@@ -218,12 +220,28 @@ public class CodeGenerator
                         { "IndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + allColumns.First(z => y == z.Id).Name + "`")) },
                     },
                     indexes.ConvertAll<object>(y => y)),
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "UniqueIndexName", x => ((IndexInfo)x).Name },
+                        { "UniqueIndexColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => allColumns.First(z => y == z.Id).Name)) },
+                        { "UniqueIndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + allColumns.First(z => y == z.Id).Name + "`")) },
+                    },
+                    uniqueIndexes.ConvertAll<object>(y => y)),
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "NonUniqueIndexName", x => ((IndexInfo)x).Name },
+                        { "NonUniqueIndexColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => allColumns.First(z => y == z.Id).Name)) },
+                        { "NonUniqueIndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + allColumns.First(z => y == z.Id).Name + "`")) },
+                    },
+                    nonUniqueIndexes.ConvertAll<object>(y => y)),
                 // foreign keys related
                 Tuple.Create(
                     new Dictionary<string, Func<object, string>>
                     {
                         { "ForeignKeyName", x => ((ForeignKeyInfo)x).Name },
-                        { "ForeignKeyColumn", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ColumnId)?.Name ?? string.Empty},
+                        { "ForeignKeyColumnName", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ColumnId)?.Name ?? string.Empty},
                         { "ForeignKeyReferenceTableName", x => Global.Get<IDevData>().GetTableById(((ForeignKeyInfo)x).TableId)?.Name ?? string.Empty},
                         { "ForeignKeyReferenceColumnName", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ReferenceColumnId)?.Name ?? string.Empty},
                     },
