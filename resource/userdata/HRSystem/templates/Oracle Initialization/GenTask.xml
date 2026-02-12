@@ -1,0 +1,9 @@
+<GenTask>
+    <TemplateFile>oracle_init.template</TemplateFile>
+    <RecursionLevel>Database</RecursionLevel>
+    <OutputFile>${DatabaseName(lower_snake)}_init.sql</OutputFile>
+    <ProgramLanguage>Java</ProgramLanguage>
+    <IsUsingString>true</IsUsingString>
+    <DatabaseType>Oracle</DatabaseType>
+    <IsIncludingHistoryDatabases>true</IsIncludingHistoryDatabases>
+</GenTask>

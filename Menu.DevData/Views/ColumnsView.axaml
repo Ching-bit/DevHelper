@@ -39,31 +39,31 @@
                   CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <!-- ID -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="ID"
                     Binding="{Binding Id}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True"/>
                 <!-- Name -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_NAME}"
                     Binding="{Binding Name}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True" Width="150"/>
                 <!-- Description -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_DESCRIPTION}"
                     Binding="{Binding Description}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True" Width="150"/>
                 <!-- Type -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_TYPE}"
                     Binding="{Binding Type}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True" Width="110"/>
                 <!-- Length -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_LENGTH}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True" Width="90">
@@ -73,9 +73,9 @@
                             <Binding Path="Length"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
-                </ctrl:BindableDataGridTextColumn>
+                </ctrl:DataGridBindableTextColumn>
                 <!-- Scale -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_SCALE}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True" Width="90">
@@ -85,25 +85,25 @@
                             <Binding Path="Scale"/>
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
-                </ctrl:BindableDataGridTextColumn>
+                </ctrl:DataGridBindableTextColumn>
                 <!-- is nullable -->
                 <DataGridCheckBoxColumn
                     Header="{DynamicResource R_STR_IS_NULLABLE}"
                     Binding="{Binding IsNullable}"
                     IsReadOnly="True"/>
                 <!-- default value -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_DEFAULT_VALUE}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"
                     IsReadOnly="True">
-                    <ctrl:BindableDataGridTextColumn.Binding>
+                    <ctrl:DataGridBindableTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource ColumnDefaultValueDisplayConverter}">
                             <Binding Path="HasDefaultValue"/>
                             <Binding Path="DefaultValue"/>
                             <Binding Path="Type"/>
                         </MultiBinding>
-                    </ctrl:BindableDataGridTextColumn.Binding>
-                </ctrl:BindableDataGridTextColumn>
+                    </ctrl:DataGridBindableTextColumn.Binding>
+                </ctrl:DataGridBindableTextColumn>
                 <!-- DataDict -->
                 <DataGridTemplateColumn Header="{DynamicResource R_STR_DATA_DICT}" Width="300">
                     <DataGridTemplateColumn.CellTemplate>
@@ -122,7 +122,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!-- Remark -->
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_REMARK}"
                     Binding="{Binding Remark}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ColumnModifyStatusToColourConverter}}"

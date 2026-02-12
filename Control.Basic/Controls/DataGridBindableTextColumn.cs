@@ -3,7 +3,7 @@ using Avalonia.Data;
 
 namespace Control.Basic;
 
-public class BindableDataGridTextColumn : DataGridTextColumn
+public class DataGridBindableTextColumn : DataGridTextColumn
 {
     public IBinding? ForegroundBinding { get; set; }
     

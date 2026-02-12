@@ -1,0 +1,15 @@
+
+-- ${TableName(lower_snake)}
+prompt Creating table ${TableName(lower_snake)}...
+
+DECLARE v_count INT;
+BEGIN
+  SELECT COUNT(*) INTO v_count FROM user_tables WHERE table_name = UPPER('${TableName(lower_snake)}');
+  IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP TABLE ${TableName(lower_snake)} CASCADE CONSTRAINTS PURGE';
+  END IF;
+END;
+/
+
+CREATE TABLE ${TableName(lower_snake)} (
+  ${ColumnName(lower_snake)} ${ColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultValue}${CONDITIONAL_SPACE}${ColumnDbNullableFlag(ALL_UPPER)}${ColumnComma}
+);

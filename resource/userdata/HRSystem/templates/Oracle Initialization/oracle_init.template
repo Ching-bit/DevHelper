@@ -1,0 +1,211 @@
+
+${TEMPLATE(table_create.template,Table)}
+
+
+
+/* Table upgrade */
+
+DROP TABLE IF EXISTS `schema_upgrade_log`;
+
+CREATE TABLE `schema_upgrade_log` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `date` DATE DEFAULT (CURRENT_DATE),
+    `time` TIME DEFAULT (CURRENT_TIME),
+    `table_name` VARCHAR(64),
+    `action` VARCHAR(64),
+    `details` TEXT
+);
+
+DELIMITER $$
+
+CREATE PROCEDURE `upgrade_table` (
+    IN `in_table_name` VARCHAR(64),   -- target table name
+    IN `in_columns_sql` TEXT          -- statement SQLs of columns including indexes and foreign keys
+)
+BEGIN
+    DECLARE `table_count` INT DEFAULT 0;
+    DECLARE `column_diff` INT DEFAULT 0;
+    DECLARE index_diff INT DEFAULT 0;
+    DECLARE fk_diff INT DEFAULT 0;
+    DECLARE tmp_table_name VARCHAR(70);
+    DECLARE common_cols TEXT;
+
+    -- check if the table exists
+    SELECT COUNT(*) INTO `table_count`
+    FROM `information_schema`.`tables`
+    WHERE `table_schema` = DATABASE()
+      AND `table_name` = `in_table_name`;
+
+    -- create directly if not exists
+    IF `table_count` = 0 THEN
+        SET @sql = CONCAT('CREATE TABLE ', `in_table_name`, ' (', `in_columns_sql`, ')');
+        PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+
+        INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'CREATE', @sql);
+    ELSE
+        -- create a temp table to compare the structure
+        SET `tmp_table_name` = CONCAT(`in_table_name`, '_tmp_');
+        SET @sql = CONCAT('CREATE TABLE ', `tmp_table_name`, ' (', `in_columns_sql`, ')');
+        PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+
+        -- compare columns
+        SELECT COUNT(*) INTO `column_diff`
+        FROM (
+            SELECT `column_name`, `column_type`
+            FROM `information_schema`.`columns`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
+        ) `cur`
+        JOIN (
+            SELECT `column_name`, `column_type`
+            FROM `information_schema`.`columns`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+        ) `tgt`
+        ON `cur`.`column_name` = `tgt`.`column_name`
+        WHERE `cur`.`column_type` <> `tgt`.`column_type`;
+
+        -- compare indexes
+        SELECT COUNT(*) INTO `index_diff`
+        FROM (
+            SELECT `index_name`, GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`) AS `cols`
+            FROM `information_schema`.`statistics`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
+            GROUP BY `index_name`
+        ) `cur`
+        LEFT JOIN (
+            SELECT `index_name`, GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`) AS `cols`
+            FROM `information_schema`.`statistics`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+            GROUP BY `index_name`
+        ) `tgt`
+        ON `cur`.`index_name` = `tgt`.`index_name` AND `cur`.`cols` = `tgt`.`cols`
+        WHERE `tgt`.`index_name` IS NULL;
+
+        -- compare foreign keys
+        SELECT COUNT(*) INTO `fk_diff`
+        FROM (
+            SELECT `constraint_name`, `column_name`, `referenced_table_name`, `referenced_column_name`
+            FROM `information_schema`.`key_column_usage`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
+              AND `referenced_table_name` IS NOT NULL
+        ) `cur`
+        LEFT JOIN (
+            SELECT `constraint_name`, `column_name`, `referenced_table_name`, `referenced_column_name`
+            FROM `information_schema`.`key_column_usage`
+            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+              AND `referenced_table_name` IS NOT NULL
+        ) `tgt`
+        ON `cur`.`constraint_name` = `tgt`.`constraint_name`
+           AND `cur`.`column_name` = `tgt`.`column_name`
+           AND `cur`.`referenced_table_name` = `tgt`.`referenced_table_name`
+           AND `cur`.`referenced_column_name` = `tgt`.`referenced_column_name`
+        WHERE `tgt`.`constraint_name` IS NULL;
+
+        -- upgrade table
+        IF `column_diff` > 0 THEN
+            -- if difference exists between columns -> import data to temp table and replace the current table
+            SELECT GROUP_CONCAT(`cur`.`column_name` ORDER BY `cur`.`ordinal_position`)
+            INTO `common_cols`
+            FROM `information_schema`.`columns` `cur`
+            WHERE `cur`.`table_schema` = DATABASE() AND `cur`.`table_name` = `in_table_name`
+              AND `cur`.`column_name` IN (
+                  SELECT `column_name` FROM `information_schema`.`columns`
+                  WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+              );
+
+            SET @sql = CONCAT('INSERT INTO ', `tmp_table_name`, ' (', `common_cols`, ') ',
+                              'SELECT ', `common_cols`, ' FROM ', `in_table_name`);
+            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+            
+            INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'REPLACE', @sql);
+
+            SET @sql = CONCAT('DROP TABLE ', `in_table_name`);
+            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+
+            SET @sql = CONCAT('RENAME TABLE ', `tmp_table_name`, ' TO ', `in_table_name`);
+            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+        ELSE
+            -- difference only exists between indexes -> modify indexes only
+            IF `index_diff` > 0 THEN
+                -- remove old indexes
+                SELECT GROUP_CONCAT(CONCAT('ALTER TABLE ', `in_table_name`, ' DROP INDEX ', `index_name`) SEPARATOR '; ')
+                INTO @drop_index_sql
+                FROM (
+                    SELECT DISTINCT `index_name`
+                    FROM `information_schema`.`statistics`
+                    WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
+                ) `cur`
+                WHERE `index_name` NOT IN (
+                    SELECT DISTINCT `index_name`
+                    FROM `information_schema`.`statistics`
+                    WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+                );
+
+                IF @drop_index_sql IS NOT NULL THEN
+                    PREPARE `stmt` FROM @drop_index_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'DROP INDEX', @drop_index_sql);
+                END IF;
+
+                -- add target indexes
+                SELECT GROUP_CONCAT(
+                    CONCAT('ALTER TABLE ', `in_table_name`, ' ADD ',
+                           IF(`NON_UNIQUE`=1,'INDEX','UNIQUE INDEX'), ' ',
+                           `index_name`, ' (', GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`), ')')
+                    SEPARATOR '; ')
+                INTO @add_index_sql
+                FROM `information_schema`.`statistics`
+                WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+                GROUP BY `index_name`;
+
+                IF @add_index_sql IS NOT NULL THEN
+                    PREPARE `stmt` FROM @add_index_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'ADD INDEX', @add_index_sql);
+                END IF;
+            END IF;
+
+            IF `fk_diff` > 0 THEN
+                -- remove old foreign keys
+                SELECT GROUP_CONCAT(CONCAT('ALTER TABLE ', `in_table_name`, ' DROP FOREIGN KEY ', `constraint_name`) SEPARATOR '; ')
+                INTO @drop_fk_sql
+                FROM (
+                    SELECT DISTINCT `constraint_name`
+                    FROM `information_schema`.`key_column_usage`
+                    WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
+                      AND `referenced_table_name` IS NOT NULL
+                ) `cur`
+                WHERE `constraint_name` NOT IN (
+                    SELECT DISTINCT `constraint_name`
+                    FROM `information_schema`.`key_column_usage`
+                    WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+                      AND `referenced_table_name` IS NOT NULL
+                );
+
+                IF @drop_fk_sql IS NOT NULL THEN
+                    PREPARE `stmt` FROM @drop_fk_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'DROP FOREIGN KEY', @drop_fk_sql);
+                END IF;
+
+                -- add target foreign keys
+                SELECT GROUP_CONCAT(
+                    CONCAT('ALTER TABLE ', `in_table_name`, ' ADD CONSTRAINT ', `constraint_name`,
+                           ' FOREIGN KEY (', `column_name`, ') REFERENCES ',
+                           `referenced_table_name`, '(', `referenced_column_name`, ')')
+                    SEPARATOR '; ')
+                INTO @add_fk_sql
+                FROM `information_schema`.`key_column_usage`
+                WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
+                  AND `referenced_table_name` IS NOT NULL;
+
+                IF @add_fk_sql IS NOT NULL THEN
+                    PREPARE `stmt` FROM @add_fk_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'ADD FOREIGN KEY', @add_fk_sql);
+                END IF;
+            END IF;
+
+            -- delete temp table
+            SET @sql = CONCAT('DROP TABLE ', `tmp_table_name`);
+            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;

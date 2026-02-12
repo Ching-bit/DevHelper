@@ -30,49 +30,49 @@
             SelectionMode="Extended"
             CanUserResizeColumns="True">
             <DataGrid.Columns>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="ID"  IsReadOnly="True"
                     Binding="{Binding Id}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_NAME}"  IsReadOnly="True" Width="150"
                     Binding="{Binding Name}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_DESCRIPTION}" IsReadOnly="True" Width="150"
                     Binding="{Binding Description}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_TYPE}" IsReadOnly="True" Width="110"
                     Binding="{Binding Type}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_LENGTH}" IsReadOnly="True" Width="90"
                     Binding="{Binding Length}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_SCALE}" IsReadOnly="True" Width="90"
                     Binding="{Binding Scale}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="120"
                     Binding="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
                 <DataGridCheckBoxColumn
                     Header="{DynamicResource R_STR_IS_NULLABLE}" IsReadOnly="True"
                     Binding="{Binding IsNullable}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_DEFAULT_VALUE}" IsReadOnly="True"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}">
-                    <ctrl:BindableDataGridTextColumn.Binding>
+                    <ctrl:DataGridBindableTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource ColumnDefaultValueDisplayConverter}">
                             <Binding Path="HasDefaultValue"/>
                             <Binding Path="DefaultValue"/>
                             <Binding Path="Type"/>
                         </MultiBinding>
-                    </ctrl:BindableDataGridTextColumn.Binding>
-                </ctrl:BindableDataGridTextColumn>
-                <ctrl:BindableDataGridTextColumn
+                    </ctrl:DataGridBindableTextColumn.Binding>
+                </ctrl:DataGridBindableTextColumn>
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_DATA_DICT}" IsReadOnly="True" Width="300"
                     Binding="{Binding DataDict}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>

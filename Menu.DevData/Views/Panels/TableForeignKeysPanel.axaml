@@ -29,19 +29,19 @@
             SelectionMode="Extended"
             CanUserResizeColumns="True">
             <DataGrid.Columns>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_COLUMN}" IsReadOnly="True" Width="200"
                     Binding="{Binding Column}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_NAME}" IsReadOnly="True" Width="300"
                     Binding="{Binding Name}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_REFERENCE_TABLE}" IsReadOnly="True" Width="200"
                     Binding="{Binding ReferenceTable}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:BindableDataGridTextColumn
+                <ctrl:DataGridBindableTextColumn
                     Header="{DynamicResource R_STR_REFERENCE_COLUMN}" IsReadOnly="True" Width="200"
                     Binding="{Binding ReferenceColumn}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
