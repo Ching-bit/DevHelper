@@ -24,9 +24,6 @@ public class DevData : IDevData
     private static string TablesDir => Path.Combine(DevDataDir, TablesDirName);
     
     
-    private const int ArchiveDateColumnId = -1;
-    
-    
     #region IPlugin
     public void OnStart() { }
 
@@ -60,27 +57,7 @@ public class DevData : IDevData
 
 
     #region IDevData
-    private List<ColumnInfo> _columns = [];
-    public List<ColumnInfo> Columns
-    {
-        get
-        {
-            List<ColumnInfo> ret = [];
-            ret.AddRange(_columns);
-            // archive date column
-            // at current is Int32 type, to store the date in format of yyyyMMdd, e.g. 20240101 means Jan 1st, 2024
-            ret.Add(new ColumnInfo
-            {
-                Id = ArchiveDateColumnId,
-                Name = Global.Get<IUserSetting>().ArchiveDateColumnName,
-                Type = ColumnType.Int32,
-                IsNullable = false,
-            });
-            return ret;
-        }
-        private set => _columns = value;
-    }
-    
+    public List<ColumnInfo> Columns { get; private set; } = [];
     public IDirectoryNode? TableRoot { get; private set; }
     
 
@@ -387,7 +364,7 @@ public class DevData : IDevData
                     Description = tableInfo.Description
                 };
                 // add archive date column
-                historyTableInfo.ColumnIdList.Add(ArchiveDateColumnId);
+                historyTableInfo.ColumnIdList.Add(ColumnInfo.ArchiveDateColumnId);
                 historyTableInfo.ColumnIdList.AddRange(tableInfo.ColumnIdList);
                 // add archive date column to primary keys and indexes
                 foreach (IndexInfo indexInfo in tableInfo.IndexList)
@@ -397,7 +374,7 @@ public class DevData : IDevData
                         Name = indexInfo.Name.ToUpper().Replace(tableInfo.Name.ToUpper(), historyTableInfo.Name.ToUpper()),
                         Type = indexInfo.Type
                     };
-                    historyIndexInfo.ColumnIdList.Add(ArchiveDateColumnId);
+                    historyIndexInfo.ColumnIdList.Add(ColumnInfo.ArchiveDateColumnId);
                     historyIndexInfo.ColumnIdList.AddRange(indexInfo.ColumnIdList);
                     historyTableInfo.IndexList.Add(historyIndexInfo);
                 }

@@ -32,11 +32,18 @@ public class CodeGenerator
     
     private static async Task GenFileUsingCSharpScript(GenTask task)
     {
+        List<ColumnInfo> columns = [];
+        columns.AddRange(Global.Get<IDevData>().Columns);
+        columns.Add(ColumnInfo.GetArchiveDateColumn());
+        
         CodeGenScriptVars scriptVars = new()
         {
-            Columns = Global.Get<IDevData>().Columns,
-            TableRoot = Global.Get<IDevData>().TableRoot
+            Columns = columns,
+            TableRoot = Global.Get<IDevData>().TableRoot,
+            Tables = Global.Get<IDevData>().GetAllTables(),
+            HistoryTables = Global.Get<IDevData>().GetAllHistoryTables(),
         };
+        
         string scriptContent = await File.ReadAllTextAsync(task.GetTemplatePath());
         await CSharpScript.EvaluateAsync(scriptContent,
             globals: scriptVars,
@@ -132,8 +139,12 @@ public class CodeGenerator
     private static string GenFile_Table(string templateText, TableInfo tableInfo, GenTask? task)
     {
         IndexInfo? primaryKeyInfo = tableInfo.IndexList.FirstOrDefault(x => IndexType.Primary == x.Type);
+
+        List<ColumnInfo> allColumns = [];
+        allColumns.AddRange(Global.Get<IDevData>().Columns);
+        allColumns.Add(ColumnInfo.GetArchiveDateColumn());
         
-        List<ColumnInfo> columns = tableInfo.ColumnIdList.Select(x => Global.Get<IDevData>().Columns.First(y => y.Id == x)).ToList();
+        List<ColumnInfo> columns = tableInfo.ColumnIdList.Select(x => allColumns.First(y => y.Id == x)).ToList();
         List<ColumnInfo> primaryKeyColumns = columns.Where(x => primaryKeyInfo?.ColumnIdList.Contains(x.Id) ?? false).ToList();
         List<ColumnInfo> generalColumns = columns.Except(primaryKeyColumns).ToList();
         List<IndexInfo> indexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique or IndexType.Index).ToList();
@@ -203,8 +214,8 @@ public class CodeGenerator
                         { "IndexType", x => ((IndexInfo)x).Type.ToString().ToLower() },
                         { "IndexTypeWithKey", x => IndexType.Unique == ((IndexInfo)x).Type ? "unique key" : "index" },
                         { "IndexName", x => ((IndexInfo)x).Name },
-                        { "IndexColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => Global.Get<IDevData>().Columns.First(z => y == z.Id).Name)) },
-                        { "IndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + Global.Get<IDevData>().Columns.First(z => y == z.Id).Name + "`")) },
+                        { "IndexColumns", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => allColumns.First(z => y == z.Id).Name)) },
+                        { "IndexColumnsWithBackQuota", x => string.Join(", ", ((IndexInfo)x).ColumnIdList.Select(y => "`" + allColumns.First(z => y == z.Id).Name + "`")) },
                     },
                     indexes.ConvertAll<object>(y => y)),
                 // foreign keys related
@@ -212,9 +223,9 @@ public class CodeGenerator
                     new Dictionary<string, Func<object, string>>
                     {
                         { "ForeignKeyName", x => ((ForeignKeyInfo)x).Name },
-                        { "ForeignKeyColumn", x => Global.Get<IDevData>().Columns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ColumnId)?.Name ?? string.Empty},
+                        { "ForeignKeyColumn", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ColumnId)?.Name ?? string.Empty},
                         { "ForeignKeyReferenceTableName", x => Global.Get<IDevData>().GetTableById(((ForeignKeyInfo)x).TableId)?.Name ?? string.Empty},
-                        { "ForeignKeyReferenceColumnName", x => Global.Get<IDevData>().Columns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ReferenceColumnId)?.Name ?? string.Empty},
+                        { "ForeignKeyReferenceColumnName", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ReferenceColumnId)?.Name ?? string.Empty},
                     },
                     foreignKeys.ConvertAll<object>(y => y)),
                 ],

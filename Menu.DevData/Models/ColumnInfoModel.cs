@@ -12,7 +12,7 @@ public partial class ColumnInfoModel : UniModel
     {
         ModifyStatus = ModifyStatus.Normal;
         
-        Group = ColumnInfo.DEFAULT_COLUMN_NAME;
+        Group = ColumnInfo.DefaultColumnGroup;
         Name = string.Empty;
         Description = string.Empty;
         DefaultValue = string.Empty;

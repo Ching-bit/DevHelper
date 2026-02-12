@@ -236,7 +236,7 @@ public partial class ColumnsViewModel : UniViewModel
     {
         return
             ColumnList 
-                .Where(x => !x.Group.Equals(ColumnInfo.DEFAULT_COLUMN_NAME))
+                .Where(x => !x.Group.Equals(ColumnInfo.DefaultColumnGroup))
                 .Select(x => x.Group)
                 .Distinct()
                 .OrderBy(x => x)
