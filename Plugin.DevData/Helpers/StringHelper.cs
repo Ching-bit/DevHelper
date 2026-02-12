@@ -9,9 +9,9 @@ public partial class StringHelper
         string[] words = input.Split(",");
         for (int i = 0; i < words.Length; i++)
         {
-            words[i] = ToNameStyleOneWord(words[i].Trim(), style);
+            words[i] = ToNameStyleOneWord(words[i], style);
         }
-        return string.Join(", ", words);
+        return string.Join(",", words);
     }
     
     private static string ToNameStyleOneWord(string input, NameStyle style)
@@ -59,7 +59,7 @@ public partial class StringHelper
         if (ContainsMacro(input, macro, out int startIndex, out int endIndex, out string remark))
         {
             _ = Enum.TryParse(remark, out NameStyle nameStyle);
-            input = ReplaceRange(input, startIndex, endIndex, StringHelper.ToNameStyle(macroValue, nameStyle));
+            input = ReplaceRange(input, startIndex, endIndex, ToNameStyle(macroValue, nameStyle));
         }
         return input;
     }
