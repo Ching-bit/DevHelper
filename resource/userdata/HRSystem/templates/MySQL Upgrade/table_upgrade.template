@@ -4,5 +4,5 @@ CALL `upgrade_table`('${TableName(lower_snake)}', "
   `${GeneralColumnName(lower_snake)}` ${GeneralColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbNullableFlag(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${GeneralColumnDbDefaultValue} COMMENT '${GeneralColumnDescription}'${GeneralColumnComma}
 ${BACKSPACE},${NEWLINE}  PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_lower)})
 ${BACKSPACE},${NEWLINE}  ${IndexTypeWithKey(ALL_UPPER)} ${IndexName(UPPER_SNAKE)} (${IndexColumnsWithBackQuota(all_lower)})
-${BACKSPACE},${NEWLINE}  FOREIGN KEY (`${ForeignKeyColumn(lower_snake)}`) REFERENCES `${ForeignKeyReferenceTableName(lower_snake)}`(`${ForeignKeyReferenceColumnName(lower_snake)}`)
+${BACKSPACE},${NEWLINE}  FOREIGN KEY (`${ForeignKeyColumnName(lower_snake)}`) REFERENCES `${ForeignKeyReferenceTableName(lower_snake)}`(`${ForeignKeyReferenceColumnName(lower_snake)}`)
 ");

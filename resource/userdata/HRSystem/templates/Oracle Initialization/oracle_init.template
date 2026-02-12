@@ -8,12 +8,12 @@ ${TEMPLATE(table_create.template,Table)}
 DROP TABLE IF EXISTS `schema_upgrade_log`;
 
 CREATE TABLE `schema_upgrade_log` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `date` DATE DEFAULT (CURRENT_DATE),
-    `time` TIME DEFAULT (CURRENT_TIME),
-    `table_name` VARCHAR(64),
-    `action` VARCHAR(64),
-    `details` TEXT
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  date DATE DEFAULT (CURRENT_DATE),
+  time TIME DEFAULT (CURRENT_TIME),
+  table_name VARCHAR(64),
+  action VARCHAR(64),
+  details TEXT
 );
 
 DELIMITER $$

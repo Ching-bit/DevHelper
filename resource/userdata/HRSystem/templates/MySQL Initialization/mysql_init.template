@@ -20,6 +20,8 @@ CREATE TABLE `schema_upgrade_log` (
     `details` TEXT
 );
 
+DROP PROCEDURE IF EXISTS `upgrade_table`;
+
 DELIMITER $$
 
 CREATE PROCEDURE `upgrade_table` (
@@ -34,11 +36,24 @@ BEGIN
     DECLARE tmp_table_name VARCHAR(70);
     DECLARE common_cols TEXT;
 
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT COUNT(*) INTO `table_count`
+        FROM `information_schema`.`tables`
+        WHERE `table_schema` = DATABASE()
+            AND `table_name` = `tmp_table_name`;
+        IF `table_count` > 0 THEN
+            SET @sql = CONCAT('DROP TABLE ', `tmp_table_name`);
+            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+        END IF;
+        RESIGNAL;
+    END;
+
     -- check if the table exists
     SELECT COUNT(*) INTO `table_count`
     FROM `information_schema`.`tables`
     WHERE `table_schema` = DATABASE()
-      AND `table_name` = `in_table_name`;
+        AND `table_name` = `in_table_name`;
 
     -- create directly if not exists
     IF `table_count` = 0 THEN
@@ -98,8 +113,7 @@ BEGIN
             WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
               AND `referenced_table_name` IS NOT NULL
         ) `tgt`
-        ON `cur`.`constraint_name` = `tgt`.`constraint_name`
-           AND `cur`.`column_name` = `tgt`.`column_name`
+        ON `cur`.`column_name` = `tgt`.`column_name`
            AND `cur`.`referenced_table_name` = `tgt`.`referenced_table_name`
            AND `cur`.`referenced_column_name` = `tgt`.`referenced_column_name`
         WHERE `tgt`.`constraint_name` IS NULL;
