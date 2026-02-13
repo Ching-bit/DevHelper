@@ -8,15 +8,18 @@
         <StackPanel>
             <!-- history database name -->
             <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_DB_NAME}">
-                <TextBox Classes="Common" Text="{Binding SystemSettingModel.HistoryDatabaseName}"/>
+                <TextBox Classes="Common" Width="300"
+                         Text="{Binding SystemSettingModel.HistoryDatabaseName}"/>
             </HeaderedContentControl>
             <!-- history table name -->
             <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_TABLE_NAME}">
-                <TextBox Classes="Common" Text="{Binding SystemSettingModel.HistoryTableName}"/>
+                <TextBox Classes="Common" Width="300"
+                         Text="{Binding SystemSettingModel.HistoryTableName}"/>
             </HeaderedContentControl>
             <!-- data column name of history tables -->
             <HeaderedContentControl Classes="Common" Header="{DynamicResource R_STR_HIS_TABLE_DATE_COLUMN_NAME}">
-                <TextBox Classes="Common" Text="{Binding SystemSettingModel.ArchiveDateColumnName}"/>
+                <TextBox Classes="Common" Width="300"
+                         Text="{Binding SystemSettingModel.ArchiveDateColumnName}"/>
             </HeaderedContentControl>
         </StackPanel>
     </ctrl:ConfirmDialog>
