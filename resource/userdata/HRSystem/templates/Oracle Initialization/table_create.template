@@ -1,20 +1,26 @@
 
 -- ${TableName(lower_snake)}
-prompt Creating table ${TableName(lower_snake)}...
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Creating table [${TableName(lower_snake)}]...');
+END;
+/
 
 DECLARE v_count INT;
 BEGIN
-  SELECT COUNT(*) INTO v_count FROM user_tables WHERE table_name = UPPER('${TableName(lower_snake)}');
-  IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP TABLE ${TableName(lower_snake)} CASCADE CONSTRAINTS PURGE';
-  END IF;
+    SELECT COUNT(*) INTO v_count FROM user_tables WHERE table_name = UPPER('${TableName(lower_snake)}');
+    IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP TABLE ${TableName(lower_snake)} CASCADE CONSTRAINTS PURGE';
+    END IF;
+    SELECT COUNT(*) INTO v_count FROM user_sequences WHERE sequence_name = UPPER('seq_${TableName(lower_snake)}');
+    IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_${TableName(lower_snake)}';
+    END IF;
 END;
 /
 
 CREATE TABLE ${TableName(lower_snake)} (
-  ${ColumnName(lower_snake)} ${ColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultValue}${CONDITIONAL_SPACE}${ColumnDbNullableFlag(ALL_UPPER)}${ColumnComma}
-${BACKSPACE},${NEWLINE}  CONSTRAINT ${PrimaryKeyName(UPPER_SNAKE)} PRIMARY KEY (${PrimaryKeyColumns(lower_snake)})
-${BACKSPACE},${NEWLINE}  CONSTRAINT ${UniqueIndexName(UPPER_SNAKE)} UNIQUE (${UniqueIndexColumns(lower_snake)})
-${BACKSPACE},${NEWLINE}  CONSTRAINT ${ForeignKeyName(UPPER_SNAKE)} FOREIGN KEY ${ForeignKeyColumnName(lower_snake)} REFERENCES ${ForeignKeyReferenceTableName(lower_snake)}(${ForeignKeyReferenceColumnName(lower_snake)})
+    ${ColumnName(lower_snake)} ${ColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultValue}${CONDITIONAL_SPACE}${ColumnDbNullableFlag(ALL_UPPER)}${ColumnComma}
 );
+ALTER TABLE ${TableName(lower_snake)} ADD PRIMARY KEY (${PrimaryKeyColumns(lower_snake)});
+ALTER TABLE ${TableName(lower_snake)} ADD UNIQUE (${UniqueIndexColumns(lower_snake)});
+ALTER TABLE ${TableName(lower_snake)} ADD FOREIGN KEY (${ForeignKeyColumnName(lower_snake)}) REFERENCES ${ForeignKeyReferenceTableName(lower_snake)}(${ForeignKeyReferenceColumnName(lower_snake)});
 CREATE INDEX ${NonUniqueIndexName(UPPER_SNAKE)} ON ${TableName(lower_snake)}(${NonUniqueIndexColumns(lower_snake)});
-
+CREATE SEQUENCE seq_${TableName(lower_snake)} START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;${NEWLINE}CREATE OR REPLACE TRIGGER trg_${TableName(lower_snake)}_${AutoIncColumnName(lower_snake)} BEFORE INSERT ON ${TableName(lower_snake)} FOR EACH ROW BEGIN :NEW.${AutoIncColumnName(lower_snake)} := seq_${TableName(lower_snake)}.NEXTVAL; END;${NEWLINE}/

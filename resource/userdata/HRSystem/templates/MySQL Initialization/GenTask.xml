@@ -1,7 +1,7 @@
 <GenTask>
     <TemplateFile>mysql_init.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
-    <OutputFile>${DatabaseName(lower_snake)}_mysql_init.sql</OutputFile>
+    <OutputFile>mysql_${DatabaseName(lower_snake)}_init.sql</OutputFile>
     <ProgramLanguage>Java</ProgramLanguage>
     <IsUsingString>true</IsUsingString>
     <DatabaseType>MySQL</DatabaseType>

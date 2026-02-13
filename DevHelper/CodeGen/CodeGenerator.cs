@@ -151,6 +151,7 @@ public class CodeGenerator
         List<IndexInfo> uniqueIndexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Unique).ToList();
         List<IndexInfo> nonUniqueIndexes = tableInfo.IndexList.Where(x => x.Type is IndexType.Index).ToList();
         List<ForeignKeyInfo> foreignKeys = tableInfo.ForeignKeyList;
+        ColumnInfo? autoIncColumn = null == primaryKeyInfo?.AutoIncrementColumnId ? null : allColumns.FirstOrDefault(x => x.Id == primaryKeyInfo.AutoIncrementColumnId);
         
         return GenFile_Template(templateText,
             new Dictionary<string, string>
@@ -246,6 +247,19 @@ public class CodeGenerator
                         { "ForeignKeyReferenceColumnName", x => allColumns.FirstOrDefault(y => y.Id == ((ForeignKeyInfo)x).ReferenceColumnId)?.Name ?? string.Empty},
                     },
                     foreignKeys.ConvertAll<object>(y => y)),
+                // auto increment column
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "AutoIncColumnName", x => ((ColumnInfo)x).Name },
+                        { "AutoIncColumnDescription", x => ((ColumnInfo)x).Description },
+                        { "AutoIncColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
+                        { "AutoIncColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
+                        { "AutoIncColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
+                        { "AutoIncColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
+                        { "AutoIncColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
+                    },
+                    null == autoIncColumn ? new List<object>() : [ autoIncColumn ]),
                 ],
             task);
     }

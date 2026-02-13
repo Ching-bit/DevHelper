@@ -1,0 +1,5 @@
+SET SERVEROUTPUT ON;
+
+${TEMPLATE(table_upgrade.template,Table)}
+
+SET SERVEROUTPUT OFF;

@@ -1,3 +1,4 @@
+SET SERVEROUTPUT ON;
 
 ${TEMPLATE(table_create.template,Table)}
 
@@ -5,207 +6,362 @@ ${TEMPLATE(table_create.template,Table)}
 
 /* Table upgrade */
 
-DROP TABLE IF EXISTS `schema_upgrade_log`;
+prompt Creating table [schema_upgrade_log]...
 
-CREATE TABLE `schema_upgrade_log` (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  date DATE DEFAULT (CURRENT_DATE),
-  time TIME DEFAULT (CURRENT_TIME),
-  table_name VARCHAR(64),
-  action VARCHAR(64),
-  details TEXT
-);
-
-DELIMITER $$
-
-CREATE PROCEDURE `upgrade_table` (
-    IN `in_table_name` VARCHAR(64),   -- target table name
-    IN `in_columns_sql` TEXT          -- statement SQLs of columns including indexes and foreign keys
-)
+DECLARE v_count INT;
 BEGIN
-    DECLARE `table_count` INT DEFAULT 0;
-    DECLARE `column_diff` INT DEFAULT 0;
-    DECLARE index_diff INT DEFAULT 0;
-    DECLARE fk_diff INT DEFAULT 0;
-    DECLARE tmp_table_name VARCHAR(70);
-    DECLARE common_cols TEXT;
-
-    -- check if the table exists
-    SELECT COUNT(*) INTO `table_count`
-    FROM `information_schema`.`tables`
-    WHERE `table_schema` = DATABASE()
-      AND `table_name` = `in_table_name`;
-
-    -- create directly if not exists
-    IF `table_count` = 0 THEN
-        SET @sql = CONCAT('CREATE TABLE ', `in_table_name`, ' (', `in_columns_sql`, ')');
-        PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-
-        INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'CREATE', @sql);
-    ELSE
-        -- create a temp table to compare the structure
-        SET `tmp_table_name` = CONCAT(`in_table_name`, '_tmp_');
-        SET @sql = CONCAT('CREATE TABLE ', `tmp_table_name`, ' (', `in_columns_sql`, ')');
-        PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-
-        -- compare columns
-        SELECT COUNT(*) INTO `column_diff`
-        FROM (
-            SELECT `column_name`, `column_type`
-            FROM `information_schema`.`columns`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
-        ) `cur`
-        JOIN (
-            SELECT `column_name`, `column_type`
-            FROM `information_schema`.`columns`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-        ) `tgt`
-        ON `cur`.`column_name` = `tgt`.`column_name`
-        WHERE `cur`.`column_type` <> `tgt`.`column_type`;
-
-        -- compare indexes
-        SELECT COUNT(*) INTO `index_diff`
-        FROM (
-            SELECT `index_name`, GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`) AS `cols`
-            FROM `information_schema`.`statistics`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
-            GROUP BY `index_name`
-        ) `cur`
-        LEFT JOIN (
-            SELECT `index_name`, GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`) AS `cols`
-            FROM `information_schema`.`statistics`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-            GROUP BY `index_name`
-        ) `tgt`
-        ON `cur`.`index_name` = `tgt`.`index_name` AND `cur`.`cols` = `tgt`.`cols`
-        WHERE `tgt`.`index_name` IS NULL;
-
-        -- compare foreign keys
-        SELECT COUNT(*) INTO `fk_diff`
-        FROM (
-            SELECT `constraint_name`, `column_name`, `referenced_table_name`, `referenced_column_name`
-            FROM `information_schema`.`key_column_usage`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
-              AND `referenced_table_name` IS NOT NULL
-        ) `cur`
-        LEFT JOIN (
-            SELECT `constraint_name`, `column_name`, `referenced_table_name`, `referenced_column_name`
-            FROM `information_schema`.`key_column_usage`
-            WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-              AND `referenced_table_name` IS NOT NULL
-        ) `tgt`
-        ON `cur`.`constraint_name` = `tgt`.`constraint_name`
-           AND `cur`.`column_name` = `tgt`.`column_name`
-           AND `cur`.`referenced_table_name` = `tgt`.`referenced_table_name`
-           AND `cur`.`referenced_column_name` = `tgt`.`referenced_column_name`
-        WHERE `tgt`.`constraint_name` IS NULL;
-
-        -- upgrade table
-        IF `column_diff` > 0 THEN
-            -- if difference exists between columns -> import data to temp table and replace the current table
-            SELECT GROUP_CONCAT(`cur`.`column_name` ORDER BY `cur`.`ordinal_position`)
-            INTO `common_cols`
-            FROM `information_schema`.`columns` `cur`
-            WHERE `cur`.`table_schema` = DATABASE() AND `cur`.`table_name` = `in_table_name`
-              AND `cur`.`column_name` IN (
-                  SELECT `column_name` FROM `information_schema`.`columns`
-                  WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-              );
-
-            SET @sql = CONCAT('INSERT INTO ', `tmp_table_name`, ' (', `common_cols`, ') ',
-                              'SELECT ', `common_cols`, ' FROM ', `in_table_name`);
-            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-            
-            INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'REPLACE', @sql);
-
-            SET @sql = CONCAT('DROP TABLE ', `in_table_name`);
-            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-
-            SET @sql = CONCAT('RENAME TABLE ', `tmp_table_name`, ' TO ', `in_table_name`);
-            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-        ELSE
-            -- difference only exists between indexes -> modify indexes only
-            IF `index_diff` > 0 THEN
-                -- remove old indexes
-                SELECT GROUP_CONCAT(CONCAT('ALTER TABLE ', `in_table_name`, ' DROP INDEX ', `index_name`) SEPARATOR '; ')
-                INTO @drop_index_sql
-                FROM (
-                    SELECT DISTINCT `index_name`
-                    FROM `information_schema`.`statistics`
-                    WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
-                ) `cur`
-                WHERE `index_name` NOT IN (
-                    SELECT DISTINCT `index_name`
-                    FROM `information_schema`.`statistics`
-                    WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-                );
-
-                IF @drop_index_sql IS NOT NULL THEN
-                    PREPARE `stmt` FROM @drop_index_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'DROP INDEX', @drop_index_sql);
-                END IF;
-
-                -- add target indexes
-                SELECT GROUP_CONCAT(
-                    CONCAT('ALTER TABLE ', `in_table_name`, ' ADD ',
-                           IF(`NON_UNIQUE`=1,'INDEX','UNIQUE INDEX'), ' ',
-                           `index_name`, ' (', GROUP_CONCAT(`column_name` ORDER BY `seq_in_index`), ')')
-                    SEPARATOR '; ')
-                INTO @add_index_sql
-                FROM `information_schema`.`statistics`
-                WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-                GROUP BY `index_name`;
-
-                IF @add_index_sql IS NOT NULL THEN
-                    PREPARE `stmt` FROM @add_index_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'ADD INDEX', @add_index_sql);
-                END IF;
-            END IF;
-
-            IF `fk_diff` > 0 THEN
-                -- remove old foreign keys
-                SELECT GROUP_CONCAT(CONCAT('ALTER TABLE ', `in_table_name`, ' DROP FOREIGN KEY ', `constraint_name`) SEPARATOR '; ')
-                INTO @drop_fk_sql
-                FROM (
-                    SELECT DISTINCT `constraint_name`
-                    FROM `information_schema`.`key_column_usage`
-                    WHERE `table_schema` = DATABASE() AND `table_name` = `in_table_name`
-                      AND `referenced_table_name` IS NOT NULL
-                ) `cur`
-                WHERE `constraint_name` NOT IN (
-                    SELECT DISTINCT `constraint_name`
-                    FROM `information_schema`.`key_column_usage`
-                    WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-                      AND `referenced_table_name` IS NOT NULL
-                );
-
-                IF @drop_fk_sql IS NOT NULL THEN
-                    PREPARE `stmt` FROM @drop_fk_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'DROP FOREIGN KEY', @drop_fk_sql);
-                END IF;
-
-                -- add target foreign keys
-                SELECT GROUP_CONCAT(
-                    CONCAT('ALTER TABLE ', `in_table_name`, ' ADD CONSTRAINT ', `constraint_name`,
-                           ' FOREIGN KEY (', `column_name`, ') REFERENCES ',
-                           `referenced_table_name`, '(', `referenced_column_name`, ')')
-                    SEPARATOR '; ')
-                INTO @add_fk_sql
-                FROM `information_schema`.`key_column_usage`
-                WHERE `table_schema` = DATABASE() AND `table_name` = `tmp_table_name`
-                  AND `referenced_table_name` IS NOT NULL;
-
-                IF @add_fk_sql IS NOT NULL THEN
-                    PREPARE `stmt` FROM @add_fk_sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
-                    INSERT INTO `schema_upgrade_log`(`table_name`, `action`, `details`) VALUES (`in_table_name`, 'ADD FOREIGN KEY', @add_fk_sql);
-                END IF;
-            END IF;
-
-            -- delete temp table
-            SET @sql = CONCAT('DROP TABLE ', `tmp_table_name`);
-            PREPARE `stmt` FROM @sql; EXECUTE `stmt`; DEALLOCATE PREPARE `stmt`;
+    SELECT COUNT(*) INTO v_count FROM user_tables WHERE table_name = UPPER('schema_upgrade_log');
+    IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP TABLE schema_upgrade_log CASCADE CONSTRAINTS PURGE';
+        SELECT COUNT(*) INTO v_count FROM user_sequences WHERE sequence_name = UPPER('seq_schema_upgrade_log');
+        IF v_count > 0 THEN EXECUTE IMMEDIATE 'DROP SEQUENCE seq_schema_upgrade_log';
         END IF;
     END IF;
-END$$
+END;
+/
 
-DELIMITER ;
+CREATE TABLE schema_upgrade_log (
+    id INT NOT NULL,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    table_name VARCHAR2(64),
+    action VARCHAR2(64),
+    details CLOB,
+    PRIMARY KEY(id)
+);
+CREATE SEQUENCE seq_schema_upgrade_log START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE OR REPLACE TRIGGER trg_schema_upgrade_log_id BEFORE INSERT ON schema_upgrade_log FOR EACH ROW BEGIN :NEW.id := seq_schema_upgrade_log.NEXTVAL; END;
+/
+
+CREATE OR REPLACE PROCEDURE upgrade_table (
+    in_table_name     VARCHAR2,
+    in_columns_sql    VARCHAR2,
+    in_constrains_sql VARCHAR2,   -- use {{TABLE_NAME}} as the placeholder
+    in_indexes_sql    VARCHAR2,   -- use {{TABLE_NAME}} as the placeholder
+    sequence_name     VARCHAR2,
+    in_trigger_sql    VARCHAR2
+) AS
+    in_constrains_sql_trimed VARCHAR2;
+    in_indexes_sql_trimed    VARCHAR2;
+    in_trigger_sql_trimed    VARCHAR2;
+    table_count              INTEGER := 0;
+    sequence_count           INTEGER := 0;
+    column_diff              INTEGER := 0;
+    constraint_diff          INTEGER := 0;
+    index_diff               INTEGER := 0;
+    fk_diff                  INTEGER := 0;
+    tmp_table_name           VARCHAR2(70);
+    common_cols              VARCHAR2;
+    v_sql                    VARCHAR2;
+    v_ref_table              VARCHAR2(128);
+    v_pos                    INTEGER := 0;
+    v_str                    VARCHAR2;
+BEGIN
+    in_constrains_sql_trimed := REPLACE(in_constrains_sql, CHR(10), ' ');
+    in_constrains_sql_trimed := REPLACE(in_constrains_sql_trimed, CHR(13), ' ');
+    in_constrains_sql_trimed := TRIM(in_constrains_sql_trimed);
+    in_indexes_sql_trimed := REPLACE(in_indexes_sql, CHR(10), ' ');
+    in_indexes_sql_trimed := REPLACE(in_indexes_sql_trimed, CHR(13), ' ');
+    in_indexes_sql_trimed := TRIM(in_indexes_sql_trimed);
+    in_trigger_sql_trimed := REPLACE(in_trigger_sql, CHR(10), ' ');
+    in_trigger_sql_trimed := REPLACE(in_trigger_sql_trimed, CHR(13), ' ');
+    in_trigger_sql_trimed := TRIM(in_trigger_sql_trimed);
+    tmp_table_name := in_table_name || '_tmp_';
+    
+    -- check if the table exists
+    SELECT COUNT(*) INTO table_count FROM user_tables WHERE table_name = UPPER(in_table_name);
+    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'TABLE COUNT', table_count);
+
+    IF table_count = 0 THEN
+        -- not exists, create it directly
+        -- create table
+        v_sql := 'CREATE TABLE ' || in_table_name || ' (' || in_columns_sql || ')';
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE', v_sql);
+        EXECUTE IMMEDIATE v_sql;
+        -- add constraints
+        IF LENGTH(in_constrains_sql_trimed) > 0 THEN
+            v_str := in_constrains_sql_trimed;
+            LOOP
+                v_pos := INSTR(v_str, ';', 1);
+                EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                IF LENGTH(v_sql) > 0 THEN
+                    v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', in_table_name);
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD CONSTRAINT', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+                v_str := SUBSTR(v_str, v_pos + 1);
+            END LOOP;
+        END IF;
+        -- add indexes
+        IF LENGTH(in_indexes_sql_trimed) > 0 THEN
+            v_str := in_indexes_sql_trimed;
+            LOOP
+                v_pos := INSTR(v_str, ';', 1);
+                EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                IF LENGTH(v_sql) > 0 THEN
+                    v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', in_table_name);
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD INDEX', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+                v_str := SUBSTR(v_str, v_pos + 1);
+            END LOOP;
+        END IF;
+        -- add sequence
+        IF LENGTH(sequence_name) > 0 THEN
+            SELECT COUNT(*) INTO sequence_count FROM user_sequences WHERE sequence_name = UPPER(sequence_name);
+            IF sequence_count <= 0 THEN
+                v_sql := 'CREATE SEQUENCE ' || sequence_name || ' START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE';
+                INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE SEQUENCE', v_sql);
+                EXECUTE IMMEDIATE v_sql;
+            END IF;
+            
+            IF LENGTH(in_trigger_sql_trimed) > 0 THEN
+                v_sql := in_trigger_sql_trimed;
+                INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE TRIGGER', v_sql);
+                EXECUTE IMMEDIATE v_sql;
+            END IF;
+        END IF;
+    ELSE
+        -- create temp table
+        v_sql := 'CREATE TABLE ' || tmp_table_name || ' (' || in_columns_sql || ')';
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE TMP', v_sql);
+        EXECUTE IMMEDIATE v_sql;
+        IF LENGTH(in_constrains_sql_trimed) > 0 THEN
+            v_str := in_constrains_sql_trimed;
+            LOOP
+                v_pos := INSTR(v_str, ';', 1);
+                EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                IF LENGTH(v_sql) > 0 THEN
+                    v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', tmp_table_name);
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD TMP CONSTRAINT', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+                v_str := SUBSTR(v_str, v_pos + 1);
+            END LOOP;
+        END IF;
+        IF LENGTH(in_indexes_sql_trimed) > 0 THEN
+            v_str := in_indexes_sql_trimed;
+            LOOP
+                v_pos := INSTR(v_str, ';', 1);
+                EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                IF LENGTH(v_sql) > 0 THEN
+                    v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', tmp_table_name);
+                    v_sql := REPLACE(v_sql, 'IDX_' || UPPER(in_table_name) || '_', 'IDX_' || UPPER(tmp_table_name));
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD TMP INDEX', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+                v_str := SUBSTR(v_str, v_pos + 1);
+            END LOOP;
+        END IF;
+
+        -- compare columns
+        SELECT COUNT(*) INTO column_diff
+        FROM ((
+            SELECT column_name, data_type, data_length, data_precision, data_scale, nullable
+                FROM user_tab_columns
+                WHERE table_name = UPPER(in_table_name)
+            MINUS
+            SELECT column_name, data_type, data_length, data_precision, data_scale, nullable
+                FROM user_tab_columns
+                WHERE table_name = UPPER(tmp_table_name)
+        ) UNION (
+            SELECT column_name, data_type, data_length, data_precision, data_scale, nullable
+                FROM user_tab_columns
+                WHERE table_name = UPPER(tmp_table_name)
+            MINUS
+            SELECT column_name, data_type, data_length, data_precision, data_scale, nullable
+                FROM user_tab_columns
+                WHERE table_name = UPPER(in_table_name)
+        ));
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'COLUMN DIFF', column_diff);
+        
+        -- compare constrains
+        SELECT COUNT(*) INTO constraint_diff
+        FROM ((
+            SELECT MAX(a.constraint_type) AS constraint_type, LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_constraints a
+                LEFT JOIN user_indexes b ON a.index_name = b.index_name
+                LEFT JOIN user_ind_columns c ON b.index_name = c.index_name
+                WHERE a.constraint_type in ('P', 'U', 'R')
+                    AND a.table_name = UPPER(in_table_name)
+                GROUP BY a.index_name
+            MINUS
+            SELECT MAX(a.constraint_type) AS constraint_type, LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_constraints a
+                LEFT JOIN user_indexes b ON a.index_name = b.index_name
+                LEFT JOIN user_ind_columns c ON b.index_name = c.index_name
+                WHERE a.constraint_type in ('P', 'U', 'R')
+                    AND a.table_name = UPPER(tmp_table_name)
+                GROUP BY a.index_name
+        ) UNION (
+            SELECT MAX(a.constraint_type) AS constraint_type, LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_constraints a
+                LEFT JOIN user_indexes b ON a.index_name = b.index_name
+                LEFT JOIN user_ind_columns c ON b.index_name = c.index_name
+                WHERE a.constraint_type in ('P', 'U', 'R')
+                    AND a.table_name = UPPER(tmp_table_name)
+                GROUP BY a.index_name
+            MINUS
+            SELECT MAX(a.constraint_type) AS constraint_type, LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_constraints a
+                LEFT JOIN user_indexes b ON a.index_name = b.index_name
+                LEFT JOIN user_ind_columns c ON b.index_name = c.index_name
+                WHERE a.constraint_type in ('P', 'U', 'R')
+                    AND a.table_name = UPPER(in_table_name)
+                GROUP BY a.index_name
+        ));
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CONSTRAINT DIFF', constraint_diff);
+
+        -- compare indexes
+        SELECT COUNT(*) INTO index_diff
+        FROM ((
+            SELECT LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_indexes a
+                LEFT JOIN user_ind_columns b ON a.index_name = b.index_name
+                WHERE a.uniqueness = 'NONUNIQUE'
+                AND a.table_name = UPPER(in_table_name)
+                GROUP BY a.index_name
+            MINUS
+            SELECT LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_indexes a
+                LEFT JOIN user_ind_columns b ON a.index_name = b.index_name
+                WHERE a.uniqueness = 'NONUNIQUE'
+                AND a.table_name = UPPER(tmp_table_name)
+                GROUP BY a.index_name
+        ) UNION (
+            SELECT LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_indexes a
+                LEFT JOIN user_ind_columns b ON a.index_name = b.index_name
+                WHERE a.uniqueness = 'NONUNIQUE'
+                AND a.table_name = UPPER(tmp_table_name)
+                GROUP BY a.index_name
+            MINUS
+            SELECT LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_position) AS cols
+                FROM user_indexes a
+                LEFT JOIN user_ind_columns b ON a.index_name = b.index_name
+                WHERE a.uniqueness = 'NONUNIQUE'
+                AND a.table_name = UPPER(in_table_name)
+                GROUP BY a.index_name
+        ));
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'INDEX DIFF', index_diff);
+        
+        -- columns' difference: insert all data to temp table and replace current table
+        IF column_diff > 0 THEN
+            SELECT LISTAGG(column_name, ',') WITHIN GROUP (ORDER BY column_id)
+            INTO common_cols
+            FROM user_tab_columns
+            WHERE table_name = UPPER(in_table_name)
+              AND column_name IN (
+                  SELECT column_name FROM user_tab_columns WHERE table_name = UPPER(tmp_table_name)
+              );
+
+            v_sql := 'INSERT INTO ' || tmp_table_name || '(' || common_cols || ') ' || 'SELECT ' || common_cols || ' FROM ' || in_table_name;
+            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'INSERT TO TEMP', v_sql);
+            EXECUTE IMMEDIATE v_sql;
+
+            v_sql := 'DROP TABLE ' || in_table_name || ' CASCADE CONSTRAINTS';
+            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'DROP CURRENT', v_sql);
+            EXECUTE IMMEDIATE v_sql;
+            
+            v_sql := 'ALTER TABLE ' || tmp_table_name || ' RENAME TO ' || in_table_name;
+            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'TEMP TO CURRENT', v_sql);
+            EXECUTE IMMEDIATE v_sql;
+            
+            -- add sequence
+            IF LENGTH(sequence_name) > 0 THEN
+                SELECT COUNT(*) INTO sequence_count FROM user_sequences WHERE sequence_name = UPPER(sequence_name);
+                IF sequence_count <= 0 THEN
+                    v_sql := 'CREATE SEQUENCE ' || sequence_name || ' START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE';
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE SEQUENCE', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+                
+                IF LENGTH(in_trigger_sql_trimed) > 0 THEN
+                    v_sql := in_trigger_sql_trimed;
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'CREATE TRIGGER', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END IF;
+            END IF;
+        ELSE
+            -- constraint difference
+            IF constraint_diff > 0 THEN
+                FOR rec IN (
+                    SELECT constraint_name
+                    FROM user_constraints
+                    WHERE constraint_type in ('P', 'U')
+                    AND table_name = UPPER(in_table_name)
+                ) LOOP
+                    v_sql := 'ALTER TABLE ' || in_table_name || ' DROP CONSTRAINT ' || rec.constraint_name;
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'DROP CONSTRAINT', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END LOOP;
+                IF LENGTH(in_constrains_sql_trimed) > 0 THEN
+                    v_str := in_constrains_sql_trimed;
+                    LOOP
+                        v_pos := INSTR(v_str, ';', 1);
+                        EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                        v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                        IF LENGTH(v_sql) > 0 THEN
+                            v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', in_table_name);
+                            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD CONSTRAINT', v_sql);
+                            EXECUTE IMMEDIATE v_sql;
+                        END IF;
+                        v_str := SUBSTR(v_str, v_pos + 1);
+                    END LOOP;
+                END IF;
+            END IF;
+            
+            -- index difference
+            IF index_diff > 0 THEN
+                FOR rec IN (
+                    SELECT index_name
+                    FROM user_indexes
+                    WHERE uniqueness = 'NONUNIQUE'
+                    AND table_name = UPPER(in_table_name)
+                ) LOOP
+                    v_sql := 'DROP INDEX ' || rec.index_name;
+                    INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'DROP INDEX', v_sql);
+                    EXECUTE IMMEDIATE v_sql;
+                END LOOP;
+
+                IF LENGTH(in_indexes_sql_trimed) > 0 THEN
+                    v_str := in_indexes_sql_trimed;
+                    LOOP
+                        v_pos := INSTR(v_str, ';', 1);
+                        EXIT WHEN v_pos = 0 OR v_pos IS NULL;
+                        v_sql := TRIM(SUBSTR(v_str, 1, v_pos - 1));
+                        IF LENGTH(v_sql) > 0 THEN
+                            v_sql := REPLACE(v_sql, '{{TABLE_NAME}}', in_table_name);
+                            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'ADD INDEX', v_sql);
+                            EXECUTE IMMEDIATE v_sql;
+                        END IF;
+                        v_str := SUBSTR(v_str, v_pos + 1);
+                    END LOOP;
+                END IF;
+            END IF;
+
+            -- drop tmp table
+            v_sql := 'DROP TABLE ' || tmp_table_name || ' CASCADE CONSTRAINTS PURGE';
+            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'DROP TEMP', v_sql);
+            EXECUTE IMMEDIATE v_sql;
+        END IF;
+    END IF;
+    
+    -- exception: drop tmp table
+    EXCEPTION
+    WHEN OTHERS THEN
+        v_sql := SQLCODE || ': ' || SQLERRM;
+        INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'EXCEPTION', v_sql);
+        SELECT COUNT(*) INTO table_count FROM user_tables WHERE table_name = UPPER(in_table_name);
+        IF table_count > 0 THEN
+            v_sql := 'DROP TABLE ' || tmp_table_name || ' CASCADE CONSTRAINTS PURGE';
+            INSERT INTO schema_upgrade_log(table_name, action, details) VALUES (in_table_name, 'DROP TMP', v_sql);
+            EXECUTE IMMEDIATE v_sql;
+        END IF;
+END;
+/
+
+
+SET SERVEROUTPUT OFF;

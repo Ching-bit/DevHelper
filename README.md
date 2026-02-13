@@ -171,4 +171,14 @@
 - ForeignKeyName：外鍵名稱；
 - ForeignKeyColumnName：外鍵字段；
 - ForeignKeyReferenceTableName：外鍵關聯表名稱；
-- ForeignKeyReferenceColumnName：外鍵關聯字段名稱。
+- ForeignKeyReferenceColumnName：外鍵關聯字段名稱；
+
+（8）自增字段迭代
+
+- AutoIncColumnName：字段名稱；
+- AutoIncColumnDescription：字段描述；
+- AutoIncColumnDbType：字段資料庫類型；
+- AutoIncColumnDbDefaultString：字段缺省字串；
+- AutoIncColumnDbDefaultValue：資料庫缺省值；
+- AutoIncColumnDbNullableFlag：字段可空標誌；
+- AutoIncColumnProgramType：字段對應程式數據類型。

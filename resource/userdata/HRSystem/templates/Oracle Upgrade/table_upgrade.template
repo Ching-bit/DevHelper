@@ -1,0 +1,28 @@
+
+
+-- ${TableName(lower_snake)}
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Upgrading table [${TableName(lower_snake)}]...');
+END;
+/
+
+BEGIN
+    upgrade_table(
+    in_table_name => '${TableName(lower_snake)}',
+    in_columns_sql => '
+        ${ColumnName(lower_snake)} ${ColumnDbType(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultString(ALL_UPPER)}${CONDITIONAL_SPACE}${ColumnDbDefaultValue}${CONDITIONAL_SPACE}${ColumnDbNullableFlag(ALL_UPPER)}${ColumnComma}
+    ',
+    in_constrains_sql => '
+        ALTER TABLE {{TABLE_NAME}} ADD PRIMARY KEY (${PrimaryKeyColumns(lower_snake)});
+        ALTER TABLE {{TABLE_NAME}} ADD UNIQUE (${UniqueIndexColumns(lower_snake)});
+        ALTER TABLE {{TABLE_NAME}} ADD FOREIGN KEY (${ForeignKeyColumnName(lower_snake)}) REFERENCES ${ForeignKeyReferenceTableName(lower_snake)}(${ForeignKeyReferenceColumnName(lower_snake)});
+    ',
+    in_indexes_sql => '
+        CREATE INDEX ${NonUniqueIndexName(UPPER_SNAKE)} ON {{TABLE_NAME}}(${NonUniqueIndexColumns(lower_snake)});
+    ',
+    sequence_name => 'seq_${TableName(lower_snake)}',
+    in_trigger_sql => '
+        CREATE OR REPLACE TRIGGER trg_${TableName(lower_snake)}_${AutoIncColumnName(lower_snake)} BEFORE INSERT ON ${TableName(lower_snake)} FOR EACH ROW BEGIN :NEW.${AutoIncColumnName(lower_snake)} := seq_${TableName(lower_snake)}.NEXTVAL; END;
+    ');
+END;
+/

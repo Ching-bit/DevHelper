@@ -46,8 +46,8 @@ public partial class StringHelper
 
     private static string Capitalize(string word)
     {
-        if (string.IsNullOrEmpty(word)) return word;
-        if (word.Length == 1) return word.ToUpper();
+        if (string.IsNullOrEmpty(word)) { return word; }
+        if (word.Length == 1) { return word.ToUpper(); }
         return char.ToUpper(word[0]) + word.Substring(1).ToLower();
     }
 
@@ -72,7 +72,7 @@ public partial class StringHelper
         
         string pattern = $@"\$\{{{Regex.Escape(macro)}(?:\((?<arg>[^\)]*)\))?\}}";
 
-        var match = Regex.Match(line, pattern);
+        Match match = Regex.Match(line, pattern);
 
         if (!match.Success) { return false; }
         

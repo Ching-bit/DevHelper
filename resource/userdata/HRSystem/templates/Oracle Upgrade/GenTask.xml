@@ -1,7 +1,7 @@
 <GenTask>
-    <TemplateFile>oracle_init.template</TemplateFile>
+    <TemplateFile>oracle_upgrade.template</TemplateFile>
     <RecursionLevel>Database</RecursionLevel>
-    <OutputFile>oracle_${DatabaseName(lower_snake)}_init.sql</OutputFile>
+    <OutputFile>oracle_${DatabaseName(lower_snake)}_upgrade.sql</OutputFile>
     <ProgramLanguage>Java</ProgramLanguage>
     <IsUsingString>true</IsUsingString>
     <DatabaseType>Oracle</DatabaseType>
