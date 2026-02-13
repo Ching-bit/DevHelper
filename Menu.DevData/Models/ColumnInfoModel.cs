@@ -11,19 +11,17 @@ public partial class ColumnInfoModel : UniModel
     public ColumnInfoModel()
     {
         ModifyStatus = ModifyStatus.Normal;
-        
         Group = ColumnInfo.DefaultColumnGroup;
-        Name = string.Empty;
-        Description = string.Empty;
-        DefaultValue = string.Empty;
-        DataDict = string.Empty;
-        Remark = string.Empty;
     }
     
     public ColumnInfoModel(ColumnInfo columnInfo)
     {
         ModifyStatus = ModifyStatus.Normal;
-        
+        CopyFromColumnInfo(columnInfo);
+    }
+
+    public void CopyFromColumnInfo(ColumnInfo columnInfo)
+    {
         Group = columnInfo.Group;
         Id = columnInfo.Id;
         Name = columnInfo.Name;
@@ -44,18 +42,18 @@ public partial class ColumnInfoModel : UniModel
     [ObservableProperty] private ModifyStatus _modifyStatus;
     [ObservableProperty] private bool _isPrimaryKey;
     
-    [ObservableProperty] private string _group;
+    [ObservableProperty] private string _group = string.Empty;
     [ObservableProperty] private int _id;
-    [ObservableProperty] private string _name;
-    [ObservableProperty] private string _description;
+    [ObservableProperty] private string _name = string.Empty;
+    [ObservableProperty] private string _description = string.Empty;
     [ObservableProperty] private ColumnType _type;
     [ObservableProperty] private int _length;
     [ObservableProperty] private int _scale;
     [ObservableProperty] private bool _isNullable;
     [ObservableProperty] private bool _hasDefaultValue;
-    [ObservableProperty] private string _defaultValue;
-    [ObservableProperty] private string _dataDict;
-    [ObservableProperty] private string _remark;
+    [ObservableProperty] private string _defaultValue = string.Empty;
+    [ObservableProperty] private string _dataDict = string.Empty;
+    [ObservableProperty] private string _remark = string.Empty;
     
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

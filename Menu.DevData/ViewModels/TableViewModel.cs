@@ -1,9 +1,11 @@
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Control.Basic;
 using Framework.Common;
 using Plugin.DevData;
+using Plugin.DevData.Messages;
 
 namespace Menu.DevData;
 
@@ -13,6 +15,20 @@ public partial class TableViewModel : UniViewModel
     {
         base.OnMenuInit();
         InitData();
+        
+        // register language changed
+        WeakReferenceMessenger.Default.Register<ColumnsChangedMessage>(this, (_, message) =>
+        {
+            if (null == TableInfoModel) { return; }
+            
+            List<ColumnInfo> columns = message.Value;
+            foreach (ColumnInfoModel columnInfoModel in TableInfoModel.ColumnList)
+            {
+                ColumnInfo? columnInfo = columns.FirstOrDefault(x => x.Id == columnInfoModel.Id);
+                if (null == columnInfo) { continue; }
+                columnInfoModel.CopyFromColumnInfo(columnInfo);
+            }
+        });
     }
 
     [RelayCommand]

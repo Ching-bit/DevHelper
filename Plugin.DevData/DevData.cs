@@ -1,8 +1,10 @@
 using System.Reflection;
+using CommunityToolkit.Mvvm.Messaging;
 using Framework.Common;
 using Framework.Utils.Helpers;
 using Plugin.AppEnv;
 using Plugin.DevData.Helpers;
+using Plugin.DevData.Messages;
 
 namespace Plugin.DevData;
 
@@ -70,6 +72,7 @@ public class DevData : IDevData
         }
 
         Columns = columns;
+        WeakReferenceMessenger.Default.Send(new ColumnsChangedMessage(Columns));
         return true;
     }
 
