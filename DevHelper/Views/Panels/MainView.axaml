@@ -99,11 +99,7 @@
             <RootDock IsCollapsable="False" DefaultDockable="{Binding #MainLayout}">
                 <ProportionalDock Id="MainLayout" Orientation="Horizontal">
                     <ProportionalDock>
-                        <DocumentDock x:Name="MenuDock" CanCreateDocument="False" CanDrag="False" CanDrop="False">
-                            <Document CanClose="False">
-                                <local:HomeView/>
-                            </Document>
-                        </DocumentDock>
+                        <DocumentDock x:Name="MenuDock" CanCreateDocument="False" CanDrag="False" CanDrop="False"/>
                     </ProportionalDock>
                 </ProportionalDock>
             </RootDock>

@@ -15,6 +15,11 @@ public partial class MainView : UniPanel
     public MainView()
     {
         InitializeComponent();
+        MenuDock.AddDocument(new Document()
+        {
+            Content = new HomeView(),
+            CanClose = false
+        });
         Loaded += OnLoaded;
     }
 
