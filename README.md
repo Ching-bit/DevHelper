@@ -186,3 +186,9 @@
 - AutoIncColumnDbNullableFlag：字段可空標誌；
 - AutoIncColumnProgramType：字段對應程式數據類型；
 - AutoIncColumnHungarianPrefix：匈牙利命名法前綴。
+
+# 示例
+
+在工具初始的包中，有預設的 HRSystem，其中包含了 tdept 和 temployee 兩張表。預設示例演示了如何用本工具生成 C++ 結構體、Java 類、MyBatis 的 Mapper、MySQL 和 Oracle 的初始化建表腳本和表結構升級腳本。
+
+在 MySQL 和 Oracle 的初始化建表腳本中，預設了一個名為 upgrade_table 的儲存過程，在該儲存過程中讀取由外部傳入的建表語句，建立臨時表並於當前表比較字段、索引是否有差異。若字段有差異則將當前表數據導入臨時表中，並在數據導入完成後以臨時表替換當前表；若索引有差異則重新建立索引；若無任何差異則不執行任何操作。在表結構升級腳本中，工具根據表結構數據生成調用該儲存過程的 SQL 語句。正是因為有該工具的支持，使得在工具內維護表結構數據後，執行升級腳本能保證最終的表結構與工具內部定義一致。
