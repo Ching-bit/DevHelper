@@ -120,6 +120,7 @@
 - ColumnDbDefaultValue：資料庫缺省值，對於無缺省值的字段為空串，對於有缺省值的字段，字串類字段將在前後加單引號，該宏可用於建表語句；
 - ColumnDbNullableFlag：字段可空標誌，對於可為 null 的字段為空串，對於不可為空的字段為 "not null"，該宏可用於建表語句；
 - ColumnProgramType：字段對應程式數據類型，其值與生成任務的 ProgramLanguage 設置有關，並按照 **字段管理** 一節的對應關係確定其值；
+- ColumnHungarianPrefix：匈牙利命名法前綴，Int32: n，Int64：l，Number：d，Char、Varchar：sz，Bool：b，Datetime：dt；
 - ColumnComma：逗點，迭代時最後一個字段為空串，其餘為一逗號；
 
 （2）普通字段（非主鍵字段）迭代
@@ -131,6 +132,7 @@
 - GeneralColumnDbDefaultValue：資料庫缺省值；
 - GeneralColumnDbNullableFlag：字段可空標誌；
 - GeneralColumnProgramType：字段對應程式數據類型；
+- GeneralColumnHungarianPrefix：匈牙利命名法前綴；
 - GeneralColumnComma：逗點；
 
 (3) 主鍵字段迭代
@@ -142,6 +144,7 @@
 - PrimaryKeyColumnDbDefaultValue：資料庫缺省值；
 - PrimaryKeyColumnDbNullableFlag：字段可空標誌；
 - PrimaryKeyColumnProgramType：字段對應程式數據類型；
+- PrimaryKeyColumnHungarianPrefix：匈牙利命名法前綴；
 - PrimaryKeyColumnComma：逗點；
 - PrimaryKeyColumnIndex：字段索引下標值；
 - PrimaryKeyColumnAutoIncrement：被設置為自增的字段，值為“auto_increment”，其他字段則為空串；
@@ -181,4 +184,5 @@
 - AutoIncColumnDbDefaultString：字段缺省字串；
 - AutoIncColumnDbDefaultValue：資料庫缺省值；
 - AutoIncColumnDbNullableFlag：字段可空標誌；
-- AutoIncColumnProgramType：字段對應程式數據類型。
+- AutoIncColumnProgramType：字段對應程式數據類型；
+- AutoIncColumnHungarianPrefix：匈牙利命名法前綴。

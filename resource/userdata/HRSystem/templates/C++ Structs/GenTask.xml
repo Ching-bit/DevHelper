@@ -1,0 +1,9 @@
+<GenTask>
+    <TemplateFile>cpp_struct.template</TemplateFile>
+    <RecursionLevel>Database</RecursionLevel>
+    <OutputFile>${DatabaseName(lower_snake)}.h</OutputFile>
+    <ProgramLanguage>Cpp</ProgramLanguage>
+    <IsUsingString>false</IsUsingString>
+    <DatabaseType>MySQL</DatabaseType>
+    <IsIncludingHistoryDatabases>false</IsIncludingHistoryDatabases>
+</GenTask>

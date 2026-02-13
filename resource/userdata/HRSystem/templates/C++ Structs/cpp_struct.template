@@ -1,0 +1,4 @@
+#include <cstdint>
+#include <chrono>
+
+${TEMPLATE(table_struct.template,Table)}

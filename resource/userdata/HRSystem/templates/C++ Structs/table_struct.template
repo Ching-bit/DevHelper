@@ -1,0 +1,6 @@
+
+struct St${TableName(UpperCamel)}
+{
+    ${ColumnProgramType} ${ColumnHungarianPrefix}${ColumnName(UpperCamel)};
+};
+

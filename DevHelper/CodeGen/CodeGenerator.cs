@@ -177,6 +177,7 @@ public class CodeGenerator
                         { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "ColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
+                        { "ColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
                         { "ColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     columns.ConvertAll<object>(x => x)),
@@ -190,6 +191,7 @@ public class CodeGenerator
                         { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "GeneralColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
+                        { "GeneralColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
                         { "GeneralColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     generalColumns.ConvertAll<object>(x => x)),
@@ -205,6 +207,7 @@ public class CodeGenerator
                         { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "PrimaryKeyColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
+                        { "PrimaryKeyColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
                         { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty },
                         { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" },
                         { "PrimaryKeyColumnAutoIncrement", x => primaryKeyInfo?.AutoIncrementColumnId == ((ColumnInfo)x).Id ? "auto_increment" : string.Empty},
@@ -258,6 +261,7 @@ public class CodeGenerator
                         { "AutoIncColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
                         { "AutoIncColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
                         { "AutoIncColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
+                        { "AutoIncColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
                     },
                     null == autoIncColumn ? new List<object>() : [ autoIncColumn ]),
                 ],
@@ -371,6 +375,20 @@ public class CodeGenerator
                 ColumnType.Datetime => "LocalDateTime",
                 _ => string.Empty
             },
+            _ => string.Empty
+        };
+    }
+
+    private static string ToHungarianPrefix(ColumnInfo columnInfo)
+    {
+        return columnInfo.Type switch
+        {
+            ColumnType.Int32 => "n",
+            ColumnType.Int64 => "l",
+            ColumnType.Number => "d",
+            ColumnType.Char or ColumnType.Varchar => "sz",
+            ColumnType.Bool => "b",
+            ColumnType.Datetime => "dt",
             _ => string.Empty
         };
     }
