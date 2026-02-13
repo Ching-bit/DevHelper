@@ -1,3 +1,5 @@
+中文 | [English](https://github.com/Ching-bit/DevHelper/blob/main/README.en.md)
+
 # 介紹
 這是一個表結構管理並自動生成代碼的開發輔助工具。
 
