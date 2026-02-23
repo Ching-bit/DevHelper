@@ -31,4 +31,129 @@ public class ColumnInfo
             IsNullable = false,
         };
     }
+    
+    public string GetDbType(DatabaseType databaseType)
+    {
+        if (DatabaseType.MySQL == databaseType)
+        {
+            return Type switch
+            {
+                ColumnType.Int32 => "int",
+                ColumnType.Int64 => "bigint",
+                ColumnType.Number =>
+                    $"decimal({Length}{(Scale > 0 ? $", {Scale}" : string.Empty)})",
+                ColumnType.Char => $"char({Length})",
+                ColumnType.Varchar => $"varchar({Length})",
+                ColumnType.Bool => "tinyint",
+                ColumnType.Datetime => "datetime",
+                _ => string.Empty
+            };
+        }
+        if (DatabaseType.Oracle == databaseType)
+        {
+            return Type switch
+            {
+                ColumnType.Int32 => "number(10)",
+                ColumnType.Int64 => "number(19)",
+                ColumnType.Number =>
+                    $"number({Length}{(Scale > 0 ? $", {Scale}" : string.Empty)})",
+                ColumnType.Char => $"char({Length})",
+                ColumnType.Varchar => $"varchar2({Length})",
+                ColumnType.Bool => "number(1)",
+                ColumnType.Datetime => "date",
+                _ => string.Empty
+            };
+        }
+        if (DatabaseType.SQLServer == databaseType)
+        {
+            return Type switch
+            {
+                ColumnType.Int32 => "int",
+                ColumnType.Int64 => "bigint",
+                ColumnType.Number =>
+                    $"decimal({Length}{(Scale > 0 ? $", {Scale}" : string.Empty)})",
+                ColumnType.Char => $"char({Length})",
+                ColumnType.Varchar => $"varchar({Length})",
+                ColumnType.Bool => "bit",
+                ColumnType.Datetime => "datetime",
+                _ => string.Empty
+            };
+        }
+
+        return string.Empty;
+    }
+
+    public string GetDbDefaultValue()
+    {
+        return Type switch
+        {
+            ColumnType.Int32 or ColumnType.Int64 or ColumnType.Number => DefaultValue,
+            ColumnType.Char or ColumnType.Varchar or ColumnType.Datetime => $"'{DefaultValue}'",
+            ColumnType.Bool => DefaultValue.ToLower() switch
+            {
+                "false" => "0",
+                "true" => "1",
+                _ => DefaultValue
+            },
+            _ => string.Empty
+        };
+    }
+
+    public string GetProgramType(ProgramLanguage programLanguage, bool isUsingString)
+    {
+        return programLanguage switch
+        {
+            ProgramLanguage.Cpp => Type switch
+            {
+                ColumnType.Int32 => "int32_t",
+                ColumnType.Int64 => "int64_t",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar => isUsingString
+                    ? "std::string"
+                    : $"char[{Length * Scale + 1}]",
+                ColumnType.Bool => "bool",
+                ColumnType.Datetime => "std::chrono",
+                _ => string.Empty
+            },
+            ProgramLanguage.CSharp => Type switch
+            {
+                ColumnType.Int32 => "int",
+                ColumnType.Int64 => "long",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar => isUsingString
+                    ? "string"
+                    : $"byte[{Length * Scale + 1}]",
+                ColumnType.Bool => "bool",
+                ColumnType.Datetime => "DateTime",
+                _ => string.Empty
+            },
+            ProgramLanguage.Java => Type switch
+            {
+                ColumnType.Int32 => "Int",
+                ColumnType.Int64 => "Long",
+                ColumnType.Number => "Double",
+                ColumnType.Char or ColumnType.Varchar => isUsingString
+                    ? "String"
+                    : $"Byte[{Length * Scale + 1}]",
+                ColumnType.Bool => "Boolean",
+                ColumnType.Datetime => "LocalDateTime",
+                _ => string.Empty
+            },
+            _ => string.Empty
+        };
+    }
+
+    public string GetHungarianPrefix()
+    {
+        return Type switch
+        {
+            ColumnType.Int32 => "n",
+            ColumnType.Int64 => "l",
+            ColumnType.Number => "d",
+            ColumnType.Char or ColumnType.Varchar => "sz",
+            ColumnType.Bool => "b",
+            ColumnType.Datetime => "dt",
+            _ => string.Empty
+        };
+    }
 }

@@ -55,7 +55,7 @@ For general purposes, the code generation task is configured by the user. The co
 
 Create a new folder in the directory **userdata\corresponding system\templates**, and name the folder the corresponding task name. Add a GenTask.xml configuration file to the folder to generate the task. This configuration file should contain the following settings:
 
-- **TemplateFile**: Template file name, ending with the .template extension; if ending with .cs, the tool will execute it as a C# script, passing in the pre-defined fields and table data. This function is still under verification.
+- **TemplateFile**: Template file name, ending with the .template extension; if ending with .cs, the tool will execute it as a C# script, passing in the pre-defined fields and table data. Please refer to the table structure document generation demo.
 
 - **RecursionLevel**: Iteration level, selectable between Database and Table. For generation tasks with a Database iteration level, the tool will start from the database level and generate code sequentially according to the template, with one generation file for each database. For generation tasks with a Table iteration level, the tool will start from the table level, generating one code file for each table and storing them in separate database directories (if there is only one Database, it will be stored directly in the generation path).
 

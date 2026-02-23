@@ -1,0 +1,5 @@
+<GenTask>
+    <TemplateFile>GenDoc.cs</TemplateFile>
+    <OutputFile>TableStructure.xls</OutputFile>
+    <DatabaseType>MySQL</DatabaseType>
+</GenTask>

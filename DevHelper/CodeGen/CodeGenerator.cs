@@ -38,6 +38,7 @@ public class CodeGenerator
         
         CodeGenScriptVars scriptVars = new()
         {
+            GenTask = task,
             Columns = columns,
             TableRoot = Global.Get<IDevData>().TableRoot,
             Tables = Global.Get<IDevData>().GetAllTables(),
@@ -49,9 +50,7 @@ public class CodeGenerator
             globals: scriptVars,
             options: Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default
                 .WithReferences(AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location)))
-                .WithImports("System", "System.IO", "System.Text", "System.Collections.Generic",
-                    "Framework.Common", "Plugin.DevData", "UniClient"));
+                    .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))));
     }
 
     private static async Task GenFileUsingTemplate(GenTask task)
@@ -172,12 +171,12 @@ public class CodeGenerator
                     {
                         { "ColumnName", x => ((ColumnInfo)x).Name },
                         { "ColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "ColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
+                        { "ColumnDbType", x => ((ColumnInfo)x).GetDbType(task.DatabaseType) },
                         { "ColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
-                        { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
+                        { "ColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ((ColumnInfo)x).GetDbDefaultValue() : string.Empty },
                         { "ColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
-                        { "ColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "ColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
+                        { "ColumnProgramType", x => ((ColumnInfo)x).GetProgramType(task.ProgramLanguage, task.IsUsingString) },
+                        { "ColumnHungarianPrefix", x => ((ColumnInfo)x).GetHungarianPrefix() },
                         { "ColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     columns.ConvertAll<object>(x => x)),
@@ -186,12 +185,12 @@ public class CodeGenerator
                     {
                         { "GeneralColumnName", x => ((ColumnInfo)x).Name },
                         { "GeneralColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "GeneralColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
+                        { "GeneralColumnDbType", x => ((ColumnInfo)x).GetDbType(task.DatabaseType) },
                         { "GeneralColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
-                        { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
+                        { "GeneralColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ((ColumnInfo)x).GetDbDefaultValue() : string.Empty },
                         { "GeneralColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
-                        { "GeneralColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "GeneralColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
+                        { "GeneralColumnProgramType", x => ((ColumnInfo)x).GetProgramType(task.ProgramLanguage, task.IsUsingString) },
+                        { "GeneralColumnHungarianPrefix", x => ((ColumnInfo)x).GetHungarianPrefix() },
                         { "GeneralColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty }
                     },
                     generalColumns.ConvertAll<object>(x => x)),
@@ -202,12 +201,12 @@ public class CodeGenerator
                     {
                         { "PrimaryKeyColumnName", x => ((ColumnInfo)x).Name },
                         { "PrimaryKeyColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "PrimaryKeyColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
+                        { "PrimaryKeyColumnDbType", x => ((ColumnInfo)x).GetDbType(task.DatabaseType) },
                         { "PrimaryKeyColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
-                        { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
+                        { "PrimaryKeyColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ((ColumnInfo)x).GetDbDefaultValue() : string.Empty },
                         { "PrimaryKeyColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
-                        { "PrimaryKeyColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "PrimaryKeyColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
+                        { "PrimaryKeyColumnProgramType", x => ((ColumnInfo)x).GetProgramType(task.ProgramLanguage, task.IsUsingString) },
+                        { "PrimaryKeyColumnHungarianPrefix", x => ((ColumnInfo)x).GetHungarianPrefix() },
                         { "PrimaryKeyColumnComma", x => ((ColumnInfo)x).Id != tableInfo.ColumnIdList[^1] ? "," : string.Empty },
                         { "PrimaryKeyColumnIndex", x => primaryKeyColumns.IndexOf((ColumnInfo)x) + "" },
                         { "PrimaryKeyColumnAutoIncrement", x => primaryKeyInfo?.AutoIncrementColumnId == ((ColumnInfo)x).Id ? "auto_increment" : string.Empty},
@@ -256,141 +255,16 @@ public class CodeGenerator
                     {
                         { "AutoIncColumnName", x => ((ColumnInfo)x).Name },
                         { "AutoIncColumnDescription", x => ((ColumnInfo)x).Description },
-                        { "AutoIncColumnDbType", x => ToDbType((ColumnInfo)x, task.DatabaseType) },
+                        { "AutoIncColumnDbType", x => ((ColumnInfo)x).GetDbType(task.DatabaseType) },
                         { "AutoIncColumnDbDefaultString", x => ((ColumnInfo)x).HasDefaultValue ? "default" : string.Empty},
-                        { "AutoIncColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ToDbDefaultValue((ColumnInfo)x) : string.Empty },
+                        { "AutoIncColumnDbDefaultValue", x => ((ColumnInfo)x).HasDefaultValue ? ((ColumnInfo)x).GetDbDefaultValue() : string.Empty },
                         { "AutoIncColumnDbNullableFlag", x => ((ColumnInfo)x).IsNullable ? "" : "not null" },
-                        { "AutoIncColumnProgramType", x => ToProgramType((ColumnInfo)x, task) },
-                        { "AutoIncColumnHungarianPrefix", x => ToHungarianPrefix((ColumnInfo)x) },
+                        { "AutoIncColumnProgramType", x => ((ColumnInfo)x).GetProgramType(task.ProgramLanguage, task.IsUsingString) },
+                        { "AutoIncColumnHungarianPrefix", x => ((ColumnInfo)x).GetHungarianPrefix() },
                     },
                     null == autoIncColumn ? new List<object>() : [ autoIncColumn ]),
                 ],
             task);
-    }
-
-    private static string ToDbType(ColumnInfo columnInfo, DatabaseType databaseType)
-    {
-        if (DatabaseType.MySQL == databaseType)
-        {
-            return columnInfo.Type switch
-            {
-                ColumnType.Int32 => "int",
-                ColumnType.Int64 => "bigint",
-                ColumnType.Number =>
-                    $"decimal({columnInfo.Length}{(columnInfo.Scale > 0 ? $", {columnInfo.Scale}" : string.Empty)})",
-                ColumnType.Char => $"char({columnInfo.Length})",
-                ColumnType.Varchar => $"varchar({columnInfo.Length})",
-                ColumnType.Bool => "tinyint",
-                ColumnType.Datetime => "datetime",
-                _ => string.Empty
-            };
-        }
-        if (DatabaseType.Oracle == databaseType)
-        {
-            return columnInfo.Type switch
-            {
-                ColumnType.Int32 => "number(10)",
-                ColumnType.Int64 => "number(19)",
-                ColumnType.Number =>
-                    $"number({columnInfo.Length}{(columnInfo.Scale > 0 ? $", {columnInfo.Scale}" : string.Empty)})",
-                ColumnType.Char => $"char({columnInfo.Length})",
-                ColumnType.Varchar => $"varchar2({columnInfo.Length})",
-                ColumnType.Bool => "number(1)",
-                ColumnType.Datetime => "date",
-                _ => string.Empty
-            };
-        }
-        if (DatabaseType.SQLServer == databaseType)
-        {
-            return columnInfo.Type switch
-            {
-                ColumnType.Int32 => "int",
-                ColumnType.Int64 => "bigint",
-                ColumnType.Number =>
-                    $"decimal({columnInfo.Length}{(columnInfo.Scale > 0 ? $", {columnInfo.Scale}" : string.Empty)})",
-                ColumnType.Char => $"char({columnInfo.Length})",
-                ColumnType.Varchar => $"varchar({columnInfo.Length})",
-                ColumnType.Bool => "bit",
-                ColumnType.Datetime => "datetime",
-                _ => string.Empty
-            };
-        }
-
-        return string.Empty;
-    }
-    
-    private static string ToDbDefaultValue(ColumnInfo columnInfo)
-    {
-        return columnInfo.Type switch
-        {
-            ColumnType.Int32 or ColumnType.Int64 or ColumnType.Number => columnInfo.DefaultValue,
-            ColumnType.Char or ColumnType.Varchar or ColumnType.Datetime => $"'{columnInfo.DefaultValue}'",
-            ColumnType.Bool => columnInfo.DefaultValue.ToLower() switch
-            {
-                "false" => "0",
-                "true" => "1",
-                _ => columnInfo.DefaultValue
-            },
-            _ => string.Empty
-        };
-    }
-    
-    private static string ToProgramType(ColumnInfo columnInfo, GenTask task)
-    {
-        return task.ProgramLanguage switch
-        {
-            ProgramLanguage.Cpp => columnInfo.Type switch
-            {
-                ColumnType.Int32 => "int32_t",
-                ColumnType.Int64 => "int64_t",
-                ColumnType.Number => "double",
-                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
-                    ? "std::string"
-                    : $"char[{columnInfo.Length * columnInfo.Scale + 1}]",
-                ColumnType.Bool => "bool",
-                ColumnType.Datetime => "std::chrono",
-                _ => string.Empty
-            },
-            ProgramLanguage.CSharp => columnInfo.Type switch
-            {
-                ColumnType.Int32 => "int",
-                ColumnType.Int64 => "long",
-                ColumnType.Number => "double",
-                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
-                    ? "string"
-                    : $"byte[{columnInfo.Length * columnInfo.Scale + 1}]",
-                ColumnType.Bool => "bool",
-                ColumnType.Datetime => "DateTime",
-                _ => string.Empty
-            },
-            ProgramLanguage.Java => columnInfo.Type switch
-            {
-                ColumnType.Int32 => "Int",
-                ColumnType.Int64 => "Long",
-                ColumnType.Number => "Double",
-                ColumnType.Char or ColumnType.Varchar => task.IsUsingString
-                    ? "String"
-                    : $"Byte[{columnInfo.Length * columnInfo.Scale + 1}]",
-                ColumnType.Bool => "Boolean",
-                ColumnType.Datetime => "LocalDateTime",
-                _ => string.Empty
-            },
-            _ => string.Empty
-        };
-    }
-
-    private static string ToHungarianPrefix(ColumnInfo columnInfo)
-    {
-        return columnInfo.Type switch
-        {
-            ColumnType.Int32 => "n",
-            ColumnType.Int64 => "l",
-            ColumnType.Number => "d",
-            ColumnType.Char or ColumnType.Varchar => "sz",
-            ColumnType.Bool => "b",
-            ColumnType.Datetime => "dt",
-            _ => string.Empty
-        };
     }
     
     /// <summary>

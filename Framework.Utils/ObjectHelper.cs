@@ -33,11 +33,7 @@ public static class ObjectHelper
         XmlSerializer serializer = new(type);
         using StringReader xmlReader = new(xml);
         T? ret = (T?)serializer.Deserialize(xmlReader);
-        if (null == ret)
-        {
-            throw new Exception($"Parse error: {xml}");
-        }
-        return ret;
+        return ret ?? throw new Exception($"Parse error: {xml}");
     }
 
     public static bool ToXmlDir<T>(string xmlDir, T obj)

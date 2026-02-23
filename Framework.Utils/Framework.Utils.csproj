@@ -20,4 +20,8 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="NPOI" Version="2.7.5" />
+    </ItemGroup>
+
 </Project>
