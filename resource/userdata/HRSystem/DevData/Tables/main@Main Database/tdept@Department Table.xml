@@ -25,4 +25,8 @@
     <ForeignKeyList />
     <HasHistoryTable>true</HasHistoryTable>
     <Remark />
+    <DefaultValues>
+        <string>1,IT Department</string>
+        <string>2,HR Department</string>
+    </DefaultValues>
 </TableInfo>

@@ -66,6 +66,8 @@
     <system:String x:Key="R_STR_FOREIGN_KEYS">Foreign Keys</system:String>
     <system:String x:Key="R_STR_REFERENCE_TABLE">Reference Table</system:String>
     <system:String x:Key="R_STR_REFERENCE_COLUMN">Reference Column</system:String>
+    <system:String x:Key="R_STR_DEFAULT_VALUES">Default Values</system:String>
+    <system:String x:Key="R_STR_INPUT_VALUE">[Input Value]</system:String>
     <system:String x:Key="R_STR_SYSTEM_SETTING">System Setting</system:String>
     <system:String x:Key="R_STR_GENERATE">Generate</system:String>
     <system:String x:Key="R_STR_TASK">Task</system:String>
@@ -88,6 +90,7 @@
     <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">The name is empty</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_TASK_NOTICE">Please select a task</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">Please select a column</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_ROW_NOTICE">Please select a row</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">Please select the reference table</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">Please select the reference column</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">The column type [#1] is inconsistent with the reference column type [#2]</system:String>

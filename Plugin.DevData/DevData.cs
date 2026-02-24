@@ -438,7 +438,7 @@ public class DevData : IDevData
         return null;
     }
     
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark)
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark, List<string> defaultValues)
     {
         TableInfo tmp = new(tableInfo.Name, tableInfo.Description, tableInfo.Parent)
         {
@@ -446,7 +446,8 @@ public class DevData : IDevData
             IndexList = indexList,
             ForeignKeyList = foreignKeyList,
             HasHistoryTable = hasHistoryTable,
-            Remark = remark
+            Remark = remark,
+            DefaultValues = defaultValues
         };
         if (!tmp.ToFile())
         {
@@ -461,6 +462,8 @@ public class DevData : IDevData
         tableInfo.ForeignKeyList.AddRange(foreignKeyList);
         tableInfo.HasHistoryTable = hasHistoryTable;
         tableInfo.Remark = remark;
+        tableInfo.DefaultValues.Clear();
+        tableInfo.DefaultValues.AddRange(defaultValues);
         return true;
     }
     #endregion

@@ -63,6 +63,8 @@ R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键
 R_STR_REFERENCE_TABLE,Reference Table,指向表,指向表
 R_STR_REFERENCE_COLUMN,Reference Column,指向字段,指向字段
+R_STR_DEFAULT_VALUES,Default Values,預設值,预设值
+R_STR_INPUT_VALUE,[Input Value],[輸入值],[输入值]
 R_STR_SYSTEM_SETTING,System Setting,系統設置,系统设置
 R_STR_GENERATE,Generate,生成,生成
 R_STR_TASK,Task,任務,任务
@@ -86,6 +88,7 @@ R_STR_NAME_EXIST_NOTICE,The name already exists,名稱已存在,名称已存在
 R_STR_EMPTY_NAME_NOTICE,The name is empty,名稱為空,名称为空
 R_STR_SELECT_EMPTY_TASK_NOTICE,Please select a task,請選擇任務,请选择任务
 R_STR_SELECT_EMPTY_COLUMN_NOTICE,Please select a column,請選擇字段,请选择字段
+R_STR_SELECT_EMPTY_ROW_NOTICE,Please select a row,請選擇行,请选择行
 R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE,Please select the reference table,請選擇參照表,请选择参照表
 R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE,Please select the reference column,請選擇參照字段,请选择参照字段
 R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE,The column type [#1] is inconsistent with the reference column type [#2],字段類型 [#1] 與參照字段類型 [#2] 不一致,字段类型 [#1] 与参照字段类型 [#2] 不一致

@@ -26,5 +26,5 @@ public interface IDevData : IPlugin
     public Dictionary<DatabaseInfo, List<TableInfo>> GetAllHistoryTables();
     public TableInfo? GetTableById(int tableId);
     public DatabaseInfo? GetDatabaseInfoByTableId(int tableId);
-    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark);
+    public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark, List<string> defaultValues);
 }

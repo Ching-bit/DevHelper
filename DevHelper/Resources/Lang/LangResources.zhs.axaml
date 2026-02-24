@@ -66,6 +66,8 @@
     <system:String x:Key="R_STR_FOREIGN_KEYS">外键</system:String>
     <system:String x:Key="R_STR_REFERENCE_TABLE">指向表</system:String>
     <system:String x:Key="R_STR_REFERENCE_COLUMN">指向字段</system:String>
+    <system:String x:Key="R_STR_DEFAULT_VALUES">预设值</system:String>
+    <system:String x:Key="R_STR_INPUT_VALUE">[输入值]</system:String>
     <system:String x:Key="R_STR_SYSTEM_SETTING">系统设置</system:String>
     <system:String x:Key="R_STR_GENERATE">生成</system:String>
     <system:String x:Key="R_STR_TASK">任务</system:String>
@@ -88,6 +90,7 @@
     <system:String x:Key="R_STR_EMPTY_NAME_NOTICE">名称为空</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_TASK_NOTICE">请选择任务</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_COLUMN_NOTICE">请选择字段</system:String>
+    <system:String x:Key="R_STR_SELECT_EMPTY_ROW_NOTICE">请选择行</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">请选择参照表</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">请选择参照字段</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">字段类型 [#1] 与参照字段类型 [#2] 不一致</system:String>

@@ -21,6 +21,7 @@ public class TableInfo : FileNode
     public List<ForeignKeyInfo> ForeignKeyList { get; set; } = [];
     public bool HasHistoryTable { get; set; }
     public string Remark { get; set; } = string.Empty;
+    public List<string> DefaultValues { get; set; } = [];
     #endregion
     
     public override bool FromFile()
@@ -37,6 +38,7 @@ public class TableInfo : FileNode
             ForeignKeyList.AddRange(fileContent.ForeignKeyList);
             HasHistoryTable = fileContent.HasHistoryTable;
             Remark = fileContent.Remark;
+            DefaultValues = fileContent.DefaultValues;
             return true;
         }
         catch

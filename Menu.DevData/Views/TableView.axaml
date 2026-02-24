@@ -49,6 +49,12 @@
                     IsForeignKeyChanged="{Binding IsTableChanged, Mode=TwoWay}"
                     TableId="{Binding TableInfoModel.Id}"/>
             </TabItem>
+            <TabItem Header="{DynamicResource R_STR_DEFAULT_VALUES}">
+                <local:TableDefaultValuesPanel
+                    ColumnList="{Binding ElementName=TableColumnsPanel, Path=ColumnList}"
+                    DefaultValues="{Binding TableInfoModel.DefaultValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    IsDefaultValueChanged="{Binding IsTableChanged, Mode=TwoWay}"/>
+            </TabItem>
         </TabControl>
         
     </Grid>

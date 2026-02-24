@@ -1,9 +1,11 @@
+using System.Text;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Control.Basic;
 using Framework.Common;
+using Framework.Utils;
 using Plugin.DevData;
 using Plugin.DevData.Messages;
 
@@ -59,12 +61,28 @@ public partial class TableViewModel : UniViewModel
             TableInfoModel.ForeignKeyList.Remove(deletedForeignKey);
         }
 
+        List<string> defaultValues = [];
+        foreach (DynamicRow defaultValue in TableInfoModel.DefaultValues)
+        {
+            StringBuilder sbDefaultValue = new();
+            foreach (ColumnInfoModel columnInfoModel in TableInfoModel.ColumnList)
+            {
+                if (sbDefaultValue.Length > 0)
+                {
+                    sbDefaultValue.Append(',');
+                }
+                sbDefaultValue.Append(defaultValue[columnInfoModel.Name]);
+            }
+            defaultValues.Add(sbDefaultValue.ToString());
+        }
+
         if (!Global.Get<IDevData>().UpdateTable(tableInfo,
                 TableInfoModel.ColumnList.Select(x => x.Id).ToList(),
                 TableInfoModel.IndexList.Select(x => x.GetIndexInfo()).ToList(),
                 TableInfoModel.ForeignKeyList.Select(x => x.GetForeignKeyInfo()).ToList(),
                 TableInfoModel.HasHistoryTable,
-                TableInfoModel.Remark) ||
+                TableInfoModel.Remark,
+                defaultValues) ||
             !tableInfo.ToFile())
         {
             ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);

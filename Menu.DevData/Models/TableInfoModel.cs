@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Framework.Common;
+using Framework.Utils;
 using Plugin.DevData;
 
 namespace Menu.DevData;
@@ -21,6 +22,8 @@ public partial class TableInfoModel : UniModel
         {
             AllColumns.Add(new ColumnInfoModel(columnInfo));
         }
+
+        DefaultValues = [];
     }
 
     public TableInfoModel(TableInfo tableInfo) : this()
@@ -62,6 +65,18 @@ public partial class TableInfoModel : UniModel
         {
             ForeignKeyList.Add(new ForeignKeyInfoModel(foreignKeyInfo, ColumnList.ToList(), Name));
         }
+
+        foreach (string defaultValue in tableInfo.DefaultValues)
+        {
+            DynamicRow row = new();
+            string[] defaultValueArray = defaultValue.Split(",");
+            for (int i = 0; i < ColumnList.Count; i++)
+            {
+                string value = i < defaultValueArray.Length ? defaultValueArray[i] : string.Empty;
+                row[ColumnList[i].Name] = value;
+            }
+            DefaultValues.Add(row);
+        }
     }
     
     [ObservableProperty] private int _id;
@@ -72,6 +87,7 @@ public partial class TableInfoModel : UniModel
     [ObservableProperty] private ObservableCollection<ForeignKeyInfoModel> _foreignKeyList;
     [ObservableProperty] private bool _hasHistoryTable;
     [ObservableProperty] private string _remark;
+    [ObservableProperty] private ObservableCollection<DynamicRow> _defaultValues;
     
     private List<ColumnInfoModel> AllColumns { get; }
 
