@@ -131,4 +131,57 @@ public partial class TableColumnsPanel : UniPanel
         }
         IsColumnChanged = true;
     }
+
+    [RelayCommand]
+    private async Task RowsUp()
+    {
+        List<ColumnInfoModel> selectedColumns = DataGridColumns.SelectedItems.Cast<ColumnInfoModel>().ToList();
+        if (selectedColumns.Count <= 0)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMN_NOTICE", true);
+            return;
+        }
+
+        int startIndex = ColumnList.IndexOf(selectedColumns[0]);
+        if (startIndex <= 0) { return; }
+        int endIndex = ColumnList.IndexOf(selectedColumns[^1]);
+        
+        // change position
+        ColumnInfoModel preItem = ColumnList.ElementAt(startIndex - 1);
+        ColumnList.RemoveAt(startIndex - 1);
+        ColumnList.Insert(endIndex, preItem);
+
+        IsColumnChanged = true;
+        foreach (ColumnInfoModel selectedColumn in selectedColumns)
+        {
+            DataGridColumns.SelectedItems.Add(selectedColumn);
+        }
+    }
+
+    [RelayCommand]
+    private async Task RowsDown()
+    {
+        List<ColumnInfoModel> selectedColumns = DataGridColumns.SelectedItems.Cast<ColumnInfoModel>().ToList();
+        if (selectedColumns.Count <= 0)
+        {
+            await MessageDialog.Show("R_STR_SELECT_EMPTY_COLUMN_NOTICE", true);
+            return;
+        }
+
+        int endIndex = ColumnList.IndexOf(selectedColumns[^1]);
+        if (endIndex >= ColumnList.Count - 1) { return; }
+        int startIndex = ColumnList.IndexOf(selectedColumns[0]);
+        
+        // change position
+        ColumnInfoModel laterItem = ColumnList.ElementAt(endIndex + 1);
+        ColumnList.RemoveAt(endIndex + 1);
+        ColumnList.Insert(startIndex, laterItem);
+
+        IsColumnChanged = true;
+        foreach (ColumnInfoModel selectedColumn in selectedColumns)
+        {
+            DataGridColumns.SelectedItems.Add(selectedColumn);
+        }
+    }
+    
 }

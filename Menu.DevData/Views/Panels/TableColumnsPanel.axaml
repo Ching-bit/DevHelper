@@ -1,6 +1,7 @@
 <frw:UniPanel
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ursa="https://irihi.tech/ursa"
     xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
     xmlns:ctrl="clr-namespace:Control.Basic;assembly=Control.Basic"
     xmlns:local="clr-namespace:Menu.DevData"
@@ -23,6 +24,10 @@
             <Button Classes="Common Danger"
                     Content="{DynamicResource R_STR_DELETE}"
                     Command="{Binding DeleteCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+            <ursa:IconButton Icon="{StaticResource SemiIconFilledArrowUp}" Margin="5,0,0,0"
+                             Command="{Binding RowsUpCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+            <ursa:IconButton Icon="{StaticResource SemiIconFilledArrowDown}"
+                             Command="{Binding RowsDownCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
         </StackPanel>
         <DataGrid
             x:Name="DataGridColumns" Grid.Row="1"
@@ -54,10 +59,16 @@
                     Header="{DynamicResource R_STR_SCALE}" IsReadOnly="True" Width="90"
                     Binding="{Binding Scale}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <ctrl:DataGridBindableTextColumn
-                    Header="{DynamicResource R_STR_PRIMARY_KEY}" IsReadOnly="True" Width="120"
-                    Binding="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
-                    ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+                <DataGridTemplateColumn Header="{DynamicResource R_STR_PRIMARY_KEY}" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                TextAlignment="Center"
+                                Text="{Binding IsPrimaryKey, Converter={StaticResource PrimaryKeyColumnDisplayConverter}}"
+                                Foreground="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridCheckBoxColumn
                     Header="{DynamicResource R_STR_IS_NULLABLE}" IsReadOnly="True"
                     Binding="{Binding IsNullable}"/>
