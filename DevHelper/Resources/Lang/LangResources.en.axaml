@@ -95,6 +95,7 @@
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">Please select the reference column</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">The column type [#1] is inconsistent with the reference column type [#2]</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">Please select an index</system:String>
+    <system:String x:Key="R_STR_EMPTY_MEANS_ALL">Empty means all</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">Delete the columns as follows?</system:String>
     <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]. Continue to modify?</system:String>
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">The column [#1] is used by the table [#2]</system:String>

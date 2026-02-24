@@ -10,7 +10,8 @@
             <ursa:MultiComboBox
                 Classes="Common"
                 ItemsSource="{Binding DatabaseList}"
-                SelectedItems="{Binding TargetDatabases}"/>
+                SelectedItems="{Binding TargetDatabases}"
+                ToolTip.Tip="{DynamicResource R_STR_EMPTY_MEANS_ALL}"/>
         </HeaderedContentControl>
     </ctrl:ConfirmDialog>
     
