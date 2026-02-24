@@ -187,7 +187,11 @@
 - AutoIncColumnDbDefaultValue：資料庫缺省值；
 - AutoIncColumnDbNullableFlag：字段可空標誌；
 - AutoIncColumnProgramType：字段對應程式數據類型；
-- AutoIncColumnHungarianPrefix：匈牙利命名法前綴。
+- AutoIncColumnHungarianPrefix：匈牙利命名法前綴；
+
+（9）預設值迭代
+
+- DefaultValue: 預設值字串。
 
 # 示例
 

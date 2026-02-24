@@ -11,3 +11,5 @@ ${BACKSPACE},${NEWLINE}    PRIMARY KEY (${PrimaryKeyColumnsWithBackQuota(all_low
 ${BACKSPACE},${NEWLINE}    ${IndexTypeWithKey(ALL_UPPER)} ${IndexName(UPPER_SNAKE)} (${IndexColumnsWithBackQuota(all_lower)})
 ${BACKSPACE},${NEWLINE}    FOREIGN KEY (`${ForeignKeyColumnName(lower_snake)}`) REFERENCES `${ForeignKeyReferenceTableName(lower_snake)}`(`${ForeignKeyReferenceColumnName(lower_snake)}`)
 );
+
+INSERT INTO `${TableName(lower_snake)}` VALUES (${DefaultValue});

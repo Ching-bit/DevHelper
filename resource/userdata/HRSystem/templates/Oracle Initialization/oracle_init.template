@@ -2,6 +2,7 @@ SET SERVEROUTPUT ON;
 
 ${TEMPLATE(table_create.template,Table)}
 
+COMMIT;
 
 
 /* Table upgrade */

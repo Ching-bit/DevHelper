@@ -190,7 +190,11 @@ Iteration Macros:
 - AutoIncColumnDbDefaultValue: Database default value;
 - AutoIncColumnDbNullableFlag: Field nullable flag;
 - AutoIncColumnProgramType: Field's corresponding program data type;
-- AutoIncColumnHungarianPrefix: Hungarian notation prefix.
+- AutoIncColumnHungarianPrefix: Hungarian notation prefix;
+
+(9) Default value iteration
+
+- DefaultValue: Default value string.
 
 # Example
 

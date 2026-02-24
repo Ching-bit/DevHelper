@@ -381,6 +381,7 @@ public class DevData : IDevData
                     historyIndexInfo.ColumnIdList.AddRange(indexInfo.ColumnIdList);
                     historyTableInfo.IndexList.Add(historyIndexInfo);
                 }
+                // history table doesn't need default values
                 
                 historyTableList.Add(historyTableInfo);
             }

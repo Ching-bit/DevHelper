@@ -263,6 +263,13 @@ public class CodeGenerator
                         { "AutoIncColumnHungarianPrefix", x => ((ColumnInfo)x).GetHungarianPrefix() },
                     },
                     null == autoIncColumn ? new List<object>() : [ autoIncColumn ]),
+                // default values
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "DefaultValue", x => x + string.Empty },
+                    },
+                    tableInfo.GetDbDefaultValues().ConvertAll<object>(y => y)),
                 ],
             task);
     }
