@@ -77,7 +77,7 @@ public partial class ColumnsViewModel : UniViewModel
             TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(columnInfoModel.Id);
             if (null == usedTable) { continue; }
             
-            string errMsg = ResourceHelper.FindStringResource("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE")
+            string errMsg = ResourceHelper.FindResource<string>("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE")
                 .Replace("#1", columnInfoModel.Name)
                 .Replace("#2", usedTable.Name);
             await MessageDialog.Show(errMsg);
@@ -122,7 +122,7 @@ public partial class ColumnsViewModel : UniViewModel
         TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(SelectedColumn.Id);
         if (null != usedTable)
         {
-            string warningMsg = ResourceHelper.FindStringResource("R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE")
+            string warningMsg = ResourceHelper.FindResource<string>("R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE")
                 .Replace("#1", SelectedColumn.Name)
                 .Replace("#2", usedTable.Name);
             bool confirmResult = await MessageDialog.Show(warningMsg, isCancelButtonVisible: true);
@@ -180,7 +180,7 @@ public partial class ColumnsViewModel : UniViewModel
             TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(selectedColumn.Id);
             if (null != usedTable)
             {
-                string warningMsg = ResourceHelper.FindStringResource("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE")
+                string warningMsg = ResourceHelper.FindResource<string>("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE")
                     .Replace("#1", selectedColumn.Name)
                     .Replace("#2", usedTable.Name);
                 await MessageDialog.Show(warningMsg);
@@ -190,7 +190,7 @@ public partial class ColumnsViewModel : UniViewModel
         
         // confirm
         bool isConfirmed = await MessageDialog.Show(
-            ResourceHelper.FindStringResource("R_STR_DELETE_COLUMNS_CONFIRM_NOTICE") +
+            ResourceHelper.FindResource<string>("R_STR_DELETE_COLUMNS_CONFIRM_NOTICE") +
             Environment.NewLine +
             string.Join(Environment.NewLine, selectedColumns.Select(x => $"{x.Id}: {x.Name}({x.Description})")),
             isCancelButtonVisible: true);

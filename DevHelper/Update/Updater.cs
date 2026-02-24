@@ -77,7 +77,7 @@ public static class Updater
                     },
                     options: new DialogOptions
                     {
-                        Title = ResourceHelper.FindStringResource("R_STR_NEW_VERSION_RELEASED"),
+                        Title = ResourceHelper.FindResource<string>("R_STR_NEW_VERSION_RELEASED"),
                         Mode = DialogMode.Info,
                         CanDragMove = true,
                         IsCloseButtonVisible = false,

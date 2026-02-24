@@ -37,7 +37,7 @@ public partial class MenuConf : ObservableObject
         base.OnPropertyChanged(e);
         if (nameof(ResourceName) == e.PropertyName)
         {
-            Name = ResourceHelper.FindStringResource(ResourceName, Name);
+            Name = ResourceHelper.FindResource(ResourceName, Name);
         }
     }
 
@@ -48,7 +48,7 @@ public partial class MenuConf : ObservableObject
 
         foreach (MenuConf menuConf in menuConfList)
         {
-            menuConf.Name = ResourceHelper.FindStringResource(menuConf.ResourceName);
+            menuConf.Name = ResourceHelper.FindResource<string>(menuConf.ResourceName);
             FillMenuLevel(menuConfList, menuConf);
         }
         return [.. menuConfList.Where(x => string.IsNullOrEmpty(x.ParentId))];
@@ -74,7 +74,7 @@ public partial class MenuConf : ObservableObject
 
     public void RefreshMenuName()
     {
-        Name = ResourceHelper.FindStringResource(ResourceName, Name);
+        Name = ResourceHelper.FindResource(ResourceName, Name);
 
         foreach (MenuConf menuConf in SubMenus)
         {

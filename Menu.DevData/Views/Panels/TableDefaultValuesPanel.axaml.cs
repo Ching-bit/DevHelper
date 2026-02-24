@@ -53,7 +53,7 @@ public partial class TableDefaultValuesPanel : UniPanel
         DynamicRow newRow = new();
         foreach (ColumnInfoModel columnInfoModel in ColumnList)
         {
-            newRow[columnInfoModel.Name] = ResourceHelper.FindStringResource("R_STR_INPUT_VALUE");
+            newRow[columnInfoModel.Name] = ResourceHelper.FindResource<string>("R_STR_INPUT_VALUE");
         }
         
         DefaultValues.Add(newRow);

@@ -14,16 +14,12 @@ public class TypeToScaleTextConverter: IValueConverter
             return string.Empty;
         }
 
-        if (columnType is ColumnType.Char or ColumnType.Varchar)
+        return columnType switch
         {
-            return ResourceHelper.FindStringResource("R_STR_MAX_BYTES_PER_CHAR");
-        }
-        else if (columnType is ColumnType.Number)
-        {
-            return ResourceHelper.FindStringResource("R_STR_SCALE");
-        }
-        
-        return string.Empty;
+            ColumnType.Char or ColumnType.Varchar => ResourceHelper.FindResource<string>("R_STR_MAX_BYTES_PER_CHAR"),
+            ColumnType.Number => ResourceHelper.FindResource<string>("R_STR_SCALE"),
+            _ => string.Empty
+        };
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

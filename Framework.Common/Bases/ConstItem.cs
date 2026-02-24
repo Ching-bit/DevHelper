@@ -16,7 +16,7 @@ public class ConstItem
     public override string ToString()
     {
         return (null != _resourceName ?
-            $"{Key} {ResourceHelper.FindStringResource(_resourceName)}" :
+            $"{Key} {ResourceHelper.FindResource<string>(_resourceName)}" :
             $"{Key} {_value ?? string.Empty}").Trim();
     }
 }

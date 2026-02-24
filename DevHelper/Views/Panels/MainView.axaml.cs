@@ -49,7 +49,7 @@ public partial class MainView : UniPanel
                 {
                     continue;
                 }
-                doc.Title = ResourceHelper.FindStringResource(menu.MenuConf.ResourceName, doc.Title);
+                doc.Title = ResourceHelper.FindResource(menu.MenuConf.ResourceName, doc.Title);
             }
         });
         

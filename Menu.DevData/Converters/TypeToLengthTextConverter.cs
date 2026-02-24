@@ -14,16 +14,12 @@ public class TypeToLengthTextConverter : IValueConverter
             return string.Empty;
         }
 
-        if (columnType is ColumnType.Char or ColumnType.Varchar)
+        return columnType switch
         {
-            return ResourceHelper.FindStringResource("R_STR_LENGTH");
-        }
-        else if (columnType is ColumnType.Number)
-        {
-            return ResourceHelper.FindStringResource("R_STR_PRECISION");
-        }
-        
-        return string.Empty;
+            ColumnType.Char or ColumnType.Varchar => ResourceHelper.FindResource<string>("R_STR_LENGTH"),
+            ColumnType.Number => ResourceHelper.FindResource<string>("R_STR_PRECISION"),
+            _ => string.Empty
+        };
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

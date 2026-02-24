@@ -13,7 +13,7 @@ public partial class ColumnDialogViewModel : ConfirmDialogViewModel
     {
         ColumnGroups =
         [
-            ResourceHelper.FindStringResource("R_STR_NEW_ADD", "New..."),
+            ResourceHelper.FindResource("R_STR_NEW_ADD", "New..."),
             ColumnInfo.DefaultColumnGroup
         ];
         ColumnGroups.AddRange(columnGroups);

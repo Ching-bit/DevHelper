@@ -9,23 +9,31 @@ public class ModifyStatusToColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not ModifyStatus modifyStatus ||
-            ResourceHelper.FindResource("SemiColorText0") is not SolidColorBrush normalColor ||
-            ResourceHelper.FindResource("SemiColorPrimary") is not SolidColorBrush modifyColor ||
-            ResourceHelper.FindResource("SemiColorSuccess") is not SolidColorBrush addColor ||
-            ResourceHelper.FindResource("SemiColorDanger") is not SolidColorBrush deleteColor)
+        if (value is not ModifyStatus modifyStatus)
         {
             return new SolidColorBrush(Colors.Black);
         }
 
-        return modifyStatus switch
+        try
         {
-            ModifyStatus.Normal => normalColor,
-            ModifyStatus.Added => addColor,
-            ModifyStatus.Modified => modifyColor,
-            ModifyStatus.Deleted => deleteColor,
-            _ => normalColor
-        };
+            SolidColorBrush normalColor = ResourceHelper.FindResource<SolidColorBrush>("SemiColorText0");
+            SolidColorBrush modifyColor = ResourceHelper.FindResource<SolidColorBrush>("SemiColorPrimary");
+            SolidColorBrush addColor = ResourceHelper.FindResource<SolidColorBrush>("SemiColorSuccess");
+            SolidColorBrush deleteColor = ResourceHelper.FindResource<SolidColorBrush>("SemiColorDanger");
+            
+            return modifyStatus switch
+            {
+                ModifyStatus.Normal => normalColor,
+                ModifyStatus.Added => addColor,
+                ModifyStatus.Modified => modifyColor,
+                ModifyStatus.Deleted => deleteColor,
+                _ => normalColor
+            };
+        }
+        catch (ArgumentNullException)
+        {
+            return new SolidColorBrush(Colors.Black);
+        }
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

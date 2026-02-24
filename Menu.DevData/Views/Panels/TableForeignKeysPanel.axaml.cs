@@ -113,7 +113,7 @@ public partial class TableForeignKeysPanel : UniPanel
             return;
         }
 
-        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+        string confirmMessage = ResourceHelper.FindResource<string>("R_STR_DELETE_CONFIRM_NOTICE")
             .Replace("#1", string.Join(", ", selectedForeignKeys.Select(x => x.Name)));
         if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
         {

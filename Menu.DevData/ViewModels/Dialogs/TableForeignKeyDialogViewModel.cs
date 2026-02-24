@@ -77,7 +77,7 @@ public partial class TableForeignKeyDialogViewModel : ConfirmDialogViewModel
 
         if (!ForeignKeyInfoModel.Column.IsSameType(ForeignKeyInfoModel.ReferenceColumn))
         {
-            string errMsg = ResourceHelper.FindStringResource("R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE")
+            string errMsg = ResourceHelper.FindResource<string>("R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE")
                 .Replace("#1", ForeignKeyInfoModel.Column.GetTypeString())
                 .Replace("#2", ForeignKeyInfoModel.ReferenceColumn.GetTypeString());
             ShowNotification(errMsg, NotificationType.Error);

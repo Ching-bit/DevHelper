@@ -35,7 +35,7 @@ public partial class RemovableComboBox : TemplatedControl
         }
         
         // confirm dialog
-        string message = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE", "Confirm to delete [#1]?")
+        string message = ResourceHelper.FindResource("R_STR_DELETE_CONFIRM_NOTICE", "Confirm to delete [#1]?")
             .Replace("#1", parameter.ToString());
         if (!await MessageDialog.Show(message, isCancelButtonVisible: true))
         {

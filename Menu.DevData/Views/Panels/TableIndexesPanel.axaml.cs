@@ -74,7 +74,7 @@ public partial class TableIndexesPanel : UniPanel
             return;
         }
         
-        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+        string confirmMessage = ResourceHelper.FindResource<string>("R_STR_DELETE_CONFIRM_NOTICE")
             .Replace("#", string.Join(", ", selectedIndexes.Select(x => x.Name)));
         if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
         {

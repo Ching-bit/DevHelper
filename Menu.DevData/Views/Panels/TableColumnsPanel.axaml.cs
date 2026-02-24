@@ -59,7 +59,7 @@ public partial class TableColumnsPanel : UniPanel
         {
             if (indexInfoModel.ColumnList.Any(x => x.Id.Equals(selectedColumn.Id)))
             {
-                string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
+                string errMsg = ResourceHelper.FindResource<string>("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
                     .Replace("#1", selectedColumn.Name)
                     .Replace("#2", indexInfoModel.Name);
                 await MessageDialog.Show(errMsg);
@@ -97,7 +97,7 @@ public partial class TableColumnsPanel : UniPanel
             {
                 if (indexInfoModel.ColumnList.Any(x => x.Id.Equals(selectedColumn.Id)))
                 {
-                    string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
+                    string errMsg = ResourceHelper.FindResource<string>("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
                         .Replace("#1", selectedColumn.Name)
                         .Replace("#2", indexInfoModel.Name);
                     await MessageDialog.Show(errMsg);
@@ -109,7 +109,7 @@ public partial class TableColumnsPanel : UniPanel
             {
                 if (foreignKeyInfoModel.Column?.Id == selectedColumn.Id)
                 {
-                    string errMsg = ResourceHelper.FindStringResource("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
+                    string errMsg = ResourceHelper.FindResource<string>("R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE")
                         .Replace("#1", selectedColumn.Name)
                         .Replace("#2", foreignKeyInfoModel.Name);
                     await MessageDialog.Show(errMsg);
@@ -118,7 +118,7 @@ public partial class TableColumnsPanel : UniPanel
             }
         }
         
-        string confirmMessage = ResourceHelper.FindStringResource("R_STR_DELETE_CONFIRM_NOTICE")
+        string confirmMessage = ResourceHelper.FindResource<string>("R_STR_DELETE_CONFIRM_NOTICE")
             .Replace("#", string.Join(", ", selectedColumns.Select(x => x.Name)));
         if (!await MessageDialog.Show(confirmMessage, isCancelButtonVisible: true))
         {

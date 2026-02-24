@@ -33,14 +33,14 @@ public partial class ConfirmDialog : TemplatedControl
     
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        string okButtonText = ResourceHelper.FindStringResource("R_STR_OK", string.Empty);
+        string okButtonText = ResourceHelper.FindResource("R_STR_OK", string.Empty);
         if (string.IsNullOrEmpty(okButtonText))
         {
             okButtonText = "OK";
         }
         OkButtonText = okButtonText;
         
-        string cancelButtonText = ResourceHelper.FindStringResource("R_STR_CANCEL", string.Empty);
+        string cancelButtonText = ResourceHelper.FindResource("R_STR_CANCEL", string.Empty);
         if (string.IsNullOrEmpty(cancelButtonText))
         {
             cancelButtonText = "Cancel";
