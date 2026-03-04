@@ -331,6 +331,25 @@ public class DevData : IDevData
         }
         return ret;
     }
+    
+    private List<TableInfo> GetTableListInner(IDirectoryNode tableDirectory)
+    {
+        List<TableInfo> tableList = [];
+        foreach (IFileNode fileNode in tableDirectory.Instances)
+        {
+            if (fileNode is TableInfo tableInfo)
+            {
+                tableList.Add(tableInfo);
+            }
+        }
+
+        foreach (IDirectoryNode directoryNode in tableDirectory.SubDirectories)
+        {
+            tableList.AddRange(GetTableListInner(directoryNode));
+        }
+        
+        return tableList;
+    }
 
     public List<DatabaseInfo> GetAllHistoryDatabases()
     {
@@ -345,7 +364,7 @@ public class DevData : IDevData
 
         return ret;
     }
-
+    
     public Dictionary<DatabaseInfo, List<TableInfo>> GetAllHistoryTables()
     {
         Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables().Where(x => x.Value.Any(t => t.HasHistoryTable)).ToDictionary(x => x.Key, x => x.Value);
@@ -391,26 +410,7 @@ public class DevData : IDevData
 
         return ret;
     }
-
-    private List<TableInfo> GetTableListInner(IDirectoryNode tableDirectory)
-    {
-        List<TableInfo> tableList = [];
-        foreach (IFileNode fileNode in tableDirectory.Instances)
-        {
-            if (fileNode is TableInfo tableInfo)
-            {
-                tableList.Add(tableInfo);
-            }
-        }
-
-        foreach (IDirectoryNode directoryNode in tableDirectory.SubDirectories)
-        {
-            tableList.AddRange(GetTableListInner(directoryNode));
-        }
-        
-        return tableList;
-    }
-
+    
     public TableInfo? GetTableById(int tableId)
     {
         Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables();
