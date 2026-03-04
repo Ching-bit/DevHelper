@@ -156,6 +156,7 @@ public partial class MainViewModel : UniViewModel
             // max Id + 1 to this table
             List<TableInfo> allTableList = Global.Get<IDevData>().GetAllTables().Values.SelectMany(list => list).Where(x => x != tableInfo).ToList();
             tableInfo.Id = allTableList.Count > 0 ? allTableList.Max(x => x.Id) + 1 : 1;
+            tableInfo.ToFile();
         }
     }
     
