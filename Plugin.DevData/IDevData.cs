@@ -6,6 +6,7 @@ public interface IDevData : IPlugin
 {
     public List<ColumnInfo> Columns { get; }
     public IDirectoryNode? TableRoot { get; }
+    public IDirectoryNode? ApiRoot { get; }
 
     public bool UpdateColumns(List<ColumnInfo> columns);
     public TableInfo? FirstUsedTable(int columnId);
@@ -27,4 +28,6 @@ public interface IDevData : IPlugin
     public TableInfo? GetTableById(int tableId);
     public DatabaseInfo? GetDatabaseInfoByTableId(int tableId);
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark, List<string> defaultValues);
+    
+    public List<ApiInfo> GetAllApis();
 }

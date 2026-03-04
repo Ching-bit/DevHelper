@@ -24,6 +24,8 @@ public class DevData : IDevData
     private static string ColumnsFilePath => Path.Combine(DevDataDir, "Columns.xml");
     private const string TablesDirName = "Tables";
     private static string TablesDir => Path.Combine(DevDataDir, TablesDirName);
+    private const string ApisDirName = "Apis";
+    private static string ApisDir => Path.Combine(DevDataDir, ApisDirName);
     
     
     #region IPlugin
@@ -52,6 +54,13 @@ public class DevData : IDevData
         }
         TableRoot = new DirectoryNode(TablesDir, typeof(TableInfo));
         TableRoot.ReadFiles();
+
+        if (!Directory.Exists(ApisDir))
+        {
+            Directory.CreateDirectory(ApisDir);
+        }
+        ApiRoot = new DirectoryNode(ApisDir, typeof(ApiInfo));
+        ApiRoot.ReadFiles();
     }
 
     public void OnLoggedOut() { }
@@ -61,6 +70,7 @@ public class DevData : IDevData
     #region IDevData
     public List<ColumnInfo> Columns { get; private set; } = [];
     public IDirectoryNode? TableRoot { get; private set; }
+    public IDirectoryNode? ApiRoot { get; private set; }
     
 
     #region Column Methods
@@ -466,6 +476,33 @@ public class DevData : IDevData
         tableInfo.DefaultValues.Clear();
         tableInfo.DefaultValues.AddRange(defaultValues);
         return true;
+    }
+    #endregion
+
+
+    #region API Methods
+    public List<ApiInfo> GetAllApis()
+    {
+        return null == ApiRoot ? [] : GetApiListInner(ApiRoot);
+    }
+
+    private List<ApiInfo> GetApiListInner(IDirectoryNode apiDirectory)
+    {
+        List<ApiInfo> apiList = [];
+        foreach (IFileNode fileNode in apiDirectory.Instances)
+        {
+            if (fileNode is ApiInfo apiInfo)
+            {
+                apiList.Add(apiInfo);
+            }
+        }
+
+        foreach (IDirectoryNode directoryNode in apiDirectory.SubDirectories)
+        {
+            apiList.AddRange(GetApiListInner(directoryNode));
+        }
+
+        return apiList;
     }
     #endregion
     
