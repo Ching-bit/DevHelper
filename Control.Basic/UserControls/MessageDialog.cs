@@ -10,7 +10,7 @@ public partial class MessageDialog
         ConfirmDialogResult? result = await Dialog.ShowCustomModal<ConfirmDialogResult>(
             new MessageDialog
             {
-                Message = ResourceHelper.FindResource<string>(message),
+                Message = ResourceHelper.FindResource(message, message),
                 IsAutoClick = isAutoClick,
                 IsOkDefault = isOkDefault,
                 IsCancelButtonVisible = isCancelButtonVisible
