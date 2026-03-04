@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Framework.Common;
 using Framework.Utils;
 using Plugin.DevData;
+using Plugin.DevData.Messages;
 
 namespace Menu.DevData;
 
@@ -24,6 +26,17 @@ public partial class TableInfoModel : UniModel
         }
 
         DefaultValues = [];
+        
+        // register table name changed
+        WeakReferenceMessenger.Default.Register<ItemNameChangedMessage>(this, (_, message) =>
+        {
+            if (message.Value.Item is TableInfo tableInfo &&
+                tableInfo.Id == Id)
+            {
+                Name = tableInfo.Name;
+                Description = tableInfo.Description;
+            }
+        });
     }
 
     public TableInfoModel(TableInfo tableInfo) : this()

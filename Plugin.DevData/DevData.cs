@@ -248,9 +248,13 @@ public class DevData : IDevData
         {
             return false;
         }
-        
+
+        string originalName = item.Name;
+        string originalDescription = item.Description;
         item.Name = newName;
         item.Description = newDescription;
+        WeakReferenceMessenger.Default.Send(
+            new ItemNameChangedMessage(new ItemNameChangedMessage.Args(item, originalName, originalDescription)));
         return true;
     }
 
