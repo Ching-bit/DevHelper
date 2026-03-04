@@ -6,7 +6,7 @@ namespace Menu.DevData;
 
 [WithDirectProperty(typeof(string), "ApiName", nullable: true)]
 [WithDirectProperty(typeof(string), "ApiDescription", nullable: true)]
-[WithDirectProperty(typeof(string), "Remark", nullable: true)]
+[WithDirectProperty(typeof(string), "Remark", "")]
 [WithDirectProperty(typeof(bool), "IsBasicInfoChanged")]
 [WithDirectProperty(typeof(ModifyStatus), "InternalRemarkModifyStatus")]
 public partial class ApiBasicInfoPanel : UniPanel
@@ -16,7 +16,7 @@ public partial class ApiBasicInfoPanel : UniPanel
         InitializeComponent();
     }
     
-    private string? _remarkOriginalValue;
+    private string _remarkOriginalValue = "";
     
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {

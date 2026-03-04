@@ -8,7 +8,7 @@ namespace Menu.DevData;
 [WithDirectProperty(typeof(string), "TableName", nullable: true)]
 [WithDirectProperty(typeof(string), "TableDescription", nullable: true)]
 [WithDirectProperty(typeof(bool), "HasHistoryTable")]
-[WithDirectProperty(typeof(string), "Remark", nullable: true)]
+[WithDirectProperty(typeof(string), "Remark", "")]
 [WithDirectProperty(typeof(bool), "IsBasicInfoChanged")]
 [WithDirectProperty(typeof(ModifyStatus), "InternalHasHistoryTableModifyStatus")]
 [WithDirectProperty(typeof(ModifyStatus), "InternalRemarkModifyStatus")]
@@ -20,7 +20,7 @@ public partial class TableBasicInfoPanel : UniPanel
     }
     
     private bool _hasHistoryTableOriginalValue;
-    private string? _remarkOriginalValue;
+    private string _remarkOriginalValue = "";
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
     {

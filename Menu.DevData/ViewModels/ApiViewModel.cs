@@ -18,5 +18,6 @@ public partial class ApiViewModel : UniViewModel
         
     }
     
+    [ObservableProperty] private ApiInfoModel? _apiInfoModel;
     [ObservableProperty] private bool _isApiChanged;
 }

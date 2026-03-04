@@ -20,7 +20,11 @@
         
         <TabControl Grid.Row="1">
             <TabItem Header="{DynamicResource R_STR_BASIC_INFO}">
-                <local:ApiBasicInfoPanel/>
+                <local:ApiBasicInfoPanel
+                    ApiName="{Binding ApiInfoModel.Name}"
+                    ApiDescription="{Binding ApiInfoModel.Description}"
+                    Remark="{Binding ApiInfoModel.Remark, Mode=TwoWay}"
+                    IsBasicInfoChanged="{Binding IsApiChanged, Mode=TwoWay}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_INPUTS}">
                 
