@@ -21,8 +21,9 @@ public class MenuIconConverter : IValueConverter
                 MenuType.Columns => ResourceHelper.FindResource<object>("SemiIconAscend"),
                 MenuType.Tables => ResourceHelper.FindResource<object>("SemiIconCalendar"),
                 MenuType.Database => ResourceHelper.FindResource<object>("SemiIconArchive"),
-                MenuType.TableGroup => ResourceHelper.FindResource<object>("SemiIconFolderStroked"),
-                MenuType.Table => ResourceHelper.FindResource<object>("SemiIconFile"),
+                MenuType.Apis => ResourceHelper.FindResource<object>("SemiIconChainStroked"),
+                MenuType.TableGroup or MenuType.ApiGroup => ResourceHelper.FindResource<object>("SemiIconFolderStroked"),
+                MenuType.Table or MenuType.Api => ResourceHelper.FindResource<object>("SemiIconFile"),
                 _ => null
             };
         }

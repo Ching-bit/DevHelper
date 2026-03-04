@@ -29,6 +29,7 @@ R_STR_COLUMN,Column,字段,字段
 R_STR_COLUMNS,Columns,字段,字段
 R_STR_DATABASES,Databases,資料庫,数据库
 R_STR_TABLES,Tables,表,表
+R_STR_APIS,APIs,API,API
 R_STR_SAVE,Save,保存,保存
 R_STR_RESTORE,Restore,還原,还原
 R_STR_ADD,Add,新增,新增
@@ -53,6 +54,7 @@ R_STR_MEANING,Meaning,含意,含意
 R_STR_ADD_GROUP,Add Group,新增分組,新增分组
 R_STR_ADD_DATABASE,Add Database,新增數據庫,新增数据库
 R_STR_ADD_TABLE,Add Table,新增表,新增表
+R_STR_ADD_API,Add API,新增API,新增API
 R_STR_BASIC_INFO,Basic Info,基本資訊,基本信息
 R_STR_HISTORY_TABLE,History Table,歷史表,历史表
 R_STR_HAS_HISTORY_TABLE,Has History Table,有歷史表,有历史表

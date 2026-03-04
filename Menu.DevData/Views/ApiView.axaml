@@ -1,0 +1,23 @@
+<frw:UniMenu
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    x:Class="Menu.DevData.ApiView">
+    
+    <Grid RowDefinitions="Auto,*">
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_SAVE}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsApiChanged}"/>
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_RESTORE}"
+                    Command="{Binding RestoreCommand}"
+                    IsEnabled="{Binding IsApiChanged}"/>
+        </StackPanel>
+        
+        
+    </Grid>
+    
+</frw:UniMenu>

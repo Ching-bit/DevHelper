@@ -6,5 +6,9 @@ public enum MenuType
     Tables,
     Database,
     TableGroup,
-    Table
+    Table,
+    
+    Apis,
+    ApiGroup,
+    Api
 }

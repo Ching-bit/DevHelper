@@ -32,6 +32,7 @@
     <system:String x:Key="R_STR_COLUMNS">Columns</system:String>
     <system:String x:Key="R_STR_DATABASES">Databases</system:String>
     <system:String x:Key="R_STR_TABLES">Tables</system:String>
+    <system:String x:Key="R_STR_APIS">APIs</system:String>
     <system:String x:Key="R_STR_SAVE">Save</system:String>
     <system:String x:Key="R_STR_RESTORE">Restore</system:String>
     <system:String x:Key="R_STR_ADD">Add</system:String>
@@ -56,6 +57,7 @@
     <system:String x:Key="R_STR_ADD_GROUP">Add Group</system:String>
     <system:String x:Key="R_STR_ADD_DATABASE">Add Database</system:String>
     <system:String x:Key="R_STR_ADD_TABLE">Add Table</system:String>
+    <system:String x:Key="R_STR_ADD_API">Add API</system:String>
     <system:String x:Key="R_STR_BASIC_INFO">Basic Info</system:String>
     <system:String x:Key="R_STR_HISTORY_TABLE">History Table</system:String>
     <system:String x:Key="R_STR_HAS_HISTORY_TABLE">Has History Table</system:String>

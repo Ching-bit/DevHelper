@@ -37,10 +37,10 @@ public partial class MainViewModel : UniViewModel
     {
         Menus.Clear();
         
-        // column
+        // columns
         Menus.Add(new MenuConfModel
         {
-            Id = "menu_column",
+            Id = "menu_columns",
             ResourceName = "R_STR_COLUMNS",
             MenuLevel = 1,
             MenuType = MenuType.Columns,
@@ -63,13 +63,28 @@ public partial class MainViewModel : UniViewModel
             LeafEntityType = typeof(TableInfo)
         };
         Menus.Add(tablesMenu);
-        
         // databases
         foreach (IDirectoryNode databaseDirectory in Global.Get<IDevData>().TableRoot!.SubDirectories)
         {
             MenuConfModel databaseMenu = AddGroupMenu(tablesMenu, databaseDirectory, MenuType.Database);
+            // table
             InitMenusInner(databaseMenu, databaseDirectory, MenuType.TableGroup, MenuType.Table);
         }
+        
+        // APIs
+        MenuConfModel apisMenu = new()
+        {
+            Id = "menu_apis",
+            ResourceName = "R_STR_APIS",
+            MenuLevel = 1,
+            MenuType = MenuType.Apis,
+            Entity = Global.Get<IDevData>().ApiRoot,
+            LeafViewType = typeof(ApiView),
+            LeafEntityType = typeof(ApiInfo)
+        };
+        Menus.Add(apisMenu);
+        // API
+        InitMenusInner(apisMenu, Global.Get<IDevData>().ApiRoot!, MenuType.ApiGroup, MenuType.Api);
     }
 
     private void InitMenusInner(MenuConfModel menu, IDirectoryNode root, MenuType groupMenuType, MenuType itemMenuType)
@@ -153,10 +168,29 @@ public partial class MainViewModel : UniViewModel
         MenuConfModel? menuAdded = await AddItem(menu, MenuType.Table);
         if (menuAdded?.Entity is TableInfo tableInfo)
         {
-            // max Id + 1 to this table
+            // max ID + 1 to this table
             List<TableInfo> allTableList = Global.Get<IDevData>().GetAllTables().Values.SelectMany(list => list).Where(x => x != tableInfo).ToList();
             tableInfo.Id = allTableList.Count > 0 ? allTableList.Max(x => x.Id) + 1 : 1;
             tableInfo.ToFile();
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddApiGroup(MenuConfModel menu)
+    {
+        await AddGroup(menu, MenuType.ApiGroup);
+    }
+
+    [RelayCommand]
+    private async Task AddApi(MenuConfModel menu)
+    {
+        MenuConfModel? menuAdded = await AddItem(menu, MenuType.Api);
+        if (menuAdded?.Entity is ApiInfo apiInfo)
+        {
+            // max ID + 1 to this API
+            List<ApiInfo> allApiList = Global.Get<IDevData>().GetAllApis();
+            apiInfo.Id = allApiList.Count > 0 ? allApiList.Max(x => x.Id) + 1 : 1;
+            apiInfo.ToFile();
         }
     }
     
@@ -233,7 +267,7 @@ public partial class MainViewModel : UniViewModel
     [RelayCommand]
     private async Task ModifyItem(MenuConfModel menu)
     {
-        if (menu.MenuType is MenuType.Database or MenuType.TableGroup)
+        if (menu.MenuType is MenuType.Database or MenuType.TableGroup or MenuType.ApiGroup)
         {
             if (menu.Entity is not DirectoryNode directory || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
             {
@@ -275,7 +309,7 @@ public partial class MainViewModel : UniViewModel
             menu.Name = directory.MenuName;
             
         }
-        else if (menu.MenuType is MenuType.Table)
+        else if (menu.MenuType is MenuType.Table or MenuType.Api)
         {
             if (menu.Entity is not FileNode fileNode)
             {
@@ -331,7 +365,7 @@ public partial class MainViewModel : UniViewModel
             return;
         }
         
-        if (menu.MenuType is MenuType.Database or MenuType.TableGroup)
+        if (menu.MenuType is MenuType.Database or MenuType.TableGroup or MenuType.ApiGroup)
         {
             // delete a group
             if (menu.Entity is not DirectoryNode directory || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)
@@ -346,7 +380,7 @@ public partial class MainViewModel : UniViewModel
                 ShowNotification("R_STR_DELETE_FAILED", NotificationType.Error);
             }
         }
-        else if (menu.MenuType is MenuType.Table)
+        else if (menu.MenuType is MenuType.Table or MenuType.Api)
         {
             // delete an item
             if (menu.Entity is not FileNode fileNode || menu.ParentMenu?.Entity is not DirectoryNode parentDirectory)

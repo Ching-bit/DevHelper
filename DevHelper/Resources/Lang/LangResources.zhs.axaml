@@ -32,6 +32,7 @@
     <system:String x:Key="R_STR_COLUMNS">字段</system:String>
     <system:String x:Key="R_STR_DATABASES">数据库</system:String>
     <system:String x:Key="R_STR_TABLES">表</system:String>
+    <system:String x:Key="R_STR_APIS">API</system:String>
     <system:String x:Key="R_STR_SAVE">保存</system:String>
     <system:String x:Key="R_STR_RESTORE">还原</system:String>
     <system:String x:Key="R_STR_ADD">新增</system:String>
@@ -56,6 +57,7 @@
     <system:String x:Key="R_STR_ADD_GROUP">新增分组</system:String>
     <system:String x:Key="R_STR_ADD_DATABASE">新增数据库</system:String>
     <system:String x:Key="R_STR_ADD_TABLE">新增表</system:String>
+    <system:String x:Key="R_STR_ADD_API">新增API</system:String>
     <system:String x:Key="R_STR_BASIC_INFO">基本信息</system:String>
     <system:String x:Key="R_STR_HISTORY_TABLE">历史表</system:String>
     <system:String x:Key="R_STR_HAS_HISTORY_TABLE">有历史表</system:String>

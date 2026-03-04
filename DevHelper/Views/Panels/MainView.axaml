@@ -70,14 +70,22 @@
                                                       IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup}"
                                                       Command="{Binding #This.DataContext.AddTableCommand}"
                                                       CommandParameter="{Binding}"/>
-                                            
+                                            <!-- for APIs -->
+                                            <MenuItem Header="{DynamicResource R_STR_ADD_GROUP}"
+                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Apis|ApiGroup}"
+                                                      Command="{Binding #This.DataContext.AddApiGroupCommand}"
+                                                      CommandParameter="{Binding}"/>
+                                            <MenuItem Header="{DynamicResource R_STR_ADD_API}"
+                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Apis|ApiGroup}"
+                                                      Command="{Binding #This.DataContext.AddApiCommand}"
+                                                      CommandParameter="{Binding}"/>
                                             <!-- general -->
                                             <MenuItem Header="{DynamicResource R_STR_MODIFY}"
-                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table}"
+                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table|ApiGroup|Api}"
                                                       Command="{Binding #This.DataContext.ModifyItemCommand}"
                                                       CommandParameter="{Binding}"/>
                                             <MenuItem Header="{DynamicResource R_STR_DELETE}"
-                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table}"
+                                                      IsVisible="{Binding MenuType, Converter={StaticResource IsValueInConverter}, ConverterParameter=Database|TableGroup|Table|ApiGroup|Api}"
                                                       Command="{Binding #This.DataContext.DeleteItemCommand}"
                                                       CommandParameter="{Binding}"/>
                                         </ContextMenu>
