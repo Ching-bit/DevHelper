@@ -64,9 +64,9 @@ public partial class GenTaskModel : UniModel
     [RelayCommand]
     private async Task PickFolder()
     {
-        var topLevel = TopLevel.GetTopLevel(_view);
-        var sp = topLevel?.StorageProvider;
-        if (sp is null)
+        TopLevel? topLevel = TopLevel.GetTopLevel(_view);
+        IStorageProvider? sp = topLevel?.StorageProvider;
+        if (null == sp)
         {
             return;
         }
