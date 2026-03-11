@@ -1,0 +1,36 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ursa="https://irihi.tech/ursa"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:Menu.DevData"
+    x:Class="Menu.DevData.ApiSingleParamSetPanel">
+    
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <HeaderedContentControl Grid.Row="0" Classes="Common" HorizontalAlignment="Left"
+                                Header="{DynamicResource R_STR_PARAMETER_SET_MODE}">
+            <ComboBox Classes="Common"
+                      ItemsSource="{Binding InternalParameterSetModeList, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                      SelectedIndex="{Binding ApiParamSetModel.Mode, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </HeaderedContentControl>
+        
+        <HeaderedContentControl Grid.Row="1" Classes="Common" HorizontalAlignment="Left"
+                                Header="{DynamicResource R_STR_ASSOCIATED_TABLE}"
+                                IsVisible="{Binding ApiParamSetModel.Mode, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource IsValueInConverter}, ConverterParameter=AssociateTable}">
+            <ursa:AutoCompleteBox
+                Classes="Common" FilterMode="Contains"
+                ItemsSource="{Binding InternalTableList, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+                SelectedItem="{Binding ApiParamSetModel.AssociatedTable, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </HeaderedContentControl>
+        
+        <HeaderedContentControl Grid.Row="2" Classes="Common" HorizontalAlignment="Left"
+                                Header="{DynamicResource R_STR_COLUMNS}"
+                                IsVisible="{Binding ApiParamSetModel.Mode, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource IsValueInConverter}, ConverterParameter=SelfDefined}">
+            <local:TableColumnsPanel
+                ColumnList="{Binding ApiParamSetModel.ColumnList, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </HeaderedContentControl>
+        
+    </Grid>
+    
+</frw:UniPanel>

@@ -66,8 +66,8 @@
     <system:String x:Key="R_STR_AUTO_INCREMENT_COLUMN">自增列</system:String>
     <system:String x:Key="R_STR_INDEXES">索引</system:String>
     <system:String x:Key="R_STR_FOREIGN_KEYS">外鍵</system:String>
-    <system:String x:Key="R_STR_REFERENCE_TABLE">指向表</system:String>
-    <system:String x:Key="R_STR_REFERENCE_COLUMN">指向字段</system:String>
+    <system:String x:Key="R_STR_ASSOCIATED_TABLE">關聯表</system:String>
+    <system:String x:Key="R_STR_ASSOCIATED_COLUMN">關聯字段</system:String>
     <system:String x:Key="R_STR_DEFAULT_VALUES">預設值</system:String>
     <system:String x:Key="R_STR_INPUT_VALUE">[輸入值]</system:String>
     <system:String x:Key="R_STR_INPUTS">輸入</system:String>
@@ -81,6 +81,9 @@
     <system:String x:Key="R_STR_DATABASE_TYPE">資料庫類型</system:String>
     <system:String x:Key="R_STR_HIS_DB_NAME">歷史庫名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">歷史表名稱</system:String>
+    <system:String x:Key="R_STR_PARAMETER_SET_MODE">參數集模式</system:String>
+    <system:String x:Key="R_STR_SELF_DEFINED">自定義</system:String>
+    <system:String x:Key="R_STR_ASSOCIATE_TABLE">關聯表</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">歷史表的日期字段名稱</system:String>
     <system:String x:Key="R_STR_START_TO_RUN_TASK">開始運行任務：[#1]</system:String>
     <system:String x:Key="R_STR_TASK_FINISHED">任務 [#1] 運行完成</system:String>

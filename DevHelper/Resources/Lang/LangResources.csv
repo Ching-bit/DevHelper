@@ -63,8 +63,8 @@ R_STR_PRIMARY_KEY,Primary Key,主鍵,主键
 R_STR_AUTO_INCREMENT_COLUMN,Auto Increment Column,自增列,自增列
 R_STR_INDEXES,Indexes,索引,索引
 R_STR_FOREIGN_KEYS,Foreign Keys,外鍵,外键
-R_STR_REFERENCE_TABLE,Reference Table,指向表,指向表
-R_STR_REFERENCE_COLUMN,Reference Column,指向字段,指向字段
+R_STR_ASSOCIATED_TABLE,Associated Table,關聯表,关联表
+R_STR_ASSOCIATED_COLUMN,Associated Column,關聯字段,关联字段
 R_STR_DEFAULT_VALUES,Default Values,預設值,预设值
 R_STR_INPUT_VALUE,[Input Value],[輸入值],[输入值]
 R_STR_INPUTS,Inputs,輸入,输入
@@ -78,6 +78,9 @@ R_STR_LOG,Log,日誌,日志
 R_STR_DATABASE_TYPE,Database Type,資料庫類型,数据库类型
 R_STR_HIS_DB_NAME,History Database Name,歷史庫名稱,历史库名称
 R_STR_HIS_TABLE_NAME,History Table Name,歷史表名稱,历史表名称
+R_STR_PARAMETER_SET_MODE,Parrameter Set Mode,參數集模式,参数集模式
+R_STR_SELF_DEFINED,Self Defined,自定義,自定义
+R_STR_ASSOCIATE_TABLE,Associate Table,關聯表,关联表
 R_STR_HIS_TABLE_DATE_COLUMN_NAME,Date column name of the history tables,歷史表的日期字段名稱,历史表的日期字段名称
 R_STR_START_TO_RUN_TASK,Start to run task: [#1],開始運行任務：[#1],开始运行任务：[#1]
 R_STR_TASK_FINISHED,The task [#1] was completed,任務 [#1] 運行完成,任务 [#1] 运行完成

@@ -508,6 +508,27 @@ public class DevData : IDevData
 
         return apiList;
     }
+
+    public bool UpdateApi(ApiInfo apiInfo, List<ApiParamSet> inputParamSets, List<ApiParamSet> outputParamSets, string remark)
+    {
+        ApiInfo tmp = new(apiInfo.Name, apiInfo.Description, apiInfo.Parent)
+        {
+            InputParamSets = inputParamSets,
+            OutputParamSets = outputParamSets,
+            Remark = remark
+        };
+        if (!tmp.ToFile())
+        {
+            return false;
+        }
+        
+        apiInfo.InputParamSets.Clear();
+        apiInfo.InputParamSets.AddRange(inputParamSets);
+        apiInfo.OutputParamSets.Clear();
+        apiInfo.OutputParamSets.AddRange(outputParamSets);
+        apiInfo.Remark = remark;
+        return true;
+    }
     #endregion
     
     #endregion

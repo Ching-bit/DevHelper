@@ -1,0 +1,52 @@
+<frw:UniPanel
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:frw="clr-namespace:Framework.Common;assembly=Framework.Common"
+    xmlns:local="clr-namespace:Menu.DevData"
+    x:Class="Menu.DevData.ApiParamSetsPanel">
+    
+    <frw:UniPanel.Resources>
+        <local:ApiParamSetTabNameConverter x:Key="ApiParamSetTabNameConverter"/>
+    </frw:UniPanel.Resources>
+    
+    <Grid RowDefinitions="Auto,*">
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_ADD}"
+                    Command="{Binding AddParamSetCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+            <Button Classes="Common"
+                    Content="{DynamicResource R_STR_DELETE}"
+                    Command="{Binding DeleteParamSetCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </StackPanel>
+        
+        <TabControl
+            Grid.Row="1"
+            ItemsSource="{Binding ApiParamSets, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+            SelectedItem="{Binding InternalSelectedParamSet, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
+            SelectedIndex="{Binding InternalSelectedParamSetIndex, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource ApiParamSetTabNameConverter}">
+                                <Binding/>
+                                <Binding Path="ApiParamSets" RelativeSource="{RelativeSource AncestorType=frw:UniPanel}"/>
+                                <Binding Path="ParamSetName" RelativeSource="{RelativeSource AncestorType=frw:UniPanel}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <local:ApiSingleParamSetPanel
+                        ApiParamSetModel="{Binding }"
+                        IsParamSetChanged="{Binding IsParamSetChanged, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        
+    </Grid>
+    
+</frw:UniPanel>

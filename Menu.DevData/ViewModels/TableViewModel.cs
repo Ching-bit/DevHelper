@@ -13,6 +13,7 @@ namespace Menu.DevData;
 
 public partial class TableViewModel : UniViewModel
 {
+    #region Menu Lifecycle
     public override void OnMenuInit()
     {
         base.OnMenuInit();
@@ -32,7 +33,21 @@ public partial class TableViewModel : UniViewModel
             }
         });
     }
-
+    
+    private void InitData()
+    {
+        if (View is not UniMenu uniMenu || uniMenu.MenuConf?.Entity is not TableInfo tableInfo)
+        {
+            throw new Exception("Cannot get table instance from the menu");
+        }
+        
+        TableInfoModel = new TableInfoModel(tableInfo);
+        IsTableChanged = false;
+    }
+    #endregion
+    
+    
+    #region Commands
     [RelayCommand]
     private async Task Save()
     {
@@ -40,17 +55,17 @@ public partial class TableViewModel : UniViewModel
         {
             throw new Exception("Cannot get table instance from the menu");
         }
-
-        foreach (ColumnInfoModel deletedColumn in TableInfoModel.ColumnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
-        {
-            TableInfoModel.ColumnList.Remove(deletedColumn);
-        }
-
+        
         if (!await CheckBeforeSave(TableInfoModel))
         {
             return;
         }
 
+        foreach (ColumnInfoModel deletedColumn in TableInfoModel.ColumnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
+        {
+            TableInfoModel.ColumnList.Remove(deletedColumn);
+        }
+        
         foreach (IndexInfoModel deletedIndex in TableInfoModel.IndexList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList())
         {
             TableInfoModel.IndexList.Remove(deletedIndex);
@@ -82,8 +97,7 @@ public partial class TableViewModel : UniViewModel
                 TableInfoModel.ForeignKeyList.Select(x => x.GetForeignKeyInfo()).ToList(),
                 TableInfoModel.HasHistoryTable,
                 TableInfoModel.Remark,
-                defaultValues) ||
-            !tableInfo.ToFile())
+                defaultValues))
         {
             ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
             return;
@@ -95,7 +109,7 @@ public partial class TableViewModel : UniViewModel
     private async Task<bool> CheckBeforeSave(TableInfoModel tableInfoModel)
     {
         // check if the column exists
-        foreach (ColumnInfoModel columnInfoModel in tableInfoModel.ColumnList)
+        foreach (ColumnInfoModel columnInfoModel in tableInfoModel.ColumnList.Where(x => ModifyStatus.Deleted != x.ModifyStatus))
         {
             if (Global.Get<IDevData>().Columns.All(x => x.Id != columnInfoModel.Id))
             {
@@ -114,18 +128,12 @@ public partial class TableViewModel : UniViewModel
     {
         InitData();
     }
-
-    private void InitData()
-    {
-        if (View is not UniMenu uniMenu || uniMenu.MenuConf?.Entity is not TableInfo tableInfo)
-        {
-            throw new Exception("Cannot get table instance from the menu");
-        }
-        
-        TableInfoModel = new TableInfoModel(tableInfo);
-        IsTableChanged = false;
-    }
+    #endregion
     
+    
+    #region Properties
     [ObservableProperty] private TableInfoModel? _tableInfoModel;
     [ObservableProperty] private bool _isTableChanged;
+    #endregion
+    
 }

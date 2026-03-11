@@ -12,20 +12,10 @@ public partial class TableInfoModel : UniModel
 {
     public TableInfoModel()
     {
-        Name = string.Empty;
-        Description = string.Empty;
-        Remark = string.Empty;
-        ColumnList = [];
-        IndexList = [];
-        ForeignKeyList = [];
-
-        AllColumns = [];
         foreach (ColumnInfo columnInfo in Global.Get<IDevData>().Columns)
         {
             AllColumns.Add(new ColumnInfoModel(columnInfo));
         }
-
-        DefaultValues = [];
         
         // register table name changed
         WeakReferenceMessenger.Default.Register<ItemNameChangedMessage>(this, (_, message) =>
@@ -93,16 +83,16 @@ public partial class TableInfoModel : UniModel
     }
     
     [ObservableProperty] private int _id;
-    [ObservableProperty] private string _name;
-    [ObservableProperty] private string _description;
-    [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList;
-    [ObservableProperty] private ObservableCollection<IndexInfoModel> _indexList;
-    [ObservableProperty] private ObservableCollection<ForeignKeyInfoModel> _foreignKeyList;
+    [ObservableProperty] private string _name = string.Empty;
+    [ObservableProperty] private string _description = string.Empty;
+    [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList = [];
+    [ObservableProperty] private ObservableCollection<IndexInfoModel> _indexList = [];
+    [ObservableProperty] private ObservableCollection<ForeignKeyInfoModel> _foreignKeyList = [];
     [ObservableProperty] private bool _hasHistoryTable;
-    [ObservableProperty] private string _remark;
-    [ObservableProperty] private ObservableCollection<DynamicRow> _defaultValues;
-    
-    private List<ColumnInfoModel> AllColumns { get; }
+    [ObservableProperty] private string _remark = string.Empty;
+    [ObservableProperty] private ObservableCollection<DynamicRow> _defaultValues = [];
+
+    private List<ColumnInfoModel> AllColumns { get; } = [];
 
     public override string ToString()
     {

@@ -19,13 +19,13 @@
                     Text="{Binding ForeignKeyInfoModel.Name}"
                     TextWrapping="Wrap"/>
             </HeaderedContentControl>
-            <HeaderedContentControl Header="{DynamicResource R_STR_REFERENCE_TABLE}">
+            <HeaderedContentControl Header="{DynamicResource R_STR_ASSOCIATED_TABLE}">
                 <ursa:AutoCompleteBox
                     Classes="Common" FilterMode="Contains"
                     ItemsSource="{Binding TableList}"
                     SelectedItem="{Binding ForeignKeyInfoModel.ReferenceTable}"/>
             </HeaderedContentControl>
-            <HeaderedContentControl Header="{DynamicResource R_STR_REFERENCE_COLUMN}">
+            <HeaderedContentControl Header="{DynamicResource R_STR_ASSOCIATED_COLUMN}">
                 <ursa:AutoCompleteBox
                     Classes="Common" FilterMode="Contains"
                     ItemsSource="{Binding ReferenceColumnList}"
