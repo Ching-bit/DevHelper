@@ -59,7 +59,9 @@
                     Header="{DynamicResource R_STR_SCALE}" IsReadOnly="True" Width="90"
                     Binding="{Binding Scale}"
                     ForegroundBinding="{Binding ModifyStatus, Converter={StaticResource ModifyStatusToColorConverter}}"/>
-                <DataGridTemplateColumn Header="{DynamicResource R_STR_PRIMARY_KEY}" Width="120">
+                <DataGridTemplateColumn
+                    Header="{DynamicResource R_STR_PRIMARY_KEY}" Width="120"
+                    IsVisible="{Binding ShowPrimaryKeyColumn, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock

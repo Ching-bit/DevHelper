@@ -12,10 +12,10 @@
     <Grid RowDefinitions="Auto,*">
         
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Classes="Common"
+            <Button Classes="Common Success"
                     Content="{DynamicResource R_STR_ADD}"
                     Command="{Binding AddParamSetCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
-            <Button Classes="Common"
+            <Button Classes="Common Danger"
                     Content="{DynamicResource R_STR_DELETE}"
                     Command="{Binding DeleteParamSetCommand, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
         </StackPanel>

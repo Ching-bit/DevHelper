@@ -11,6 +11,7 @@ namespace Menu.DevData;
 [WithDirectProperty(typeof(bool), "IsColumnChanged", false)]
 [WithDirectProperty(typeof(ObservableCollection<IndexInfoModel>), "IndexList")]
 [WithDirectProperty(typeof(ObservableCollection<ForeignKeyInfoModel>), "ForeignKeyList")]
+[WithDirectProperty(typeof(bool), "ShowPrimaryKeyColumn", true)]    // for UI control
 public partial class TableColumnsPanel : UniPanel
 {
     public TableColumnsPanel()

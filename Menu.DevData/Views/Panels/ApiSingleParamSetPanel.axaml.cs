@@ -37,7 +37,7 @@ public partial class ApiSingleParamSetPanel : UniPanel
             {
                 if (args.PropertyName == nameof(ApiParamSetModel.IsParamSetChanged))
                 {
-                    IsParamSetChanged = ApiParamSetModel.IsParamSetChanged;
+                    IsParamSetChanged = ApiParamSetModel?.IsParamSetChanged ?? false;
                 }
             };
         }
@@ -45,6 +45,7 @@ public partial class ApiSingleParamSetPanel : UniPanel
 
     private void RefreshParameterSetModeList()
     {
+        InternalParameterSetModeList.Clear();
         InternalParameterSetModeList.AddRange([
             $"0 {ResourceHelper.FindResource<string>("R_STR_SELF_DEFINED", "Self Defined")}",
             $"1 {ResourceHelper.FindResource<string>("R_STR_ASSOCIATE_TABLE", "Associate Table")}"

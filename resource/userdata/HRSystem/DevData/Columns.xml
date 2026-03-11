@@ -111,4 +111,18 @@
         <DataDict />
         <Remark />
     </ColumnInfo>
+    <ColumnInfo>
+        <Group>Default</Group>
+        <Id>9</Id>
+        <Name>password</Name>
+        <Description>Password</Description>
+        <Type>Varchar</Type>
+        <Length>32</Length>
+        <Scale>1</Scale>
+        <IsNullable>false</IsNullable>
+        <HasDefaultValue>false</HasDefaultValue>
+        <DefaultValue />
+        <DataDict />
+        <Remark />
+    </ColumnInfo>
 </ArrayOfColumnInfo>
