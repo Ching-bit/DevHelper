@@ -30,7 +30,7 @@ public interface IDevData : IPlugin
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark, List<string> defaultValues);
     public ErrorInfo CheckDeleteTable(TableInfo tableInfo);
     
-    public List<ApiInfo> GetAllApis();
+    public List<ApiInfo> GetAllApis(bool isOriginal = true);
     public bool UpdateApi(ApiInfo apiInfo, List<ApiParamSet> inputParamSets, List<ApiParamSet> outputParamSets, string remark);
     public ErrorInfo CheckDeleteApi(ApiInfo apiInfo);
 }

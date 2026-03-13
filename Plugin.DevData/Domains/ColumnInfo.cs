@@ -156,4 +156,30 @@ public class ColumnInfo
             _ => string.Empty
         };
     }
+
+    public string GetRpcType(RpcType rpcType)
+    {
+        return rpcType switch
+        {
+            RpcType.Thrift => Type switch
+            {
+                ColumnType.Int32 => "i32",
+                ColumnType.Int64 => "i64",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar or ColumnType.Datetime => "string",
+                ColumnType.Bool => "bool",
+                _ => string.Empty
+            },
+            RpcType.Grpc => Type switch
+            {
+                ColumnType.Int32 => "int32",
+                ColumnType.Int64 => "int64",
+                ColumnType.Number => "double",
+                ColumnType.Char or ColumnType.Varchar or ColumnType.Datetime => "string",
+                ColumnType.Bool => "bool",
+                _ => string.Empty
+            },
+            _ => string.Empty
+        };
+    }
 }

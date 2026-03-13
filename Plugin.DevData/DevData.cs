@@ -561,25 +561,56 @@ public class DevData : IDevData
 
 
     #region API Methods
-    public List<ApiInfo> GetAllApis()
+    public List<ApiInfo> GetAllApis(bool isOriginal = true)
     {
-        return null == ApiRoot ? [] : GetApiListInner(ApiRoot);
+        return null == ApiRoot ? [] : GetApiListInner(ApiRoot, isOriginal);
     }
 
-    private List<ApiInfo> GetApiListInner(IDirectoryNode apiDirectory)
+    private List<ApiInfo> GetApiListInner(IDirectoryNode apiDirectory, bool isOriginal)
     {
         List<ApiInfo> apiList = [];
         foreach (IFileNode fileNode in apiDirectory.Instances)
         {
-            if (fileNode is ApiInfo apiInfo)
+            if (fileNode is not ApiInfo apiInfo) { continue; }
+            
+            if (isOriginal)
             {
                 apiList.Add(apiInfo);
+            }
+            else
+            {
+                ApiInfo apiInfoCopy = new(apiInfo.Name, apiInfo.Description, apiInfo.Parent) { Id = apiInfo.Id };
+                foreach (ApiParamSet inputParamSet in apiInfo.InputParamSets)
+                {
+                    ApiParamSet paramSet = inputParamSet;
+                    if (ApiParamSetMode.AssociateTable == inputParamSet.Mode)
+                    {
+                        TableInfo? tableInfo = GetTableById(inputParamSet.TableId);
+                        if (null == tableInfo) { continue; }
+                        paramSet = new ApiParamSet { Type = ApiParamSetType.Input, Mode = ApiParamSetMode.SelfDefined };
+                        paramSet.ColumnIdList.AddRange(tableInfo.ColumnIdList);
+                    }
+                    apiInfoCopy.InputParamSets.Add(paramSet);
+                }
+                foreach (ApiParamSet outputParamSet in apiInfo.OutputParamSets)
+                {
+                    ApiParamSet paramSet = outputParamSet;
+                    if (ApiParamSetMode.AssociateTable == outputParamSet.Mode)
+                    {
+                        TableInfo? tableInfo = GetTableById(outputParamSet.TableId);
+                        if (null == tableInfo) { continue; }
+                        paramSet = new ApiParamSet { Type = ApiParamSetType.Output, Mode = ApiParamSetMode.SelfDefined };
+                        paramSet.ColumnIdList.AddRange(tableInfo.ColumnIdList);
+                    }
+                    apiInfoCopy.OutputParamSets.Add(paramSet);
+                }
+                apiList.Add(apiInfoCopy);
             }
         }
 
         foreach (IDirectoryNode directoryNode in apiDirectory.SubDirectories)
         {
-            apiList.AddRange(GetApiListInner(directoryNode));
+            apiList.AddRange(GetApiListInner(directoryNode, isOriginal));
         }
 
         return apiList;

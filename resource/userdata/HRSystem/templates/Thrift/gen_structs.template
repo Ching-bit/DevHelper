@@ -1,0 +1,5 @@
+
+
+struct ${ApiName(UpperCamel)}Service_${ParamSetType(UpperCamel)}${ParamSetIndex} {
+    ${ParamIndex}: ${ParamRpcType} ${ParamName(lower_snake)}
+}

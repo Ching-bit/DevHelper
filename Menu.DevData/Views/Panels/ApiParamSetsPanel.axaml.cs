@@ -3,10 +3,12 @@ using Attributes.Avalonia;
 using Avalonia;
 using CommunityToolkit.Mvvm.Input;
 using Framework.Common;
+using Plugin.DevData;
 
 namespace Menu.DevData;
 
 [WithDirectProperty(typeof(ObservableCollection<ApiParamSetModel>), "ApiParamSets")]
+[WithDirectProperty(typeof(ApiParamSetType), "ParamSetType")]
 [WithDirectProperty(typeof(string), "ParamSetName", "")]
 [WithDirectProperty(typeof(bool), "IsParamSetChanged", false)]
 [WithDirectProperty(typeof(ApiParamSetModel), "InternalSelectedParamSet", nullable: true)]
@@ -34,7 +36,7 @@ public partial class ApiParamSetsPanel : UniPanel
     [RelayCommand]
     private void AddParamSet()
     {
-        ApiParamSets.Add(new ApiParamSetModel());
+        ApiParamSets.Add(new ApiParamSetModel(ParamSetType));
         IsParamSetChanged = true;
     }
 

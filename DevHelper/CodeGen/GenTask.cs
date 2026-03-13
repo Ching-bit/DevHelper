@@ -14,6 +14,7 @@ public class GenTask
     public bool IsUsingString { get; set; }
     public DatabaseType DatabaseType { get; set; }
     public bool IsIncludingHistoryDatabases { get; set; }
+    public RpcType RpcType { get; set; }
     
     public string OutputDir { get; set; } = string.Empty;
     public List<string> TargetDatabases { get; set; } = [];

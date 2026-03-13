@@ -10,10 +10,14 @@ public partial class ApiParamSetModel : UniModel
 {
     #region Constructors
 
-    public ApiParamSetModel() { }
-    
-    public ApiParamSetModel(ApiParamSet apiParamSet) : this()
+    public ApiParamSetModel(ApiParamSetType type)
     {
+        Type = type;
+    }
+    
+    public ApiParamSetModel(ApiParamSet apiParamSet)
+    {
+        Type = apiParamSet.Type;
         Mode = apiParamSet.Mode;
         TableInfo? tableInfo = Global.Get<IDevData>().GetTableById(apiParamSet.TableId);
         if (null != tableInfo)
@@ -35,6 +39,7 @@ public partial class ApiParamSetModel : UniModel
     
     
     #region Properties
+    [ObservableProperty] private ApiParamSetType _type;
     [ObservableProperty] private ApiParamSetMode _mode;
     [ObservableProperty] private TableInfoModel? _associatedTable;
     [ObservableProperty] private ObservableCollection<ColumnInfoModel> _columnList = [];
@@ -78,6 +83,7 @@ public partial class ApiParamSetModel : UniModel
     {
         return new ApiParamSet
         {
+            Type = Type,
             Mode = Mode,
             TableId = AssociatedTable?.Id ?? 0,
             ColumnIdList = ColumnList.Select(x => x.Id).ToList()

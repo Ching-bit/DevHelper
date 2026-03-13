@@ -41,8 +41,10 @@ public class CodeGenerator
             GenTask = task,
             Columns = columns,
             TableRoot = Global.Get<IDevData>().TableRoot,
+            ApiRoot = Global.Get<IDevData>().ApiRoot,
             Tables = Global.Get<IDevData>().GetAllTables(),
             HistoryTables = Global.Get<IDevData>().GetAllHistoryTables(),
+            Apis = Global.Get<IDevData>().GetAllApis(false)
         };
         
         string scriptContent = await File.ReadAllTextAsync(task.GetTemplatePath());
@@ -95,25 +97,43 @@ public class CodeGenerator
                     _currentDatabase = database;
                     string outputDir =
                         task.TargetDatabases.Count > 1 ?
-                        Path.Combine(task.OutputDir, database.Name) :
+                        Path.Combine(task.OutputDir, _currentDatabase.Name) :
                         task.OutputDir;
                     if (!Directory.Exists(outputDir))
                     {
                         Directory.CreateDirectory(outputDir);
                     }
                     
-                    foreach (TableInfo tableInfo in TableListSorter.Sort(_allTables[database]))
+                    foreach (TableInfo tableInfo in TableListSorter.Sort(_allTables[_currentDatabase]))
                     {
                         _currentTable = tableInfo;
-                        string outputFileName = GenFile_Table(task.OutputFile, tableInfo, null);
+                        string outputFileName = GenFile_Table(task.OutputFile, _currentTable, null);
                         string outputFilePath = Path.Combine(outputDir, outputFileName);
                     
                         StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
                         string templateText = await File.ReadAllTextAsync(task.GetTemplatePath());
-                        string outputContent = GenFile_Table(templateText, tableInfo, task);
+                        string outputContent = GenFile_Table(templateText, _currentTable, task);
                         await sw.WriteAsync(outputContent);
                         sw.Close();
                     }
+                }
+                
+                break;
+            }
+            case RecursionLevel.Api:
+            {
+                _allApis = Global.Get<IDevData>().GetAllApis(false);
+                foreach (ApiInfo apiInfo in _allApis)
+                {
+                    _currentApi = apiInfo;
+                    string outputFileName = GenFile_Api(task.OutputFile, _currentApi, null);
+                    string outputFilePath = Path.Combine(task.OutputDir, outputFileName);
+                    
+                    StreamWriter sw = new(outputFilePath, false, Encoding.UTF8);
+                    string templateText = await File.ReadAllTextAsync(task.GetTemplatePath());
+                    string outputContent = GenFile_Api(templateText, _currentApi, task);
+                    await sw.WriteAsync(outputContent);
+                    sw.Close();
                 }
                 
                 break;
@@ -273,6 +293,58 @@ public class CodeGenerator
                 ],
             task);
     }
+
+    // API level template
+    private static string GenFile_Api(string templateText, ApiInfo apiInfo, GenTask? task)
+    {
+        return GenFile_Template(templateText,
+            new Dictionary<string, string>()
+            {
+                { "ApiName", apiInfo.Name },
+                { "ApiDescription", apiInfo.Description }
+            },
+            [
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "InputParamSetIndex", x => apiInfo.InputParamSets.IndexOf((ApiParamSet)x) + 1 + "" },
+                    },
+                    apiInfo.InputParamSets.ConvertAll<object>(y => y)),
+                Tuple.Create(
+                    new Dictionary<string, Func<object, string>>
+                    {
+                        { "OutputParamSetIndex", x => apiInfo.OutputParamSets.IndexOf((ApiParamSet)x) + 1 + "" },
+                    },
+                    apiInfo.OutputParamSets.ConvertAll<object>(y => y))
+            ],
+            task);
+    }
+
+    // API param set level template
+    private static string GenFile_ApiParamSet(string templateText, ApiParamSet paramSet, GenTask? task)
+    {
+        List<ColumnInfo> columns = paramSet.ColumnIdList.Select(x => Global.Get<IDevData>().Columns.First(y => y.Id == x)).ToList();
+        
+        return GenFile_Template(templateText,
+            new Dictionary<string, string>()
+            {
+                { "ApiName", _currentApi?.Name + "" },
+                { "ParamSetType", paramSet.Type.ToString() },
+                { "ParamSetIndex", ApiParamSetType.Input == paramSet.Type ? _currentApi?.InputParamSets.IndexOf(paramSet) + 1 + "" : _currentApi?.OutputParamSets.IndexOf(paramSet) + 1 + "" }
+            },
+            null == task ? [] :
+                [
+                    Tuple.Create(
+                        new Dictionary<string, Func<object, string>>
+                        {
+                            { "ParamIndex", x => columns.IndexOf((ColumnInfo)x) + 1 + "" },
+                            { "ParamName", x => ((ColumnInfo)x).Name },
+                            { "ParamRpcType", x => ((ColumnInfo)x).GetRpcType(task.RpcType) },
+                        },
+                        columns.ConvertAll<object>(y => y)),
+                ],
+            task);
+    }
     
     /// <summary>
     /// General method to generate a file
@@ -419,23 +491,37 @@ public class CodeGenerator
         {
             case RecursionLevel.Database:
                 return null != _currentDatabase ? GenFile_Database(templateText, _currentDatabase, task) : string.Empty;
-            case RecursionLevel.Table when null == _currentDatabase:
-                throw new ArgumentException("Null database info when recurse tables");
             case RecursionLevel.Table:
             {
+                if (null == _currentDatabase) { throw new ArgumentException("Null database info when recurse tables"); }
                 StringBuilder sb = new();
                 List<TableInfo> tables = _allTables[_currentDatabase];
                 tables = TableListSorter.Sort(tables);
                 foreach (TableInfo tableInfo in tables)
                 {
                     _currentTable = tableInfo;
-                    sb.Append(GenFile_Table(templateText, tableInfo, task));
+                    sb.Append(GenFile_Table(templateText, _currentTable, task));
                 }
-                
+                return sb.ToString();
+            }
+            case RecursionLevel.ApiParamSet:
+            {
+                if (null == _currentApi) { throw new ArgumentException("Null API info when recurse API parameter sets"); }
+                StringBuilder sb = new();
+                foreach (ApiParamSet apiParamSet in _currentApi.InputParamSets)
+                {
+                    _currentApiParamSet = apiParamSet;
+                    sb.Append(GenFile_ApiParamSet(templateText, _currentApiParamSet, task));
+                }
+                foreach (ApiParamSet apiParamSet in _currentApi.OutputParamSets)
+                {
+                    _currentApiParamSet = apiParamSet;
+                    sb.Append(GenFile_ApiParamSet(templateText, _currentApiParamSet, task));
+                }
                 return sb.ToString();
             }
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentException("Invalid recursion level");
         }
     }
 
@@ -444,5 +530,9 @@ public class CodeGenerator
     private static Dictionary<DatabaseInfo, List<TableInfo>> _allTables = [];
     private static DatabaseInfo? _currentDatabase;
     private static TableInfo? _currentTable;
+    
+    private static List<ApiInfo> _allApis = [];
+    private static ApiInfo? _currentApi;
+    private static ApiParamSet? _currentApiParamSet;
     #endregion
 }

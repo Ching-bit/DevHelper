@@ -106,6 +106,7 @@
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">確認刪除以下字段？</system:String>
     <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 `#1` 被表 `#2` 使用，仍然修改？</system:String>
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 `#1` 被表 `#2` 使用</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_API_NOTICE">字段 `#1` 被 API `#2` 使用</system:String>
     <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">字段 `#1` 被表 `#2` 使用，因此將被保留</system:String>
     <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">字段 `#1` 被索引 `#2` 使用</system:String>
     <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">找不到字段信息 `#1`</system:String>

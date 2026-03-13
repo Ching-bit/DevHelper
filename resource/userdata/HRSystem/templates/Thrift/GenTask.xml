@@ -1,0 +1,6 @@
+<GenTask>
+    <TemplateFile>gen_thrift.template</TemplateFile>
+    <RecursionLevel>Api</RecursionLevel>
+    <OutputFile>${ApiName(lower_snake)}.thrift</OutputFile>
+    <RpcType>Thrift</RpcType>
+</GenTask>

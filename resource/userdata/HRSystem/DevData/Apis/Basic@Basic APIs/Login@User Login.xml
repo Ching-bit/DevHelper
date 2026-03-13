@@ -1,0 +1,33 @@
+<ApiInfo>
+    <Id>0</Id>
+    <InputParamSets>
+        <ApiParamSet>
+            <Type>Input</Type>
+            <Mode>SelfDefined</Mode>
+            <TableId>1</TableId>
+            <ColumnIdList>
+                <int>1</int>
+                <int>9</int>
+            </ColumnIdList>
+        </ApiParamSet>
+    </InputParamSets>
+    <OutputParamSets>
+        <ApiParamSet>
+            <Type>Output</Type>
+            <Mode>SelfDefined</Mode>
+            <TableId>0</TableId>
+            <ColumnIdList>
+                <int>1</int>
+                <int>2</int>
+                <int>3</int>
+            </ColumnIdList>
+        </ApiParamSet>
+        <ApiParamSet>
+            <Type>Output</Type>
+            <Mode>AssociateTable</Mode>
+            <TableId>0</TableId>
+            <ColumnIdList />
+        </ApiParamSet>
+    </OutputParamSets>
+    <Remark>User login API</Remark>
+</ApiInfo>
