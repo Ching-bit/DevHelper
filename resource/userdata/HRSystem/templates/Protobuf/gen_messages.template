@@ -1,0 +1,5 @@
+
+
+message ${ApiName(UpperCamel)}${ParamSetType(UpperCamel)}${ParamSetIndex} {
+    ${ParamRpcType} ${ParamName(lower_snake)} = ${ParamIndex};
+}

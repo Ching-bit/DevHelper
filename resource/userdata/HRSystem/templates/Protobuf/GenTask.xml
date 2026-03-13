@@ -1,0 +1,6 @@
+<GenTask>
+    <TemplateFile>gen_proto.template</TemplateFile>
+    <RecursionLevel>Api</RecursionLevel>
+    <OutputFile>${ApiName(UpperCamel)}.proto</OutputFile>
+    <RpcType>Grpc</RpcType>
+</GenTask>

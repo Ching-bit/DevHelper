@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package services;
+option csharp_namespace = "Services";
+${TEMPLATE(gen_messages.template,ApiParamSet)}
+
+message ${ApiName(UpperCamel)}Request {
+    ${InputParamSetRepeated0}${ApiName(UpperCamel)}Input${InputParamSetIndex} ${ApiName(lower_snake)}_input${InputParamSetIndex} = ${InputParamSetIndex};
+}
+
+message ${ApiName(UpperCamel)}Response {
+    ${OutputParamSetRepeated0}${ApiName(UpperCamel)}Output${OutputParamSetIndex} ${ApiName(lower_snake)}_output${OutputParamSetIndex} = ${OutputParamSetIndex};
+}
+
+service ${ApiName(UpperCamel)}Service {
+    rpc ${ApiName(lowerCamel)}(${ApiName(UpperCamel)}Request) returns (${ApiName(UpperCamel)}Response) {}
+}
