@@ -1,5 +1,3 @@
-中文 | [English](https://github.com/Ching-bit/DevHelper/blob/main/README.en.md)
-
 # 介紹
 這是一個表結構管理並自動生成代碼的開發輔助工具。
 
@@ -62,7 +60,8 @@
 - **OutputFile**：輸出文件名稱；
 - **ProgramLanguage**：編程語言，可選擇Cpp、CSharp、Java，影響對應的程序字段類型；
 - **IsUsingString**：是否使用String，是則 Char、Varchar 類型字段對應的程序字段類型為 String，否則為 byte 數組；
-- **DatabaseType**：資料庫類型，影響對應的資料庫字段類型。
+- **DatabaseType**：資料庫類型，影響對應的資料庫字段類型；
+- **RpcType**：RPC類型，可選擇Thrift、Grpc，影響對應的RPC字段類型。
 
 ### 生成模板
 
@@ -191,10 +190,47 @@
 
 （9）預設值迭代
 
-- DefaultValue: 預設值字串。
+- DefaultValue: 預設值字串；
+
+### API迭代
+
+全局類宏：
+
+- ApiName：API 名稱；
+- ApiDescription：API 描述；
+
+迭代類宏：
+
+（1）輸入參數集迭代
+
+- InputParamSetIndex：輸入參數集序號；
+- InputParamSetRepeated0：重複前綴，Thrift為"list<"，Grpc為"repeated "，用於處理可重複結果集；
+- InputParamSetRepeated1：重複後綴，Thrift為">"，Grpc為空字串，用於處理可重複結果集；
+
+（2）輸出參數集迭代
+
+- OutputParamSetIndex：輸出參數集序號；
+- OutputParamSetRepeated0：重複前綴，Thrift為"list<"，Grpc為"repeated "，用於處理可重複結果集；
+- OutputParamSetRepeated1：重複後綴，Thrift為">"，Grpc為空字串，用於處理可重複結果集；
+
+### API參數集迭代
+
+全局類宏：
+
+- ApiName：API 名稱；
+- ParamSetType：參數集類型，Input 或 Output；
+- ParamSetIndex：參數集序號；
+
+迭代類宏：
+
+（1）參數迭代
+
+- ParamIndex：參數序號；
+- ParamName：參數名稱；
+- ParamRpcType：參數 RPC 字段類型。
 
 # 示例
 
-在工具初始的包中，有預設的 HRSystem，其中包含了 tdept 和 temployee 兩張表。預設示例演示了如何用本工具生成 C++ 結構體、Java 類、MyBatis 的 Mapper、MySQL 和 Oracle 的初始化建表腳本和表結構升級腳本。
+在工具初始的包中，有預設的 HRSystem，其中包含了 tdept 和 temployee 兩張表，以及 Login API。預設示例演示了如何用本工具生成 C++ 結構體、Java 類、MyBatis 的 Mapper、MySQL 和 Oracle 的初始化建表腳本和表結構升級腳本、Thrift 和 GRPC 的定義文件。
 
 在 MySQL 和 Oracle 的初始化建表腳本中，預設了一個名為 upgrade_table 的儲存過程，在該儲存過程中讀取由外部傳入的建表語句，建立臨時表並於當前表比較字段、索引是否有差異。若字段有差異則將當前表數據導入臨時表中，並在數據導入完成後以臨時表替換當前表；若索引有差異則重新建立索引；若無任何差異則不執行任何操作。在表結構升級腳本中，工具根據表結構數據生成調用該儲存過程的 SQL 語句。正是因為有該工具的支持，使得在工具內維護表結構數據後，執行升級腳本能保證最終的表結構與工具內部定義一致。
