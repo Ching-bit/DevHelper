@@ -9,7 +9,7 @@ public interface IDevData : IPlugin
     public IDirectoryNode? ApiRoot { get; }
 
     public bool UpdateColumns(List<ColumnInfo> columns);
-    public TableInfo? FirstUsedTable(int columnId);
+    public ErrorInfo CheckDeleteColumn(int columnId);
     
     public bool AddGroup(IDirectoryNode directory, string groupName, string groupDescription, out IDirectoryNode? createdDirectory);
     public bool AddItem(IDirectoryNode directory, string itemName, string itemDescription, out IFileNode? createdItem, Type itemType);

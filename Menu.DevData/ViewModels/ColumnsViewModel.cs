@@ -49,9 +49,16 @@ public partial class ColumnsViewModel : UniViewModel
     [RelayCommand]
     private async Task Save()
     {
-        if (!await CheckBeforeSave(ColumnList))
+        // reserve the deleted columns which are being used
+        List<ColumnInfoModel> deletedColumns = ColumnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus).ToList();
+        foreach (ColumnInfoModel deletedColumn in deletedColumns)
         {
-            return;
+            ErrorInfo errorInfo = Global.Get<IDevData>().CheckDeleteColumn(deletedColumn.Id);
+            if (!errorInfo.IsSuccess)
+            {
+                await MessageDialog.Show(errorInfo.ErrorMessage);
+                deletedColumn.ModifyStatus = ModifyStatus.Normal;
+            }
         }
         
         // remove deleted columns
@@ -67,24 +74,6 @@ public partial class ColumnsViewModel : UniViewModel
         {
             ShowNotification("R_STR_SAVE_FAILED", NotificationType.Error);
         }
-    }
-
-    private async Task<bool> CheckBeforeSave(ObservableCollection<ColumnInfoModel> columnList)
-    {
-        // check if deleted column is used by tables
-        foreach (ColumnInfoModel columnInfoModel in columnList.Where(x => ModifyStatus.Deleted == x.ModifyStatus))
-        {
-            TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(columnInfoModel.Id);
-            if (null == usedTable) { continue; }
-            
-            string errMsg = ResourceHelper.FindResource<string>("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE")
-                .Replace("#1", columnInfoModel.Name)
-                .Replace("#2", usedTable.Name);
-            await MessageDialog.Show(errMsg);
-            columnInfoModel.ModifyStatus = ModifyStatus.Normal;
-        }
-        
-        return true;
     }
 
     [RelayCommand]
@@ -118,14 +107,11 @@ public partial class ColumnsViewModel : UniViewModel
             return;
         }
         
-        // warning: the column is used by the table
-        TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(SelectedColumn.Id);
-        if (null != usedTable)
+        // warning: the column is being used
+        ErrorInfo errorInfo = Global.Get<IDevData>().CheckDeleteColumn(SelectedColumn.Id);
+        if (!errorInfo.IsSuccess)
         {
-            string warningMsg = ResourceHelper.FindResource<string>("R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE")
-                .Replace("#1", SelectedColumn.Name)
-                .Replace("#2", usedTable.Name);
-            bool confirmResult = await MessageDialog.Show(warningMsg, isCancelButtonVisible: true);
+            bool confirmResult = await MessageDialog.Show(errorInfo.ErrorMessage, isCancelButtonVisible: true);
             if (!confirmResult)
             {
                 return;
@@ -174,16 +160,13 @@ public partial class ColumnsViewModel : UniViewModel
             return;
         }
         
-        // if any column is used by any table, it is not allowed to delete
+        // if any column is being used, it is not allowed to delete
         foreach (ColumnInfoModel selectedColumn in selectedColumns)
         {
-            TableInfo? usedTable = Global.Get<IDevData>().FirstUsedTable(selectedColumn.Id);
-            if (null != usedTable)
+            ErrorInfo errorInfo = Global.Get<IDevData>().CheckDeleteColumn(selectedColumn.Id);
+            if (!errorInfo.IsSuccess)
             {
-                string warningMsg = ResourceHelper.FindResource<string>("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE")
-                    .Replace("#1", selectedColumn.Name)
-                    .Replace("#2", usedTable.Name);
-                await MessageDialog.Show(warningMsg);
+                await MessageDialog.Show(errorInfo.ErrorMessage);
                 return;
             }
         }

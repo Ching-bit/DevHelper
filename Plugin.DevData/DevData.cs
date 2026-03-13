@@ -86,32 +86,50 @@ public class DevData : IDevData
         return true;
     }
 
-    public TableInfo? FirstUsedTable(int columnId)
+    public ErrorInfo CheckDeleteColumn(int columnId)
     {
-        return null == TableRoot ? null : FirstUsedTableInner(columnId, TableRoot);
-    }
-
-    private TableInfo? FirstUsedTableInner(int columnId, IDirectoryNode directory)
-    {
-        foreach (IFileNode fileNode in directory.Instances)
+        ColumnInfo? columnInfo = Columns.FirstOrDefault(x => x.Id == columnId);
+        if (null == columnInfo)
         {
-            if (fileNode is TableInfo tableInfo &&
-                tableInfo.ColumnIdList.Contains(columnId))
-            {
-                return tableInfo;
-            }
+            return ErrorInfo.Success();
         }
-
-        foreach (IDirectoryNode directoryNode in directory.SubDirectories)
+        
+        // check if used by tables
+        Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables();
+        foreach (List<TableInfo> tableList in tables.Values)
         {
-            TableInfo? tableInfo = FirstUsedTableInner(columnId, directoryNode);
-            if (null != tableInfo)
+            foreach (TableInfo tableInfo in tableList)
             {
-                return tableInfo;
+                if (tableInfo.ColumnIdList.Contains(columnId))
+                {
+                    string errMsg = "The column `#1` is used by the table `#2`";
+                    errMsg = ResourceHelper.FindResource("R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE", errMsg)
+                        .Replace("#1", columnInfo.Name)
+                        .Replace("#2", tableInfo.Name);
+                    return ErrorInfo.Fail(errMsg);
+                }
             }
         }
         
-        return null;
+        // check if used by APIs
+        List<ApiInfo> apiList = GetAllApis();
+        foreach (ApiInfo apiInfo in apiList)
+        {
+            foreach (ApiParamSet inputParamSet in apiInfo.InputParamSets)
+            {
+                if (ApiParamSetMode.SelfDefined == inputParamSet.Mode &&
+                    inputParamSet.ColumnIdList.Contains(columnId))
+                {
+                    string errMsg = "The column `#1` is used by the API `#2`";
+                    errMsg = ResourceHelper.FindResource("R_STR_DELETED_COLUMN_IS_USED_BY_API_NOTICE", errMsg)
+                        .Replace("#1", columnInfo.Name)
+                        .Replace("#2", apiInfo.Name);
+                    return ErrorInfo.Fail(errMsg);
+                }
+            }
+        }
+        
+        return ErrorInfo.Success();
     }
     #endregion
     
@@ -485,7 +503,7 @@ public class DevData : IDevData
     public ErrorInfo CheckDeleteTable(TableInfo tableInfo)
     {
         // check foreign keys
-        Dictionary<DatabaseInfo, List<TableInfo>> tables = Global.Get<IDevData>().GetAllTables();
+        Dictionary<DatabaseInfo, List<TableInfo>> tables = GetAllTables();
         foreach (List<TableInfo> tableList in tables.Values)
         {
             foreach (TableInfo table in tableList)
@@ -505,7 +523,7 @@ public class DevData : IDevData
         }
         
         // check API parameter sets
-        List<ApiInfo> apiList = Global.Get<IDevData>().GetAllApis();
+        List<ApiInfo> apiList = GetAllApis();
         foreach (ApiInfo apiInfo in apiList)
         {
             foreach (ApiParamSet inputParamSet in apiInfo.InputParamSets)

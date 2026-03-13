@@ -104,6 +104,7 @@ R_STR_EMPTY_MEANS_ALL,Empty means all,空表示全部,空表示全部
 R_STR_DELETE_COLUMNS_CONFIRM_NOTICE,Delete the columns as follows?,確認刪除以下字段？,确认删除以下字段？
 R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE,The column `#1` is used by the table `#2`. Continue to modify?,字段 `#1` 被表 `#2` 使用，仍然修改？,字段 `#1` 被表 `#2` 使用，仍然修改？
 R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE,The column `#1` is used by the table `#2`,字段 `#1` 被表 `#2` 使用,字段 `#1` 被表 `#2` 使用
+R_STR_DELETED_COLUMN_IS_USED_BY_API_NOTICE,The column `#1` is used by the API `#2`,字段 `#1` 被 API `#2` 使用,字段 `#1` 被 API `#2` 使用
 R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE,The column `#1` is used by the table `#2` so it will be reserved,字段 `#1` 被表 `#2` 使用，因此將被保留,字段 `#1` 被表 `#2` 使用，因此将被保留
 R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE,The column `#1` is used by the index `#2`,字段 `#1` 被索引 `#2` 使用,字段 `#1` 被索引 `#2` 使用
 R_STR_COLUMN_NOT_FOUND_NOTICE,The column information of `#1` is not found,找不到字段信息 `#1`,找不到字段信息 `#1`
