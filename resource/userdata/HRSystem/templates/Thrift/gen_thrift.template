@@ -1,16 +1,15 @@
-namespace netstd Plugin.Thrift
+namespace netstd Services
 namespace cpp services
-
 ${TEMPLATE(gen_structs.template,ApiParamSet)}
 
-struct ${ApiName(UpperCamel)}ServiceRequest {
-    ${InputParamSetIndex}: ${ApiName(UpperCamel)}Service_Input${InputParamSetIndex}
+struct ${ApiName(UpperCamel)}Request {
+    ${InputParamSetIndex}: ${InputParamSetRepeated0}${ApiName(UpperCamel)}Input${InputParamSetIndex}${InputParamSetRepeated1} ${ApiName(lower_snake)}_input${InputParamSetIndex}
 }
 
-struct ${ApiName(UpperCamel)}ServiceResponse {
-    ${OutputParamSetIndex}: ${ApiName(UpperCamel)}Service_Output${OutputParamSetIndex}
+struct ${ApiName(UpperCamel)}Response {
+    ${OutputParamSetIndex}: ${OutputParamSetRepeated0}${ApiName(UpperCamel)}Output${OutputParamSetIndex}${OutputParamSetRepeated1} ${ApiName(lower_snake)}_output${OutputParamSetIndex}
 }
 
 service ${ApiName(UpperCamel)}Service {
-    ${ApiName(UpperCamel)}ServiceResponse ${ApiName(UpperCamel)}(1: ${ApiName(UpperCamel)}ServiceRequest request)
+    ${ApiName(UpperCamel)}Response ${ApiName(lowerCamel)}(1: ${ApiName(UpperCamel)}Request request)
 }

@@ -81,6 +81,7 @@
     <system:String x:Key="R_STR_DATABASE_TYPE">Database Type</system:String>
     <system:String x:Key="R_STR_HIS_DB_NAME">History Database Name</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">History Table Name</system:String>
+    <system:String x:Key="R_STR_REPEATED">Repeated</system:String>
     <system:String x:Key="R_STR_PARAMETER_SET_MODE">Parrameter Set Mode</system:String>
     <system:String x:Key="R_STR_SELF_DEFINED">Self Defined</system:String>
     <system:String x:Key="R_STR_ASSOCIATE_TABLE">Associate Table</system:String>

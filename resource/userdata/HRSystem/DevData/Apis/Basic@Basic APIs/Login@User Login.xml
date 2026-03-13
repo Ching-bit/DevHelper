@@ -3,6 +3,7 @@
     <InputParamSets>
         <ApiParamSet>
             <Type>Input</Type>
+            <IsRepeated>false</IsRepeated>
             <Mode>SelfDefined</Mode>
             <TableId>1</TableId>
             <ColumnIdList>
@@ -14,6 +15,7 @@
     <OutputParamSets>
         <ApiParamSet>
             <Type>Output</Type>
+            <IsRepeated>false</IsRepeated>
             <Mode>SelfDefined</Mode>
             <TableId>0</TableId>
             <ColumnIdList>
@@ -24,6 +26,7 @@
         </ApiParamSet>
         <ApiParamSet>
             <Type>Output</Type>
+            <IsRepeated>true</IsRepeated>
             <Mode>AssociateTable</Mode>
             <TableId>0</TableId>
             <ColumnIdList />

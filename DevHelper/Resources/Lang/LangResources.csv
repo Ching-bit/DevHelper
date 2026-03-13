@@ -78,6 +78,7 @@ R_STR_LOG,Log,日誌,日志
 R_STR_DATABASE_TYPE,Database Type,資料庫類型,数据库类型
 R_STR_HIS_DB_NAME,History Database Name,歷史庫名稱,历史库名称
 R_STR_HIS_TABLE_NAME,History Table Name,歷史表名稱,历史表名称
+R_STR_REPEATED,Repeated,重複,重复
 R_STR_PARAMETER_SET_MODE,Parrameter Set Mode,參數集模式,参数集模式
 R_STR_SELF_DEFINED,Self Defined,自定義,自定义
 R_STR_ASSOCIATE_TABLE,Associate Table,關聯表,关联表

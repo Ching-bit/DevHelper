@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Menu.DevData"
     x:Class="Menu.DevData.ApiSingleParamSetPanel">
     
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
         
         <HeaderedContentControl Grid.Row="0" Classes="Common" HorizontalAlignment="Left"
                                 Header="{DynamicResource R_STR_PARAMETER_SET_MODE}">
@@ -16,6 +16,13 @@
         </HeaderedContentControl>
         
         <HeaderedContentControl Grid.Row="1" Classes="Common" HorizontalAlignment="Left"
+                                Header="{DynamicResource R_STR_REPEATED}">
+            <ToggleSwitch
+                Classes="Common"
+                IsChecked="{Binding ApiParamSetModel.IsRepeated, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
+        </HeaderedContentControl>
+        
+        <HeaderedContentControl Grid.Row="2" Classes="Common" HorizontalAlignment="Left"
                                 Header="{DynamicResource R_STR_ASSOCIATED_TABLE}"
                                 IsVisible="{Binding ApiParamSetModel.Mode, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource IsValueInConverter}, ConverterParameter=AssociateTable}">
             <ursa:AutoCompleteBox
@@ -24,7 +31,7 @@
                 SelectedItem="{Binding ApiParamSetModel.AssociatedTable, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"/>
         </HeaderedContentControl>
         
-        <HeaderedContentControl Grid.Row="2" Classes="Common" HorizontalAlignment="Left"
+        <HeaderedContentControl Grid.Row="3" Classes="Common" HorizontalAlignment="Left"
                                 Header="{DynamicResource R_STR_COLUMNS}"
                                 IsVisible="{Binding ApiParamSetModel.Mode, RelativeSource={RelativeSource AncestorType=frw:UniPanel}, Converter={StaticResource IsValueInConverter}, ConverterParameter=SelfDefined}">
             <local:TableColumnsPanel

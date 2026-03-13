@@ -579,7 +579,11 @@ public class DevData : IDevData
             }
             else
             {
-                ApiInfo apiInfoCopy = new(apiInfo.Name, apiInfo.Description, apiInfo.Parent) { Id = apiInfo.Id };
+                ApiInfo apiInfoCopy = new(apiInfo.Name, apiInfo.Description, apiInfo.Parent)
+                {
+                    Id = apiInfo.Id,
+                    Remark = apiInfo.Remark
+                };
                 foreach (ApiParamSet inputParamSet in apiInfo.InputParamSets)
                 {
                     ApiParamSet paramSet = inputParamSet;
@@ -587,7 +591,12 @@ public class DevData : IDevData
                     {
                         TableInfo? tableInfo = GetTableById(inputParamSet.TableId);
                         if (null == tableInfo) { continue; }
-                        paramSet = new ApiParamSet { Type = ApiParamSetType.Input, Mode = ApiParamSetMode.SelfDefined };
+                        paramSet = new ApiParamSet
+                        {
+                            Type = ApiParamSetType.Input,
+                            IsRepeated = inputParamSet.IsRepeated,
+                            Mode = ApiParamSetMode.SelfDefined  // to self-defined, get actual columns
+                        };
                         paramSet.ColumnIdList.AddRange(tableInfo.ColumnIdList);
                     }
                     apiInfoCopy.InputParamSets.Add(paramSet);
@@ -599,7 +608,12 @@ public class DevData : IDevData
                     {
                         TableInfo? tableInfo = GetTableById(outputParamSet.TableId);
                         if (null == tableInfo) { continue; }
-                        paramSet = new ApiParamSet { Type = ApiParamSetType.Output, Mode = ApiParamSetMode.SelfDefined };
+                        paramSet = new ApiParamSet
+                        {
+                            Type = ApiParamSetType.Output,
+                            IsRepeated = outputParamSet.IsRepeated,
+                            Mode = ApiParamSetMode.SelfDefined  // to self-defined, get actual columns
+                        };
                         paramSet.ColumnIdList.AddRange(tableInfo.ColumnIdList);
                     }
                     apiInfoCopy.OutputParamSets.Add(paramSet);

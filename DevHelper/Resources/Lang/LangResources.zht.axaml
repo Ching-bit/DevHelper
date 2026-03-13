@@ -81,6 +81,7 @@
     <system:String x:Key="R_STR_DATABASE_TYPE">資料庫類型</system:String>
     <system:String x:Key="R_STR_HIS_DB_NAME">歷史庫名稱</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_NAME">歷史表名稱</system:String>
+    <system:String x:Key="R_STR_REPEATED">重複</system:String>
     <system:String x:Key="R_STR_PARAMETER_SET_MODE">參數集模式</system:String>
     <system:String x:Key="R_STR_SELF_DEFINED">自定義</system:String>
     <system:String x:Key="R_STR_ASSOCIATE_TABLE">關聯表</system:String>

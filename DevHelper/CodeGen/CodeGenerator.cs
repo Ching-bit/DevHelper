@@ -308,12 +308,16 @@ public class CodeGenerator
                     new Dictionary<string, Func<object, string>>
                     {
                         { "InputParamSetIndex", x => apiInfo.InputParamSets.IndexOf((ApiParamSet)x) + 1 + "" },
+                        { "InputParamSetRepeated0", x => ((ApiParamSet)x).IsRepeated ? (RpcType.Thrift == task!.RpcType ? "list<" : "repeated ") : string.Empty},
+                        { "InputParamSetRepeated1", x => ((ApiParamSet)x).IsRepeated ? (RpcType.Thrift == task!.RpcType ? ">" : "") : string.Empty}
                     },
                     apiInfo.InputParamSets.ConvertAll<object>(y => y)),
                 Tuple.Create(
                     new Dictionary<string, Func<object, string>>
                     {
                         { "OutputParamSetIndex", x => apiInfo.OutputParamSets.IndexOf((ApiParamSet)x) + 1 + "" },
+                        { "OutputParamSetRepeated0", x => ((ApiParamSet)x).IsRepeated ? (RpcType.Thrift == task!.RpcType ? "list<" : "repeated ") : string.Empty},
+                        { "OutputParamSetRepeated1", x => ((ApiParamSet)x).IsRepeated ? (RpcType.Thrift == task!.RpcType ? ">" : "") : string.Empty}
                     },
                     apiInfo.OutputParamSets.ConvertAll<object>(y => y))
             ],
