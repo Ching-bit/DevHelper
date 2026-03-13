@@ -28,7 +28,9 @@ public interface IDevData : IPlugin
     public TableInfo? GetTableById(int tableId);
     public DatabaseInfo? GetDatabaseInfoByTableId(int tableId);
     public bool UpdateTable(TableInfo tableInfo, List<int> columnIdList, List<IndexInfo> indexList, List<ForeignKeyInfo> foreignKeyList, bool hasHistoryTable, string remark, List<string> defaultValues);
+    public ErrorInfo CheckDeleteTable(TableInfo tableInfo);
     
     public List<ApiInfo> GetAllApis();
     public bool UpdateApi(ApiInfo apiInfo, List<ApiParamSet> inputParamSets, List<ApiParamSet> outputParamSets, string remark);
+    public ErrorInfo CheckDeleteApi(ApiInfo apiInfo);
 }

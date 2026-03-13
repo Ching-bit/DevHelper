@@ -288,7 +288,7 @@ public class DevData : IDevData
     public IDirectoryNode? GetRootDirectory(IFileNode fileNode)
     {
         IDirectoryNode? ret = fileNode.Parent;
-        while (null != ret && null != ret.Parent)
+        while (ret is { Parent: not null })
         {
             ret = ret.Parent;
         }
@@ -298,7 +298,7 @@ public class DevData : IDevData
     public IDirectoryNode? GetRootDirectory(IDirectoryNode directoryNode)
     {
         IDirectoryNode? ret = directoryNode;
-        while (null != ret && null != ret.Parent)
+        while (ret is { Parent: not null })
         {
             ret = ret.Parent;
         }
@@ -481,6 +481,64 @@ public class DevData : IDevData
         tableInfo.DefaultValues.AddRange(defaultValues);
         return true;
     }
+
+    public ErrorInfo CheckDeleteTable(TableInfo tableInfo)
+    {
+        // check foreign keys
+        Dictionary<DatabaseInfo, List<TableInfo>> tables = Global.Get<IDevData>().GetAllTables();
+        foreach (List<TableInfo> tableList in tables.Values)
+        {
+            foreach (TableInfo table in tableList)
+            {
+                foreach (ForeignKeyInfo foreignKeyInfo in table.ForeignKeyList)
+                {
+                    if (foreignKeyInfo.TableId == tableInfo.Id)
+                    {
+                        string errMsg = "The table `#1` is associated with the foreign key `#2`";
+                        errMsg = ResourceHelper.FindResource("R_STR_TABLE_ASSOCIATED_WITH_FOREIGN_KEY_NOTICE", errMsg)
+                            .Replace("#1", tableInfo.Name)
+                            .Replace("#2", $"{table.Name}.{foreignKeyInfo.Name}");
+                        return ErrorInfo.Fail(errMsg);
+                    }
+                }
+            }
+        }
+        
+        // check API parameter sets
+        List<ApiInfo> apiList = Global.Get<IDevData>().GetAllApis();
+        foreach (ApiInfo apiInfo in apiList)
+        {
+            foreach (ApiParamSet inputParamSet in apiInfo.InputParamSets)
+            {
+                if (ApiParamSetMode.AssociateTable == inputParamSet.Mode &&
+                    inputParamSet.TableId == tableInfo.Id)
+                {
+                    string errMsg = "The table `#1` is associated with the input parameter sets of API `#2`";
+                    errMsg = ResourceHelper
+                        .FindResource("R_STR_TABLE_ASSOCIATED_WITH_API_INPUT_PARAM_SET_NOTICE", errMsg)
+                        .Replace("#1", tableInfo.Name)
+                        .Replace("#2", apiInfo.Name);
+                    return ErrorInfo.Fail(errMsg);
+                }
+            }
+
+            foreach (ApiParamSet outputParamSet in apiInfo.OutputParamSets)
+            {
+                if (ApiParamSetMode.AssociateTable == outputParamSet.Mode &&
+                    outputParamSet.TableId == tableInfo.Id)
+                {
+                    string errMsg = "The table `#1` is associated with the output parameter sets of API `#2`";
+                    errMsg = ResourceHelper
+                        .FindResource("R_STR_TABLE_ASSOCIATED_WITH_API_OUTPUT_PARAM_SET_NOTICE", errMsg)
+                        .Replace("#1", tableInfo.Name)
+                        .Replace("#2", apiInfo.Name);
+                    return ErrorInfo.Fail(errMsg);
+                }
+            }
+        }
+        
+        return ErrorInfo.Success();
+    }
     #endregion
 
 
@@ -528,6 +586,12 @@ public class DevData : IDevData
         apiInfo.OutputParamSets.AddRange(outputParamSets);
         apiInfo.Remark = remark;
         return true;
+    }
+
+    public ErrorInfo CheckDeleteApi(ApiInfo apiInfo)
+    {
+        // nothing to check
+        return ErrorInfo.Success();
     }
     #endregion
     

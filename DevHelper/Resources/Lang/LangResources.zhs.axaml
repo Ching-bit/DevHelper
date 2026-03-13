@@ -21,7 +21,7 @@
     <system:String x:Key="R_STR_HOMEPAGE">主页</system:String>
     <system:String x:Key="R_STR_DEMO">示例</system:String>
     <system:String x:Key="R_STR_TEST">测试</system:String>
-    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确定要删除 [#1] 吗？</system:String>
+    <system:String x:Key="R_STR_DELETE_CONFIRM_NOTICE">确定要删除 `#1` 吗？</system:String>
     <system:String x:Key="R_STR_REMOVE_USER_DATA_NOTICE">是否同时删除用户数据？</system:String>
     <system:String x:Key="R_STR_CHANGE_CONN_NOTICE">若改变连接地址客户端将断开重连，是否继续？</system:String>
     <system:String x:Key="R_STR_NEW_VERSION_RELEASED">新版本已发布，请更新</system:String>
@@ -69,7 +69,7 @@
     <system:String x:Key="R_STR_ASSOCIATED_TABLE">关联表</system:String>
     <system:String x:Key="R_STR_ASSOCIATED_COLUMN">关联字段</system:String>
     <system:String x:Key="R_STR_DEFAULT_VALUES">预设值</system:String>
-    <system:String x:Key="R_STR_INPUT_VALUE">[输入值]</system:String>
+    <system:String x:Key="R_STR_INPUT_VALUE">`输入值`</system:String>
     <system:String x:Key="R_STR_INPUTS">输入</system:String>
     <system:String x:Key="R_STR_OUTPUTS">输出</system:String>
     <system:String x:Key="R_STR_SYSTEM_SETTING">系统设置</system:String>
@@ -85,8 +85,8 @@
     <system:String x:Key="R_STR_SELF_DEFINED">自定义</system:String>
     <system:String x:Key="R_STR_ASSOCIATE_TABLE">关联表</system:String>
     <system:String x:Key="R_STR_HIS_TABLE_DATE_COLUMN_NAME">历史表的日期字段名称</system:String>
-    <system:String x:Key="R_STR_START_TO_RUN_TASK">开始运行任务：[#1]</system:String>
-    <system:String x:Key="R_STR_TASK_FINISHED">任务 [#1] 运行完成</system:String>
+    <system:String x:Key="R_STR_START_TO_RUN_TASK">开始运行任务：`#1`</system:String>
+    <system:String x:Key="R_STR_TASK_FINISHED">任务 `#1` 运行完成</system:String>
     <system:String x:Key="R_STR_ADD_FAILED">新增失败</system:String>
     <system:String x:Key="R_STR_DELETE_FAILED">删除失败</system:String>
     <system:String x:Key="R_STR_MODIFY_FAILED">修改失败</system:String>
@@ -100,15 +100,18 @@
     <system:String x:Key="R_STR_SELECT_EMPTY_ROW_NOTICE">请选择行</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_TABLE_NOTICE">请选择参照表</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_REFERENCE_COLUMN_NOTICE">请选择参照字段</system:String>
-    <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">字段类型 [#1] 与参照字段类型 [#2] 不一致</system:String>
+    <system:String x:Key="R_STR_FOREIGN_KEY_COLUMN_TYPE_INCONSISTENT_NOTICE">字段类型 `#1` 与参照字段类型 `#2` 不一致</system:String>
     <system:String x:Key="R_STR_SELECT_EMPTY_INDEX_NOTICE">请选择索引</system:String>
     <system:String x:Key="R_STR_EMPTY_MEANS_ALL">空表示全部</system:String>
     <system:String x:Key="R_STR_DELETE_COLUMNS_CONFIRM_NOTICE">确认删除以下字段？</system:String>
-    <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 [#1] 被表 [#2] 使用，仍然修改？</system:String>
-    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 [#1] 被表 [#2] 使用</system:String>
-    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">字段 [#1] 被表 [#2] 使用，因此将被保留</system:String>
-    <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">字段 [#1] 被索引 [#2] 使用</system:String>
-    <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">找不到字段信息 [#1]</system:String>
+    <system:String x:Key="R_STR_MODIFIED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 `#1` 被表 `#2` 使用，仍然修改？</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_NOTICE">字段 `#1` 被表 `#2` 使用</system:String>
+    <system:String x:Key="R_STR_DELETED_COLUMN_IS_USED_BY_TABLE_AND_RESERVED_NOTICE">字段 `#1` 被表 `#2` 使用，因此将被保留</system:String>
+    <system:String x:Key="R_STR_COLUMN_IS_USED_BY_INDEX_NOTICE">字段 `#1` 被索引 `#2` 使用</system:String>
+    <system:String x:Key="R_STR_COLUMN_NOT_FOUND_NOTICE">找不到字段信息 `#1`</system:String>
     <system:String x:Key="R_STR_COLUMN_DEFAULT_VALUE_NOT_MATCH_TYPE">缺省值与字段类型不一致</system:String>
+    <system:String x:Key="R_STR_TABLE_ASSOCIATED_WITH_FOREIGN_KEY_NOTICE">表 `#1` 被外键 `#2` 关联</system:String>
+    <system:String x:Key="R_STR_TABLE_ASSOCIATED_WITH_API_INPUT_PARAM_SET_NOTICE">表 `#1` 与 API `#2` 的输入参数集关联</system:String>
+    <system:String x:Key="R_STR_TABLE_ASSOCIATED_WITH_API_OUTPUT_PARAM_SET_NOTICE">表 `#1` 与 API `#2` 的输出参数集关联</system:String>
 
 </ResourceDictionary>

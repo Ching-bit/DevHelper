@@ -389,6 +389,19 @@ public partial class MainViewModel : UniViewModel
                 return;
             }
 
+            // check
+            ErrorInfo errorInfo = fileNode switch
+            {
+                TableInfo tableInfo => Global.Get<IDevData>().CheckDeleteTable(tableInfo),
+                ApiInfo apiInfo => Global.Get<IDevData>().CheckDeleteApi(apiInfo),
+                _ => ErrorInfo.Success()
+            };
+            if (!errorInfo.IsSuccess)
+            {
+                await MessageDialog.Show(errorInfo.ErrorMessage);
+                return;
+            }
+
             if (!Global.Get<IDevData>().RemoveItem(parentDirectory, fileNode) ||
                 !RemoveMenu(menu))
             {
