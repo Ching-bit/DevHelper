@@ -6,5 +6,7 @@ public enum RecursionLevel
     Table,
     
     Api,
-    ApiParamSet
+    ApiParamSet,
+    ApiInputParamSet,
+    ApiOutputParamSet
 }

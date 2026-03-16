@@ -456,14 +456,9 @@ public class CodeGenerator
                 ret = StringHelper.ReplaceRange(ret, startIndex, endIndex, string.Empty);
                 if (startIndex <= 0) { continue; }
                 
-                if (ret[..startIndex].EndsWith(Environment.NewLine))
-                {
-                    ret = StringHelper.ReplaceRange(ret, startIndex - Environment.NewLine.Length, startIndex - 1, string.Empty);
-                }
-                else
-                {
-                    ret = StringHelper.ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
-                }
+                ret = ret[..startIndex].EndsWith(Environment.NewLine) ?
+                    StringHelper.ReplaceRange(ret, startIndex - Environment.NewLine.Length, startIndex - 1, string.Empty) :
+                    StringHelper.ReplaceRange(ret, startIndex - 1, startIndex - 1, string.Empty);
             }
         }
         // CONDITIONAL_SPACE
@@ -517,6 +512,28 @@ public class CodeGenerator
                     _currentApiParamSet = apiParamSet;
                     sb.Append(GenFile_ApiParamSet(templateText, _currentApiParamSet, task));
                 }
+                foreach (ApiParamSet apiParamSet in _currentApi.OutputParamSets)
+                {
+                    _currentApiParamSet = apiParamSet;
+                    sb.Append(GenFile_ApiParamSet(templateText, _currentApiParamSet, task));
+                }
+                return sb.ToString();
+            }
+            case RecursionLevel.ApiInputParamSet:
+            {
+                if (null == _currentApi) { throw new ArgumentException("Null API info when recurse API parameter sets"); }
+                StringBuilder sb = new();
+                foreach (ApiParamSet apiParamSet in _currentApi.InputParamSets)
+                {
+                    _currentApiParamSet = apiParamSet;
+                    sb.Append(GenFile_ApiParamSet(templateText, _currentApiParamSet, task));
+                }
+                return sb.ToString();
+            }
+            case RecursionLevel.ApiOutputParamSet:
+            {
+                if (null == _currentApi) { throw new ArgumentException("Null API info when recurse API parameter sets"); }
+                StringBuilder sb = new();
                 foreach (ApiParamSet apiParamSet in _currentApi.OutputParamSets)
                 {
                     _currentApiParamSet = apiParamSet;
