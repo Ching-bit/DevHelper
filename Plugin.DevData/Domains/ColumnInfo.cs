@@ -110,7 +110,7 @@ public class ColumnInfo
                 ColumnType.Number => "double",
                 ColumnType.Char or ColumnType.Varchar => isUsingString
                     ? "std::string"
-                    : $"char[{Length * Scale + 1}]",
+                    : $"char{Length * Scale + 1}",
                 ColumnType.Bool => "bool",
                 ColumnType.Datetime => "std::chrono",
                 _ => string.Empty

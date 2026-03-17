@@ -1,4 +1,8 @@
 #include <cstdint>
 #include <chrono>
 
+typedef char char9[9];
+typedef char char256[256];
+
+
 ${TEMPLATE(table_struct.template,Table)}
