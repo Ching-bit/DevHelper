@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Framework.Common;
 using Plugin.AppEnv;
 
-namespace UniClient.Models;
+namespace UniClient;
 
 public partial class SettingModel : UniModel
 {

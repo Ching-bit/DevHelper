@@ -13,7 +13,7 @@ using Menu.DevData;
 using Plugin.AppEnv;
 using Plugin.DevData;
 
-namespace UniClient.Models;
+namespace UniClient;
 
 public partial class GenTaskModel : UniModel
 {

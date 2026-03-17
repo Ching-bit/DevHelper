@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Control.Basic;
 using Framework.Common;
-using UniClient.Models;
 
 namespace UniClient;
 
