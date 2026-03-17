@@ -56,7 +56,7 @@
 在 **userdata\對應系統\templates** 的目錄下新增文件夾，文件夾名稱對應生成任務的名稱。在文件夾下添加 GenTask.xml 生成任務配置文件，該配置文件中設置以下內容：
 
 - **TemplateFile**：模板文件名稱，以 .template 擴展名結尾；若以 .cs 擴展名結尾，則工具將其作為 C# 腳本進行執行，並將已設置的字段、表數據傳入，可參見表結構文檔生成的示例；
-- **RecursionLevel**：迭代層級，可選擇 Database 或 Table；對於迭代層級為 Database 的生成任務，工具將從資料庫層級開始，逐一按模板生成代碼，每個 database 對應一個生成文件；對於迭代層級為 Table 的生成任務，工具將從表的層級開始，每張表生成一個代碼文件，並分資料庫目錄存放（若只有一個 Database 則直接存放至生成路徑下）；
+- **RecursionLevel**：迭代層級，可選擇 Database、Table、Api；對於迭代層級為 Database 的生成任務，工具將從資料庫層級開始，逐一按模板生成代碼，每個 database 對應一個生成文件；對於迭代層級為 Table 的生成任務，工具將從表的層級開始，每張表生成一個代碼文件，並分資料庫目錄存放（若只有一個 Database 則直接存放至生成路徑下）；
 - **OutputFile**：輸出文件名稱；
 - **ProgramLanguage**：編程語言，可選擇Cpp、CSharp、Java，影響對應的程序字段類型；
 - **IsUsingString**：是否使用String，是則 Char、Varchar 類型字段對應的程序字段類型為 String，否則為 byte 數組；
@@ -89,7 +89,7 @@
 - NEWLINE：換行；
 - BACKSPACE：退格；
 - CONDITIONAL_SPACE：若前、後方字符都不為空格，則插入空格；若前後有多個空格，也將合併為一個空格；
-- TEMPLATE：子模板，該宏的書寫規範為 ${TEMPLATE(模板文件名稱,迭代層級)}。
+- TEMPLATE：子模板，該宏的書寫規範為 ${TEMPLATE(模板文件名稱,迭代層級)}，迭代層級包含 Database（資料庫）、Table（表）、Api（API）、ApiParamSet（API參數集）、ApiInputParamSet（API輸入參數集）、ApiOutputParamSet（API輸出參數集）。
 
 ### 資料庫迭代
 
