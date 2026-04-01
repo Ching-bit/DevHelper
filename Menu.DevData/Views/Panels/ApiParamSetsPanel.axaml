@@ -24,7 +24,7 @@
             Grid.Row="1"
             ItemsSource="{Binding ApiParamSets, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
             SelectedItem="{Binding InternalSelectedParamSet, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}"
-            SelectedIndex="{Binding InternalSelectedParamSetIndex, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}">
+            SelectedIndex="{Binding SelectedParamSetIndex, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=frw:UniPanel}}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock>

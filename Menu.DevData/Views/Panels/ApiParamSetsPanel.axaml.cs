@@ -12,7 +12,7 @@ namespace Menu.DevData;
 [WithDirectProperty(typeof(string), "ParamSetName", "")]
 [WithDirectProperty(typeof(bool), "IsParamSetChanged", false)]
 [WithDirectProperty(typeof(ApiParamSetModel), "InternalSelectedParamSet", nullable: true)]
-[WithDirectProperty(typeof(int), "InternalSelectedParamSetIndex")]
+[WithDirectProperty(typeof(int), "SelectedParamSetIndex")]
 public partial class ApiParamSetsPanel : UniPanel
 {
     public ApiParamSetsPanel()
@@ -48,7 +48,7 @@ public partial class ApiParamSetsPanel : UniPanel
             return;
         }
 
-        int selectedIndex = InternalSelectedParamSetIndex;
+        int selectedIndex = SelectedParamSetIndex;
         ApiParamSets.Remove(InternalSelectedParamSet);
         IsParamSetChanged = true;
 

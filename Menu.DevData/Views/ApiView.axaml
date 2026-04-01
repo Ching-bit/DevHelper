@@ -31,14 +31,16 @@
                     ApiParamSets="{Binding ApiInfoModel.InputParamSetList, Mode=TwoWay}"
                     ParamSetType="Input"
                     ParamSetName="{DynamicResource R_STR_INPUTS}"
-                    IsParamSetChanged="{Binding IsApiChanged, Mode=TwoWay}"/>
+                    IsParamSetChanged="{Binding IsApiChanged, Mode=TwoWay}"
+                    SelectedParamSetIndex="{Binding InputParamSetSelectedIndex, Mode=TwoWay}"/>
             </TabItem>
             <TabItem Header="{DynamicResource R_STR_OUTPUTS}">
                 <local:ApiParamSetsPanel
                     ApiParamSets="{Binding ApiInfoModel.OutputParamSetList, Mode=TwoWay}"
                     ParamSetType="Output"
                     ParamSetName="{DynamicResource R_STR_OUTPUTS}"
-                    IsParamSetChanged="{Binding IsApiChanged, Mode=TwoWay}"/>
+                    IsParamSetChanged="{Binding IsApiChanged, Mode=TwoWay}"
+                    SelectedParamSetIndex="{Binding OutputParamSetSelectedIndex, Mode=TwoWay}"/>
             </TabItem>
         </TabControl>
         

@@ -21,8 +21,13 @@ public partial class ApiViewModel : UniViewModel
         {
             throw new Exception("Cannot get API instance from the menu");
         }
-
+        
+        int prevInputIndex = InputParamSetSelectedIndex;
+        int prevOutputIndex = OutputParamSetSelectedIndex;
         ApiInfoModel = new ApiInfoModel(apiInfo);
+        InputParamSetSelectedIndex = Math.Max(0, Math.Min(prevInputIndex, ApiInfoModel.InputParamSetList.Count - 1));
+        OutputParamSetSelectedIndex = Math.Max(0, Math.Min(prevOutputIndex, ApiInfoModel.OutputParamSetList.Count - 1));
+        
         IsApiChanged = false;
     }
     #endregion
@@ -78,6 +83,8 @@ public partial class ApiViewModel : UniViewModel
     #region Properties
     [ObservableProperty] private ApiInfoModel? _apiInfoModel;
     [ObservableProperty] private bool _isApiChanged;
+    [ObservableProperty] private int _inputParamSetSelectedIndex;
+    [ObservableProperty] private int _outputParamSetSelectedIndex;
     #endregion
     
 }
